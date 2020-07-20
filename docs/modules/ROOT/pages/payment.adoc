@@ -1,0 +1,442 @@
+= Payment
+
+NOTE: This page is incomplete. We're working to improve it for the next release. Stay tuned!
+
+== Utilities
+
+:PaymentSplitter: pass:normal[xref:#PaymentSplitter[`PaymentSplitter`]]
+:constructor: pass:normal[xref:#PaymentSplitter-constructor-address---uint256---[`constructor`]]
+:fallback: pass:normal[xref:#PaymentSplitter-fallback--[`fallback`]]
+:totalShares: pass:normal[xref:#PaymentSplitter-totalShares--[`totalShares`]]
+:totalReleased: pass:normal[xref:#PaymentSplitter-totalReleased--[`totalReleased`]]
+:shares: pass:normal[xref:#PaymentSplitter-shares-address-[`shares`]]
+:released: pass:normal[xref:#PaymentSplitter-released-address-[`released`]]
+:payee: pass:normal[xref:#PaymentSplitter-payee-uint256-[`payee`]]
+:release: pass:normal[xref:#PaymentSplitter-release-address-payable-[`release`]]
+:PayeeAdded: pass:normal[xref:#PaymentSplitter-PayeeAdded-address-uint256-[`PayeeAdded`]]
+:PaymentReleased: pass:normal[xref:#PaymentSplitter-PaymentReleased-address-uint256-[`PaymentReleased`]]
+:PaymentReceived: pass:normal[xref:#PaymentSplitter-PaymentReceived-address-uint256-[`PaymentReceived`]]
+
+[[PaymentSplitter]]
+== `PaymentSplitter`
+
+This contract allows to split Ether payments among a group of accounts. The sender does not need to be aware
+that the Ether will be split in this way, since it is handled transparently by the contract.
+
+The split can be in equal parts or in any other arbitrary proportion. The way this is specified is by assigning each
+account to a number of shares. Of all the Ether that this contract receives, each account will then be able to claim
+an amount proportional to the percentage of total shares they were assigned.
+
+`PaymentSplitter` follows a _pull payment_ model. This means that payments are not automatically forwarded to the
+accounts but kept in this contract, and the actual transfer is triggered as a separate step by calling the {release}
+function.
+
+
+- xref:#PaymentSplitter-constructor-address---uint256---[constructor(address[],uint256[])]
+- xref:#PaymentSplitter-fallback--[fallback()]
+- xref:#PaymentSplitter-totalShares--[totalShares()]
+- xref:#PaymentSplitter-totalReleased--[totalReleased()]
+- xref:#PaymentSplitter-shares-address-[shares(address)]
+- xref:#PaymentSplitter-released-address-[released(address)]
+- xref:#PaymentSplitter-payee-uint256-[payee(uint256)]
+- xref:#PaymentSplitter-release-address-payable-[release(address payable)]
+- xref:#Context-constructor--[constructor()]
+- xref:#Context-_msgSender--[_msgSender()]
+- xref:#Context-_msgData--[_msgData()]
+
+- xref:#PaymentSplitter-PayeeAdded-address-uint256-[PayeeAdded(address,uint256)]
+- xref:#PaymentSplitter-PaymentReleased-address-uint256-[PaymentReleased(address,uint256)]
+- xref:#PaymentSplitter-PaymentReceived-address-uint256-[PaymentReceived(address,uint256)]
+
+[[PaymentSplitter-constructor-address---uint256---]]
+=== constructor(address[] payees, uint256[] shares)
+
+Creates an instance of `PaymentSplitter` where each account in `payees` is assigned the number of shares at
+the matching position in the `shares` array.
+
+All addresses in `payees` must be non-zero. Both arrays must have the same non-zero length, and there must be no
+duplicates in `payees`.
+
+[[PaymentSplitter-fallback--]]
+=== fallback()
+
+The Ether received will be logged with {PaymentReceived} events. Note that these events are not fully
+reliable: it's possible for a contract to receive Ether without triggering this function. This only affects the
+reliability of the events, and not the actual splitting of Ether.
+
+To learn more about this see the Solidity documentation for
+https://solidity.readthedocs.io/en/latest/contracts.html#fallback-function[fallback
+functions].
+
+[[PaymentSplitter-totalShares--]]
+=== totalShares() → uint256
+
+Getter for the total shares held by payees.
+
+[[PaymentSplitter-totalReleased--]]
+=== totalReleased() → uint256
+
+Getter for the total amount of Ether already released.
+
+[[PaymentSplitter-shares-address-]]
+=== shares(address account) → uint256
+
+Getter for the amount of shares held by an account.
+
+[[PaymentSplitter-released-address-]]
+=== released(address account) → uint256
+
+Getter for the amount of Ether already released to a payee.
+
+[[PaymentSplitter-payee-uint256-]]
+=== payee(uint256 index) → address
+
+Getter for the address of the payee number `index`.
+
+[[PaymentSplitter-release-address-payable-]]
+=== release(address payable account)
+
+Triggers a transfer to `account` of the amount of Ether they are owed, according to their percentage of the
+total shares and their previous withdrawals.
+
+[[PaymentSplitter-PayeeAdded-address-uint256-]]
+=== PayeeAdded(address account, uint256 shares)
+
+
+
+[[PaymentSplitter-PaymentReleased-address-uint256-]]
+=== PaymentReleased(address to, uint256 amount)
+
+
+
+[[PaymentSplitter-PaymentReceived-address-uint256-]]
+=== PaymentReceived(address from, uint256 amount)
+
+
+
+
+
+:PullPayment: pass:normal[xref:#PullPayment[`PullPayment`]]
+:constructor: pass:normal[xref:#PullPayment-constructor--[`constructor`]]
+:withdrawPayments: pass:normal[xref:#PullPayment-withdrawPayments-address-payable-[`withdrawPayments`]]
+:withdrawPaymentsWithGas: pass:normal[xref:#PullPayment-withdrawPaymentsWithGas-address-payable-[`withdrawPaymentsWithGas`]]
+:payments: pass:normal[xref:#PullPayment-payments-address-[`payments`]]
+:_asyncTransfer: pass:normal[xref:#PullPayment-_asyncTransfer-address-uint256-[`_asyncTransfer`]]
+
+[[PullPayment]]
+== `PullPayment`
+
+Simple implementation of a
+https://consensys.github.io/smart-contract-best-practices/recommendations/#favor-pull-over-push-for-external-calls[pull-payment]
+strategy, where the paying contract doesn't interact directly with the
+receiver account, which must withdraw its payments itself.
+
+Pull-payments are often considered the best practice when it comes to sending
+Ether, security-wise. It prevents recipients from blocking execution, and
+eliminates reentrancy concerns.
+
+TIP: If you would like to learn more about reentrancy and alternative ways
+to protect against it, check out our blog post
+https://blog.openzeppelin.com/reentrancy-after-istanbul/[Reentrancy After Istanbul].
+
+To use, derive from the `PullPayment` contract, and use {_asyncTransfer}
+instead of Solidity's `transfer` function. Payees can query their due
+payments with {payments}, and retrieve them with {withdrawPayments}.
+
+
+- xref:#PullPayment-constructor--[constructor()]
+- xref:#PullPayment-withdrawPayments-address-payable-[withdrawPayments(address payable)]
+- xref:#PullPayment-withdrawPaymentsWithGas-address-payable-[withdrawPaymentsWithGas(address payable)]
+- xref:#PullPayment-payments-address-[payments(address)]
+- xref:#PullPayment-_asyncTransfer-address-uint256-[_asyncTransfer(address,uint256)]
+
+
+[[PullPayment-constructor--]]
+=== constructor()
+
+
+
+[[PullPayment-withdrawPayments-address-payable-]]
+=== withdrawPayments(address payable payee)
+
+Withdraw accumulated payments.
+
+Note that _any_ account can call this function, not just the `payee`.
+This means that contracts unaware of the `PullPayment` protocol can still
+receive funds this way, by having a separate account call
+{withdrawPayments}.
+
+NOTE: This function has been deprecated, use {withdrawPaymentsWithGas}
+instead. Calling contracts with fixed gas limits is an anti-pattern and
+may break contract interactions in network upgrades (hardforks).
+https://diligence.consensys.net/blog/2019/09/stop-using-soliditys-transfer-now/[Learn more.]
+
+
+
+[[PullPayment-withdrawPaymentsWithGas-address-payable-]]
+=== withdrawPaymentsWithGas(address payable payee)
+
+Same as {withdrawPayments}, but forwarding all gas to the recipient.
+
+WARNING: Forwarding all gas opens the door to reentrancy vulnerabilities.
+Make sure you trust the recipient, or are either following the
+checks-effects-interactions pattern or using {ReentrancyGuard}.
+
+_Available since v2.4.0._
+
+[[PullPayment-payments-address-]]
+=== payments(address dest) → uint256
+
+Returns the payments owed to an address.
+
+
+[[PullPayment-_asyncTransfer-address-uint256-]]
+=== _asyncTransfer(address dest, uint256 amount)
+
+Called by the payer to store the sent amount as credit to be pulled.
+Funds sent in this way are stored in an intermediate {Escrow} contract, so
+there is no danger of them being spent before withdrawal.
+
+
+
+
+
+== Escrow
+
+:Escrow: pass:normal[xref:#Escrow[`Escrow`]]
+:depositsOf: pass:normal[xref:#Escrow-depositsOf-address-[`depositsOf`]]
+:deposit: pass:normal[xref:#Escrow-deposit-address-[`deposit`]]
+:withdraw: pass:normal[xref:#Escrow-withdraw-address-payable-[`withdraw`]]
+:withdrawWithGas: pass:normal[xref:#Escrow-withdrawWithGas-address-payable-[`withdrawWithGas`]]
+:Deposited: pass:normal[xref:#Escrow-Deposited-address-uint256-[`Deposited`]]
+:Withdrawn: pass:normal[xref:#Escrow-Withdrawn-address-uint256-[`Withdrawn`]]
+
+[[Escrow]]
+== `Escrow`
+
+Base escrow contract, holds funds designated for a payee until they
+withdraw them.
+
+Intended usage: This contract (and derived escrow contracts) should be a
+standalone contract, that only interacts with the contract that instantiated
+it. That way, it is guaranteed that all Ether will be handled according to
+the `Escrow` rules, and there is no need to check for payable functions or
+transfers in the inheritance tree. The contract that uses the escrow as its
+payment method should be its primary, and provide public methods redirecting
+to the escrow's deposit and withdraw.
+
+- xref:#Secondary-onlyPrimary--[onlyPrimary()]
+
+- xref:#Escrow-depositsOf-address-[depositsOf(address)]
+- xref:#Escrow-deposit-address-[deposit(address)]
+- xref:#Escrow-withdraw-address-payable-[withdraw(address payable)]
+- xref:#Escrow-withdrawWithGas-address-payable-[withdrawWithGas(address payable)]
+- xref:#Secondary-constructor--[constructor()]
+- xref:#Secondary-primary--[primary()]
+- xref:#Secondary-transferPrimary-address-[transferPrimary(address)]
+- xref:#Context-constructor--[constructor()]
+- xref:#Context-_msgSender--[_msgSender()]
+- xref:#Context-_msgData--[_msgData()]
+
+- xref:#Escrow-Deposited-address-uint256-[Deposited(address,uint256)]
+- xref:#Escrow-Withdrawn-address-uint256-[Withdrawn(address,uint256)]
+- xref:#Secondary-PrimaryTransferred-address-[PrimaryTransferred(address)]
+
+[[Escrow-depositsOf-address-]]
+=== depositsOf(address payee) → uint256
+
+
+
+[[Escrow-deposit-address-]]
+=== deposit(address payee)
+
+Stores the sent amount as credit to be withdrawn.
+
+
+[[Escrow-withdraw-address-payable-]]
+=== withdraw(address payable payee)
+
+Withdraw accumulated balance for a payee, forwarding 2300 gas (a
+Solidity `transfer`).
+
+NOTE: This function has been deprecated, use {withdrawWithGas} instead.
+Calling contracts with fixed-gas limits is an anti-pattern and may break
+contract interactions in network upgrades (hardforks).
+https://diligence.consensys.net/blog/2019/09/stop-using-soliditys-transfer-now/[Learn more.]
+
+
+
+[[Escrow-withdrawWithGas-address-payable-]]
+=== withdrawWithGas(address payable payee)
+
+Same as {withdraw}, but forwarding all gas to the recipient.
+
+WARNING: Forwarding all gas opens the door to reentrancy vulnerabilities.
+Make sure you trust the recipient, or are either following the
+checks-effects-interactions pattern or using {ReentrancyGuard}.
+
+_Available since v2.4.0._
+
+[[Escrow-Deposited-address-uint256-]]
+=== Deposited(address payee, uint256 weiAmount)
+
+
+
+[[Escrow-Withdrawn-address-uint256-]]
+=== Withdrawn(address payee, uint256 weiAmount)
+
+
+
+
+
+:ConditionalEscrow: pass:normal[xref:#ConditionalEscrow[`ConditionalEscrow`]]
+:withdrawalAllowed: pass:normal[xref:#ConditionalEscrow-withdrawalAllowed-address-[`withdrawalAllowed`]]
+:withdraw: pass:normal[xref:#ConditionalEscrow-withdraw-address-payable-[`withdraw`]]
+
+[[ConditionalEscrow]]
+== `ConditionalEscrow`
+
+Base abstract escrow to only allow withdrawal if a condition is met.
+Intended usage: See {Escrow}. Same usage guidelines apply here.
+
+- xref:#Secondary-onlyPrimary--[onlyPrimary()]
+
+- xref:#ConditionalEscrow-withdrawalAllowed-address-[withdrawalAllowed(address)]
+- xref:#ConditionalEscrow-withdraw-address-payable-[withdraw(address payable)]
+- xref:#Escrow-depositsOf-address-[depositsOf(address)]
+- xref:#Escrow-deposit-address-[deposit(address)]
+- xref:#Escrow-withdraw-address-payable-[withdraw(address payable)]
+- xref:#Escrow-withdrawWithGas-address-payable-[withdrawWithGas(address payable)]
+- xref:#Secondary-constructor--[constructor()]
+- xref:#Secondary-primary--[primary()]
+- xref:#Secondary-transferPrimary-address-[transferPrimary(address)]
+- xref:#Context-constructor--[constructor()]
+- xref:#Context-_msgSender--[_msgSender()]
+- xref:#Context-_msgData--[_msgData()]
+
+- xref:#Escrow-Deposited-address-uint256-[Deposited(address,uint256)]
+- xref:#Escrow-Withdrawn-address-uint256-[Withdrawn(address,uint256)]
+- xref:#Secondary-PrimaryTransferred-address-[PrimaryTransferred(address)]
+
+[[ConditionalEscrow-withdrawalAllowed-address-]]
+=== withdrawalAllowed(address payee) → bool
+
+Returns whether an address is allowed to withdraw their funds. To be
+implemented by derived contracts.
+
+
+[[ConditionalEscrow-withdraw-address-payable-]]
+=== withdraw(address payable payee)
+
+
+
+
+
+:RefundEscrow: pass:normal[xref:#RefundEscrow[`RefundEscrow`]]
+:constructor: pass:normal[xref:#RefundEscrow-constructor-address-payable-[`constructor`]]
+:state: pass:normal[xref:#RefundEscrow-state--[`state`]]
+:beneficiary: pass:normal[xref:#RefundEscrow-beneficiary--[`beneficiary`]]
+:deposit: pass:normal[xref:#RefundEscrow-deposit-address-[`deposit`]]
+:close: pass:normal[xref:#RefundEscrow-close--[`close`]]
+:enableRefunds: pass:normal[xref:#RefundEscrow-enableRefunds--[`enableRefunds`]]
+:beneficiaryWithdraw: pass:normal[xref:#RefundEscrow-beneficiaryWithdraw--[`beneficiaryWithdraw`]]
+:withdrawalAllowed: pass:normal[xref:#RefundEscrow-withdrawalAllowed-address-[`withdrawalAllowed`]]
+:RefundsClosed: pass:normal[xref:#RefundEscrow-RefundsClosed--[`RefundsClosed`]]
+:RefundsEnabled: pass:normal[xref:#RefundEscrow-RefundsEnabled--[`RefundsEnabled`]]
+
+[[RefundEscrow]]
+== `RefundEscrow`
+
+Escrow that holds funds for a beneficiary, deposited from multiple
+parties.
+Intended usage: See {Escrow}. Same usage guidelines apply here.
+The primary account (that is, the contract that instantiates this
+contract) may deposit, close the deposit period, and allow for either
+withdrawal by the beneficiary, or refunds to the depositors. All interactions
+with `RefundEscrow` will be made through the primary contract. See the
+`RefundableCrowdsale` contract for an example of `RefundEscrow`’s use.
+
+- xref:#Secondary-onlyPrimary--[onlyPrimary()]
+
+- xref:#RefundEscrow-constructor-address-payable-[constructor(address payable)]
+- xref:#RefundEscrow-state--[state()]
+- xref:#RefundEscrow-beneficiary--[beneficiary()]
+- xref:#RefundEscrow-deposit-address-[deposit(address)]
+- xref:#RefundEscrow-close--[close()]
+- xref:#RefundEscrow-enableRefunds--[enableRefunds()]
+- xref:#RefundEscrow-beneficiaryWithdraw--[beneficiaryWithdraw()]
+- xref:#RefundEscrow-withdrawalAllowed-address-[withdrawalAllowed(address)]
+- xref:#ConditionalEscrow-withdrawalAllowed-address-[withdrawalAllowed(address)]
+- xref:#ConditionalEscrow-withdraw-address-payable-[withdraw(address payable)]
+- xref:#Escrow-depositsOf-address-[depositsOf(address)]
+- xref:#Escrow-deposit-address-[deposit(address)]
+- xref:#Escrow-withdraw-address-payable-[withdraw(address payable)]
+- xref:#Escrow-withdrawWithGas-address-payable-[withdrawWithGas(address payable)]
+- xref:#Secondary-constructor--[constructor()]
+- xref:#Secondary-primary--[primary()]
+- xref:#Secondary-transferPrimary-address-[transferPrimary(address)]
+- xref:#Context-constructor--[constructor()]
+- xref:#Context-_msgSender--[_msgSender()]
+- xref:#Context-_msgData--[_msgData()]
+
+- xref:#RefundEscrow-RefundsClosed--[RefundsClosed()]
+- xref:#RefundEscrow-RefundsEnabled--[RefundsEnabled()]
+- xref:#Escrow-Deposited-address-uint256-[Deposited(address,uint256)]
+- xref:#Escrow-Withdrawn-address-uint256-[Withdrawn(address,uint256)]
+- xref:#Secondary-PrimaryTransferred-address-[PrimaryTransferred(address)]
+
+[[RefundEscrow-constructor-address-payable-]]
+=== constructor(address payable beneficiary)
+
+Constructor.
+
+
+[[RefundEscrow-state--]]
+=== state() → enum RefundEscrow.State
+
+
+
+[[RefundEscrow-beneficiary--]]
+=== beneficiary() → address
+
+
+
+[[RefundEscrow-deposit-address-]]
+=== deposit(address refundee)
+
+Stores funds that may later be refunded.
+
+
+[[RefundEscrow-close--]]
+=== close()
+
+Allows for the beneficiary to withdraw their funds, rejecting
+further deposits.
+
+[[RefundEscrow-enableRefunds--]]
+=== enableRefunds()
+
+Allows for refunds to take place, rejecting further deposits.
+
+[[RefundEscrow-beneficiaryWithdraw--]]
+=== beneficiaryWithdraw()
+
+Withdraws the beneficiary's funds.
+
+[[RefundEscrow-withdrawalAllowed-address-]]
+=== withdrawalAllowed(address) → bool
+
+Returns whether refundees can withdraw their deposits (be refunded). The overridden function receives a
+'payee' argument, but we ignore it here since the condition is global, not per-payee.
+
+[[RefundEscrow-RefundsClosed--]]
+=== RefundsClosed()
+
+
+
+[[RefundEscrow-RefundsEnabled--]]
+=== RefundsEnabled()
+
+
+
+

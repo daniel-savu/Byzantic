@@ -1,0 +1,520 @@
+= Access
+
+NOTE: This page is incomplete. We're working to improve it for the next release. Stay tuned!
+
+== Library
+
+:Roles: pass:normal[xref:#Roles[`Roles`]]
+:add: pass:normal[xref:#Roles-add-struct-Roles-Role-address-[`add`]]
+:remove: pass:normal[xref:#Roles-remove-struct-Roles-Role-address-[`remove`]]
+:has: pass:normal[xref:#Roles-has-struct-Roles-Role-address-[`has`]]
+
+[[Roles]]
+== `Roles`
+
+Library for managing addresses assigned to a Role.
+
+
+- xref:#Roles-add-struct-Roles-Role-address-[add(struct Roles.Role,address)]
+- xref:#Roles-remove-struct-Roles-Role-address-[remove(struct Roles.Role,address)]
+- xref:#Roles-has-struct-Roles-Role-address-[has(struct Roles.Role,address)]
+
+
+[[Roles-add-struct-Roles-Role-address-]]
+=== add(struct Roles.Role role, address account)
+
+Give an account access to this role.
+
+[[Roles-remove-struct-Roles-Role-address-]]
+=== remove(struct Roles.Role role, address account)
+
+Remove an account's access to this role.
+
+[[Roles-has-struct-Roles-Role-address-]]
+=== has(struct Roles.Role role, address account) → bool
+
+Check if an account has this role.
+
+
+
+
+== Roles
+
+:CapperRole: pass:normal[xref:#CapperRole[`CapperRole`]]
+:onlyCapper: pass:normal[xref:#CapperRole-onlyCapper--[`onlyCapper`]]
+:constructor: pass:normal[xref:#CapperRole-constructor--[`constructor`]]
+:isCapper: pass:normal[xref:#CapperRole-isCapper-address-[`isCapper`]]
+:addCapper: pass:normal[xref:#CapperRole-addCapper-address-[`addCapper`]]
+:renounceCapper: pass:normal[xref:#CapperRole-renounceCapper--[`renounceCapper`]]
+:_addCapper: pass:normal[xref:#CapperRole-_addCapper-address-[`_addCapper`]]
+:_removeCapper: pass:normal[xref:#CapperRole-_removeCapper-address-[`_removeCapper`]]
+:CapperAdded: pass:normal[xref:#CapperRole-CapperAdded-address-[`CapperAdded`]]
+:CapperRemoved: pass:normal[xref:#CapperRole-CapperRemoved-address-[`CapperRemoved`]]
+
+[[CapperRole]]
+== `CapperRole`
+
+
+
+- xref:#CapperRole-onlyCapper--[onlyCapper()]
+
+- xref:#CapperRole-constructor--[constructor()]
+- xref:#CapperRole-isCapper-address-[isCapper(address)]
+- xref:#CapperRole-addCapper-address-[addCapper(address)]
+- xref:#CapperRole-renounceCapper--[renounceCapper()]
+- xref:#CapperRole-_addCapper-address-[_addCapper(address)]
+- xref:#CapperRole-_removeCapper-address-[_removeCapper(address)]
+- xref:#Context-constructor--[constructor()]
+- xref:#Context-_msgSender--[_msgSender()]
+- xref:#Context-_msgData--[_msgData()]
+
+- xref:#CapperRole-CapperAdded-address-[CapperAdded(address)]
+- xref:#CapperRole-CapperRemoved-address-[CapperRemoved(address)]
+
+[[CapperRole-onlyCapper--]]
+=== onlyCapper()
+
+
+
+[[CapperRole-constructor--]]
+=== constructor()
+
+
+
+[[CapperRole-isCapper-address-]]
+=== isCapper(address account) → bool
+
+
+
+[[CapperRole-addCapper-address-]]
+=== addCapper(address account)
+
+
+
+[[CapperRole-renounceCapper--]]
+=== renounceCapper()
+
+
+
+[[CapperRole-_addCapper-address-]]
+=== _addCapper(address account)
+
+
+
+[[CapperRole-_removeCapper-address-]]
+=== _removeCapper(address account)
+
+
+
+[[CapperRole-CapperAdded-address-]]
+=== CapperAdded(address account)
+
+
+
+[[CapperRole-CapperRemoved-address-]]
+=== CapperRemoved(address account)
+
+
+
+
+
+:MinterRole: pass:normal[xref:#MinterRole[`MinterRole`]]
+:onlyMinter: pass:normal[xref:#MinterRole-onlyMinter--[`onlyMinter`]]
+:constructor: pass:normal[xref:#MinterRole-constructor--[`constructor`]]
+:isMinter: pass:normal[xref:#MinterRole-isMinter-address-[`isMinter`]]
+:addMinter: pass:normal[xref:#MinterRole-addMinter-address-[`addMinter`]]
+:renounceMinter: pass:normal[xref:#MinterRole-renounceMinter--[`renounceMinter`]]
+:_addMinter: pass:normal[xref:#MinterRole-_addMinter-address-[`_addMinter`]]
+:_removeMinter: pass:normal[xref:#MinterRole-_removeMinter-address-[`_removeMinter`]]
+:MinterAdded: pass:normal[xref:#MinterRole-MinterAdded-address-[`MinterAdded`]]
+:MinterRemoved: pass:normal[xref:#MinterRole-MinterRemoved-address-[`MinterRemoved`]]
+
+[[MinterRole]]
+== `MinterRole`
+
+
+
+- xref:#MinterRole-onlyMinter--[onlyMinter()]
+
+- xref:#MinterRole-constructor--[constructor()]
+- xref:#MinterRole-isMinter-address-[isMinter(address)]
+- xref:#MinterRole-addMinter-address-[addMinter(address)]
+- xref:#MinterRole-renounceMinter--[renounceMinter()]
+- xref:#MinterRole-_addMinter-address-[_addMinter(address)]
+- xref:#MinterRole-_removeMinter-address-[_removeMinter(address)]
+- xref:#Context-constructor--[constructor()]
+- xref:#Context-_msgSender--[_msgSender()]
+- xref:#Context-_msgData--[_msgData()]
+
+- xref:#MinterRole-MinterAdded-address-[MinterAdded(address)]
+- xref:#MinterRole-MinterRemoved-address-[MinterRemoved(address)]
+
+[[MinterRole-onlyMinter--]]
+=== onlyMinter()
+
+
+
+[[MinterRole-constructor--]]
+=== constructor()
+
+
+
+[[MinterRole-isMinter-address-]]
+=== isMinter(address account) → bool
+
+
+
+[[MinterRole-addMinter-address-]]
+=== addMinter(address account)
+
+
+
+[[MinterRole-renounceMinter--]]
+=== renounceMinter()
+
+
+
+[[MinterRole-_addMinter-address-]]
+=== _addMinter(address account)
+
+
+
+[[MinterRole-_removeMinter-address-]]
+=== _removeMinter(address account)
+
+
+
+[[MinterRole-MinterAdded-address-]]
+=== MinterAdded(address account)
+
+
+
+[[MinterRole-MinterRemoved-address-]]
+=== MinterRemoved(address account)
+
+
+
+
+
+:PauserRole: pass:normal[xref:#PauserRole[`PauserRole`]]
+:onlyPauser: pass:normal[xref:#PauserRole-onlyPauser--[`onlyPauser`]]
+:constructor: pass:normal[xref:#PauserRole-constructor--[`constructor`]]
+:isPauser: pass:normal[xref:#PauserRole-isPauser-address-[`isPauser`]]
+:addPauser: pass:normal[xref:#PauserRole-addPauser-address-[`addPauser`]]
+:renouncePauser: pass:normal[xref:#PauserRole-renouncePauser--[`renouncePauser`]]
+:_addPauser: pass:normal[xref:#PauserRole-_addPauser-address-[`_addPauser`]]
+:_removePauser: pass:normal[xref:#PauserRole-_removePauser-address-[`_removePauser`]]
+:PauserAdded: pass:normal[xref:#PauserRole-PauserAdded-address-[`PauserAdded`]]
+:PauserRemoved: pass:normal[xref:#PauserRole-PauserRemoved-address-[`PauserRemoved`]]
+
+[[PauserRole]]
+== `PauserRole`
+
+
+
+- xref:#PauserRole-onlyPauser--[onlyPauser()]
+
+- xref:#PauserRole-constructor--[constructor()]
+- xref:#PauserRole-isPauser-address-[isPauser(address)]
+- xref:#PauserRole-addPauser-address-[addPauser(address)]
+- xref:#PauserRole-renouncePauser--[renouncePauser()]
+- xref:#PauserRole-_addPauser-address-[_addPauser(address)]
+- xref:#PauserRole-_removePauser-address-[_removePauser(address)]
+- xref:#Context-constructor--[constructor()]
+- xref:#Context-_msgSender--[_msgSender()]
+- xref:#Context-_msgData--[_msgData()]
+
+- xref:#PauserRole-PauserAdded-address-[PauserAdded(address)]
+- xref:#PauserRole-PauserRemoved-address-[PauserRemoved(address)]
+
+[[PauserRole-onlyPauser--]]
+=== onlyPauser()
+
+
+
+[[PauserRole-constructor--]]
+=== constructor()
+
+
+
+[[PauserRole-isPauser-address-]]
+=== isPauser(address account) → bool
+
+
+
+[[PauserRole-addPauser-address-]]
+=== addPauser(address account)
+
+
+
+[[PauserRole-renouncePauser--]]
+=== renouncePauser()
+
+
+
+[[PauserRole-_addPauser-address-]]
+=== _addPauser(address account)
+
+
+
+[[PauserRole-_removePauser-address-]]
+=== _removePauser(address account)
+
+
+
+[[PauserRole-PauserAdded-address-]]
+=== PauserAdded(address account)
+
+
+
+[[PauserRole-PauserRemoved-address-]]
+=== PauserRemoved(address account)
+
+
+
+
+
+:SignerRole: pass:normal[xref:#SignerRole[`SignerRole`]]
+:onlySigner: pass:normal[xref:#SignerRole-onlySigner--[`onlySigner`]]
+:constructor: pass:normal[xref:#SignerRole-constructor--[`constructor`]]
+:isSigner: pass:normal[xref:#SignerRole-isSigner-address-[`isSigner`]]
+:addSigner: pass:normal[xref:#SignerRole-addSigner-address-[`addSigner`]]
+:renounceSigner: pass:normal[xref:#SignerRole-renounceSigner--[`renounceSigner`]]
+:_addSigner: pass:normal[xref:#SignerRole-_addSigner-address-[`_addSigner`]]
+:_removeSigner: pass:normal[xref:#SignerRole-_removeSigner-address-[`_removeSigner`]]
+:SignerAdded: pass:normal[xref:#SignerRole-SignerAdded-address-[`SignerAdded`]]
+:SignerRemoved: pass:normal[xref:#SignerRole-SignerRemoved-address-[`SignerRemoved`]]
+
+[[SignerRole]]
+== `SignerRole`
+
+
+
+- xref:#SignerRole-onlySigner--[onlySigner()]
+
+- xref:#SignerRole-constructor--[constructor()]
+- xref:#SignerRole-isSigner-address-[isSigner(address)]
+- xref:#SignerRole-addSigner-address-[addSigner(address)]
+- xref:#SignerRole-renounceSigner--[renounceSigner()]
+- xref:#SignerRole-_addSigner-address-[_addSigner(address)]
+- xref:#SignerRole-_removeSigner-address-[_removeSigner(address)]
+- xref:#Context-constructor--[constructor()]
+- xref:#Context-_msgSender--[_msgSender()]
+- xref:#Context-_msgData--[_msgData()]
+
+- xref:#SignerRole-SignerAdded-address-[SignerAdded(address)]
+- xref:#SignerRole-SignerRemoved-address-[SignerRemoved(address)]
+
+[[SignerRole-onlySigner--]]
+=== onlySigner()
+
+
+
+[[SignerRole-constructor--]]
+=== constructor()
+
+
+
+[[SignerRole-isSigner-address-]]
+=== isSigner(address account) → bool
+
+
+
+[[SignerRole-addSigner-address-]]
+=== addSigner(address account)
+
+
+
+[[SignerRole-renounceSigner--]]
+=== renounceSigner()
+
+
+
+[[SignerRole-_addSigner-address-]]
+=== _addSigner(address account)
+
+
+
+[[SignerRole-_removeSigner-address-]]
+=== _removeSigner(address account)
+
+
+
+[[SignerRole-SignerAdded-address-]]
+=== SignerAdded(address account)
+
+
+
+[[SignerRole-SignerRemoved-address-]]
+=== SignerRemoved(address account)
+
+
+
+
+
+:WhitelistAdminRole: pass:normal[xref:#WhitelistAdminRole[`WhitelistAdminRole`]]
+:onlyWhitelistAdmin: pass:normal[xref:#WhitelistAdminRole-onlyWhitelistAdmin--[`onlyWhitelistAdmin`]]
+:constructor: pass:normal[xref:#WhitelistAdminRole-constructor--[`constructor`]]
+:isWhitelistAdmin: pass:normal[xref:#WhitelistAdminRole-isWhitelistAdmin-address-[`isWhitelistAdmin`]]
+:addWhitelistAdmin: pass:normal[xref:#WhitelistAdminRole-addWhitelistAdmin-address-[`addWhitelistAdmin`]]
+:renounceWhitelistAdmin: pass:normal[xref:#WhitelistAdminRole-renounceWhitelistAdmin--[`renounceWhitelistAdmin`]]
+:_addWhitelistAdmin: pass:normal[xref:#WhitelistAdminRole-_addWhitelistAdmin-address-[`_addWhitelistAdmin`]]
+:_removeWhitelistAdmin: pass:normal[xref:#WhitelistAdminRole-_removeWhitelistAdmin-address-[`_removeWhitelistAdmin`]]
+:WhitelistAdminAdded: pass:normal[xref:#WhitelistAdminRole-WhitelistAdminAdded-address-[`WhitelistAdminAdded`]]
+:WhitelistAdminRemoved: pass:normal[xref:#WhitelistAdminRole-WhitelistAdminRemoved-address-[`WhitelistAdminRemoved`]]
+
+[[WhitelistAdminRole]]
+== `WhitelistAdminRole`
+
+WhitelistAdmins are responsible for assigning and removing Whitelisted accounts.
+
+- xref:#WhitelistAdminRole-onlyWhitelistAdmin--[onlyWhitelistAdmin()]
+
+- xref:#WhitelistAdminRole-constructor--[constructor()]
+- xref:#WhitelistAdminRole-isWhitelistAdmin-address-[isWhitelistAdmin(address)]
+- xref:#WhitelistAdminRole-addWhitelistAdmin-address-[addWhitelistAdmin(address)]
+- xref:#WhitelistAdminRole-renounceWhitelistAdmin--[renounceWhitelistAdmin()]
+- xref:#WhitelistAdminRole-_addWhitelistAdmin-address-[_addWhitelistAdmin(address)]
+- xref:#WhitelistAdminRole-_removeWhitelistAdmin-address-[_removeWhitelistAdmin(address)]
+- xref:#Context-constructor--[constructor()]
+- xref:#Context-_msgSender--[_msgSender()]
+- xref:#Context-_msgData--[_msgData()]
+
+- xref:#WhitelistAdminRole-WhitelistAdminAdded-address-[WhitelistAdminAdded(address)]
+- xref:#WhitelistAdminRole-WhitelistAdminRemoved-address-[WhitelistAdminRemoved(address)]
+
+[[WhitelistAdminRole-onlyWhitelistAdmin--]]
+=== onlyWhitelistAdmin()
+
+
+
+[[WhitelistAdminRole-constructor--]]
+=== constructor()
+
+
+
+[[WhitelistAdminRole-isWhitelistAdmin-address-]]
+=== isWhitelistAdmin(address account) → bool
+
+
+
+[[WhitelistAdminRole-addWhitelistAdmin-address-]]
+=== addWhitelistAdmin(address account)
+
+
+
+[[WhitelistAdminRole-renounceWhitelistAdmin--]]
+=== renounceWhitelistAdmin()
+
+
+
+[[WhitelistAdminRole-_addWhitelistAdmin-address-]]
+=== _addWhitelistAdmin(address account)
+
+
+
+[[WhitelistAdminRole-_removeWhitelistAdmin-address-]]
+=== _removeWhitelistAdmin(address account)
+
+
+
+[[WhitelistAdminRole-WhitelistAdminAdded-address-]]
+=== WhitelistAdminAdded(address account)
+
+
+
+[[WhitelistAdminRole-WhitelistAdminRemoved-address-]]
+=== WhitelistAdminRemoved(address account)
+
+
+
+
+
+:WhitelistedRole: pass:normal[xref:#WhitelistedRole[`WhitelistedRole`]]
+:onlyWhitelisted: pass:normal[xref:#WhitelistedRole-onlyWhitelisted--[`onlyWhitelisted`]]
+:isWhitelisted: pass:normal[xref:#WhitelistedRole-isWhitelisted-address-[`isWhitelisted`]]
+:addWhitelisted: pass:normal[xref:#WhitelistedRole-addWhitelisted-address-[`addWhitelisted`]]
+:removeWhitelisted: pass:normal[xref:#WhitelistedRole-removeWhitelisted-address-[`removeWhitelisted`]]
+:renounceWhitelisted: pass:normal[xref:#WhitelistedRole-renounceWhitelisted--[`renounceWhitelisted`]]
+:_addWhitelisted: pass:normal[xref:#WhitelistedRole-_addWhitelisted-address-[`_addWhitelisted`]]
+:_removeWhitelisted: pass:normal[xref:#WhitelistedRole-_removeWhitelisted-address-[`_removeWhitelisted`]]
+:WhitelistedAdded: pass:normal[xref:#WhitelistedRole-WhitelistedAdded-address-[`WhitelistedAdded`]]
+:WhitelistedRemoved: pass:normal[xref:#WhitelistedRole-WhitelistedRemoved-address-[`WhitelistedRemoved`]]
+
+[[WhitelistedRole]]
+== `WhitelistedRole`
+
+Whitelisted accounts have been approved by a WhitelistAdmin to perform certain actions (e.g. participate in a
+crowdsale). This role is special in that the only accounts that can add it are WhitelistAdmins (who can also remove
+it), and not Whitelisteds themselves.
+
+- xref:#WhitelistedRole-onlyWhitelisted--[onlyWhitelisted()]
+- xref:#WhitelistAdminRole-onlyWhitelistAdmin--[onlyWhitelistAdmin()]
+
+- xref:#WhitelistedRole-isWhitelisted-address-[isWhitelisted(address)]
+- xref:#WhitelistedRole-addWhitelisted-address-[addWhitelisted(address)]
+- xref:#WhitelistedRole-removeWhitelisted-address-[removeWhitelisted(address)]
+- xref:#WhitelistedRole-renounceWhitelisted--[renounceWhitelisted()]
+- xref:#WhitelistedRole-_addWhitelisted-address-[_addWhitelisted(address)]
+- xref:#WhitelistedRole-_removeWhitelisted-address-[_removeWhitelisted(address)]
+- xref:#WhitelistAdminRole-constructor--[constructor()]
+- xref:#WhitelistAdminRole-isWhitelistAdmin-address-[isWhitelistAdmin(address)]
+- xref:#WhitelistAdminRole-addWhitelistAdmin-address-[addWhitelistAdmin(address)]
+- xref:#WhitelistAdminRole-renounceWhitelistAdmin--[renounceWhitelistAdmin()]
+- xref:#WhitelistAdminRole-_addWhitelistAdmin-address-[_addWhitelistAdmin(address)]
+- xref:#WhitelistAdminRole-_removeWhitelistAdmin-address-[_removeWhitelistAdmin(address)]
+- xref:#Context-constructor--[constructor()]
+- xref:#Context-_msgSender--[_msgSender()]
+- xref:#Context-_msgData--[_msgData()]
+
+- xref:#WhitelistedRole-WhitelistedAdded-address-[WhitelistedAdded(address)]
+- xref:#WhitelistedRole-WhitelistedRemoved-address-[WhitelistedRemoved(address)]
+- xref:#WhitelistAdminRole-WhitelistAdminAdded-address-[WhitelistAdminAdded(address)]
+- xref:#WhitelistAdminRole-WhitelistAdminRemoved-address-[WhitelistAdminRemoved(address)]
+
+[[WhitelistedRole-onlyWhitelisted--]]
+=== onlyWhitelisted()
+
+
+
+[[WhitelistedRole-isWhitelisted-address-]]
+=== isWhitelisted(address account) → bool
+
+
+
+[[WhitelistedRole-addWhitelisted-address-]]
+=== addWhitelisted(address account)
+
+
+
+[[WhitelistedRole-removeWhitelisted-address-]]
+=== removeWhitelisted(address account)
+
+
+
+[[WhitelistedRole-renounceWhitelisted--]]
+=== renounceWhitelisted()
+
+
+
+[[WhitelistedRole-_addWhitelisted-address-]]
+=== _addWhitelisted(address account)
+
+
+
+[[WhitelistedRole-_removeWhitelisted-address-]]
+=== _removeWhitelisted(address account)
+
+
+
+[[WhitelistedRole-WhitelistedAdded-address-]]
+=== WhitelistedAdded(address account)
+
+
+
+[[WhitelistedRole-WhitelistedRemoved-address-]]
+=== WhitelistedRemoved(address account)
+
+
+
+

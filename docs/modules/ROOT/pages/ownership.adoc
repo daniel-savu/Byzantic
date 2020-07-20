@@ -1,0 +1,140 @@
+= Ownership
+
+Contract modules for simple authorization and access control mechanisms.
+
+TIP: For more complex needs see xref:access.adoc[Access].
+
+== Contracts
+
+:Ownable: pass:normal[xref:#Ownable[`Ownable`]]
+:onlyOwner: pass:normal[xref:#Ownable-onlyOwner--[`onlyOwner`]]
+:constructor: pass:normal[xref:#Ownable-constructor--[`constructor`]]
+:owner: pass:normal[xref:#Ownable-owner--[`owner`]]
+:isOwner: pass:normal[xref:#Ownable-isOwner--[`isOwner`]]
+:renounceOwnership: pass:normal[xref:#Ownable-renounceOwnership--[`renounceOwnership`]]
+:transferOwnership: pass:normal[xref:#Ownable-transferOwnership-address-[`transferOwnership`]]
+:_transferOwnership: pass:normal[xref:#Ownable-_transferOwnership-address-[`_transferOwnership`]]
+:OwnershipTransferred: pass:normal[xref:#Ownable-OwnershipTransferred-address-address-[`OwnershipTransferred`]]
+
+[[Ownable]]
+== `Ownable`
+
+Contract module which provides a basic access control mechanism, where
+there is an account (an owner) that can be granted exclusive access to
+specific functions.
+
+This module is used through inheritance. It will make available the modifier
+`onlyOwner`, which can be applied to your functions to restrict their use to
+the owner.
+
+- xref:#Ownable-onlyOwner--[onlyOwner()]
+
+- xref:#Ownable-constructor--[constructor()]
+- xref:#Ownable-owner--[owner()]
+- xref:#Ownable-isOwner--[isOwner()]
+- xref:#Ownable-renounceOwnership--[renounceOwnership()]
+- xref:#Ownable-transferOwnership-address-[transferOwnership(address)]
+- xref:#Ownable-_transferOwnership-address-[_transferOwnership(address)]
+- xref:#Context-constructor--[constructor()]
+- xref:#Context-_msgSender--[_msgSender()]
+- xref:#Context-_msgData--[_msgData()]
+
+- xref:#Ownable-OwnershipTransferred-address-address-[OwnershipTransferred(address,address)]
+
+[[Ownable-onlyOwner--]]
+=== onlyOwner()
+
+Throws if called by any account other than the owner.
+
+[[Ownable-constructor--]]
+=== constructor()
+
+Initializes the contract setting the deployer as the initial owner.
+
+[[Ownable-owner--]]
+=== owner() → address
+
+Returns the address of the current owner.
+
+[[Ownable-isOwner--]]
+=== isOwner() → bool
+
+Returns true if the caller is the current owner.
+
+[[Ownable-renounceOwnership--]]
+=== renounceOwnership()
+
+Leaves the contract without owner. It will not be possible to call
+`onlyOwner` functions anymore. Can only be called by the current owner.
+
+NOTE: Renouncing ownership will leave the contract without an owner,
+thereby removing any functionality that is only available to the owner.
+
+[[Ownable-transferOwnership-address-]]
+=== transferOwnership(address newOwner)
+
+Transfers ownership of the contract to a new account (`newOwner`).
+Can only be called by the current owner.
+
+[[Ownable-_transferOwnership-address-]]
+=== _transferOwnership(address newOwner)
+
+Transfers ownership of the contract to a new account (`newOwner`).
+
+[[Ownable-OwnershipTransferred-address-address-]]
+=== OwnershipTransferred(address previousOwner, address newOwner)
+
+
+
+
+
+:Secondary: pass:normal[xref:#Secondary[`Secondary`]]
+:onlyPrimary: pass:normal[xref:#Secondary-onlyPrimary--[`onlyPrimary`]]
+:constructor: pass:normal[xref:#Secondary-constructor--[`constructor`]]
+:primary: pass:normal[xref:#Secondary-primary--[`primary`]]
+:transferPrimary: pass:normal[xref:#Secondary-transferPrimary-address-[`transferPrimary`]]
+:PrimaryTransferred: pass:normal[xref:#Secondary-PrimaryTransferred-address-[`PrimaryTransferred`]]
+
+[[Secondary]]
+== `Secondary`
+
+A Secondary contract can only be used by its primary account (the one that created it).
+
+- xref:#Secondary-onlyPrimary--[onlyPrimary()]
+
+- xref:#Secondary-constructor--[constructor()]
+- xref:#Secondary-primary--[primary()]
+- xref:#Secondary-transferPrimary-address-[transferPrimary(address)]
+- xref:#Context-constructor--[constructor()]
+- xref:#Context-_msgSender--[_msgSender()]
+- xref:#Context-_msgData--[_msgData()]
+
+- xref:#Secondary-PrimaryTransferred-address-[PrimaryTransferred(address)]
+
+[[Secondary-onlyPrimary--]]
+=== onlyPrimary()
+
+Reverts if called from any account other than the primary.
+
+[[Secondary-constructor--]]
+=== constructor()
+
+Sets the primary account to the one that is creating the Secondary contract.
+
+[[Secondary-primary--]]
+=== primary() → address
+
+
+
+[[Secondary-transferPrimary-address-]]
+=== transferPrimary(address recipient)
+
+Transfers contract to a new primary.
+
+
+[[Secondary-PrimaryTransferred-address-]]
+=== PrimaryTransferred(address recipient)
+
+Emitted when the primary contract changes.
+
+

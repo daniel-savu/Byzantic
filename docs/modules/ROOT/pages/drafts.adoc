@@ -1,0 +1,383 @@
+= Drafts
+
+Contracts in this category should be considered unstable. They are as thoroughly reviewed as everything else in OpenZeppelin Contracts, but we have doubts about their API so we don't commit to backwards compatibility. This means these contracts can receive breaking changes in a minor version, so you should pay special attention to the changelog when upgrading. For anything that is outside of this category you can read more about xref:ROOT:api-stability.adoc[API Stability].
+
+NOTE: This page is incomplete. We're working to improve it for the next release. Stay tuned!
+
+== ERC 20
+
+:ERC20Migrator: pass:normal[xref:#ERC20Migrator[`ERC20Migrator`]]
+:constructor: pass:normal[xref:#ERC20Migrator-constructor-contract-IERC20-[`constructor`]]
+:legacyToken: pass:normal[xref:#ERC20Migrator-legacyToken--[`legacyToken`]]
+:newToken: pass:normal[xref:#ERC20Migrator-newToken--[`newToken`]]
+:beginMigration: pass:normal[xref:#ERC20Migrator-beginMigration-contract-ERC20Mintable-[`beginMigration`]]
+:migrate: pass:normal[xref:#ERC20Migrator-migrate-address-uint256-[`migrate`]]
+:migrateAll: pass:normal[xref:#ERC20Migrator-migrateAll-address-[`migrateAll`]]
+
+[[ERC20Migrator]]
+== `ERC20Migrator`
+
+This contract can be used to migrate an ERC20 token from one
+contract to another, where each token holder has to opt-in to the migration.
+To opt-in, users must approve for this contract the number of tokens they
+want to migrate. Once the allowance is set up, anyone can trigger the
+migration to the new token contract. In this way, token holders "turn in"
+their old balance and will be minted an equal amount in the new token.
+The new token contract must be mintable. For the precise interface refer to
+OpenZeppelin's {ERC20Mintable}, but the only functions that are needed are
+{MinterRole-isMinter} and {ERC20Mintable-mint}. The migrator will check
+that it is a minter for the token.
+The balance from the legacy token will be transferred to the migrator, as it
+is migrated, and remain there forever.
+Although this contract can be used in many different scenarios, the main
+motivation was to provide a way to migrate ERC20 tokens into an upgradeable
+version of it using ZeppelinOS. To read more about how this can be done
+using this implementation, please follow the official documentation site of
+ZeppelinOS: https://docs.zeppelinos.org/docs/erc20_onboarding.html
+
+Example of usage:
+```
+const migrator = await ERC20Migrator.new(legacyToken.address);
+await newToken.addMinter(migrator.address);
+await migrator.beginMigration(newToken.address);
+```
+
+
+- xref:#ERC20Migrator-constructor-contract-IERC20-[constructor(contract IERC20)]
+- xref:#ERC20Migrator-legacyToken--[legacyToken()]
+- xref:#ERC20Migrator-newToken--[newToken()]
+- xref:#ERC20Migrator-beginMigration-contract-ERC20Mintable-[beginMigration(contract ERC20Mintable)]
+- xref:#ERC20Migrator-migrate-address-uint256-[migrate(address,uint256)]
+- xref:#ERC20Migrator-migrateAll-address-[migrateAll(address)]
+
+
+[[ERC20Migrator-constructor-contract-IERC20-]]
+=== constructor(contract IERC20 legacyToken)
+
+
+
+[[ERC20Migrator-legacyToken--]]
+=== legacyToken() → contract IERC20
+
+Returns the legacy token that is being migrated.
+
+[[ERC20Migrator-newToken--]]
+=== newToken() → contract IERC20
+
+Returns the new token to which we are migrating.
+
+[[ERC20Migrator-beginMigration-contract-ERC20Mintable-]]
+=== beginMigration(contract ERC20Mintable newToken_)
+
+Begins the migration by setting which is the new token that will be
+minted. This contract must be a minter for the new token.
+
+
+[[ERC20Migrator-migrate-address-uint256-]]
+=== migrate(address account, uint256 amount)
+
+Transfers part of an account's balance in the old token to this
+contract, and mints the same amount of new tokens for that account.
+
+
+[[ERC20Migrator-migrateAll-address-]]
+=== migrateAll(address account)
+
+Transfers all of an account's allowed balance in the old token to
+this contract, and mints the same amount of new tokens for that account.
+
+
+
+
+:ERC20Snapshot: pass:normal[xref:#ERC20Snapshot[`ERC20Snapshot`]]
+:snapshot: pass:normal[xref:#ERC20Snapshot-snapshot--[`snapshot`]]
+:balanceOfAt: pass:normal[xref:#ERC20Snapshot-balanceOfAt-address-uint256-[`balanceOfAt`]]
+:totalSupplyAt: pass:normal[xref:#ERC20Snapshot-totalSupplyAt-uint256-[`totalSupplyAt`]]
+:_transfer: pass:normal[xref:#ERC20Snapshot-_transfer-address-address-uint256-[`_transfer`]]
+:_mint: pass:normal[xref:#ERC20Snapshot-_mint-address-uint256-[`_mint`]]
+:_burn: pass:normal[xref:#ERC20Snapshot-_burn-address-uint256-[`_burn`]]
+:Snapshot: pass:normal[xref:#ERC20Snapshot-Snapshot-uint256-[`Snapshot`]]
+
+[[ERC20Snapshot]]
+== `ERC20Snapshot`
+
+Inspired by Jordi Baylina's
+https://github.com/Giveth/minimd/blob/ea04d950eea153a04c51fa510b068b9dded390cb/contracts/MiniMeToken.sol[MiniMeToken]
+to record historical balances.
+
+When a snapshot is made, the balances and total supply at the time of the snapshot are recorded for later
+access.
+
+To make a snapshot, call the {snapshot} function, which will emit the {Snapshot} event and return a snapshot id.
+To get the total supply from a snapshot, call the function {totalSupplyAt} with the snapshot id.
+To get the balance of an account from a snapshot, call the {balanceOfAt} function with the snapshot id and the
+account address.
+
+
+
+- xref:#ERC20Snapshot-snapshot--[snapshot()]
+- xref:#ERC20Snapshot-balanceOfAt-address-uint256-[balanceOfAt(address,uint256)]
+- xref:#ERC20Snapshot-totalSupplyAt-uint256-[totalSupplyAt(uint256)]
+- xref:#ERC20Snapshot-_transfer-address-address-uint256-[_transfer(address,address,uint256)]
+- xref:#ERC20Snapshot-_mint-address-uint256-[_mint(address,uint256)]
+- xref:#ERC20Snapshot-_burn-address-uint256-[_burn(address,uint256)]
+- xref:#ERC20-totalSupply--[totalSupply()]
+- xref:#ERC20-balanceOf-address-[balanceOf(address)]
+- xref:#ERC20-transfer-address-uint256-[transfer(address,uint256)]
+- xref:#ERC20-allowance-address-address-[allowance(address,address)]
+- xref:#ERC20-approve-address-uint256-[approve(address,uint256)]
+- xref:#ERC20-transferFrom-address-address-uint256-[transferFrom(address,address,uint256)]
+- xref:#ERC20-increaseAllowance-address-uint256-[increaseAllowance(address,uint256)]
+- xref:#ERC20-decreaseAllowance-address-uint256-[decreaseAllowance(address,uint256)]
+- xref:#ERC20-_transfer-address-address-uint256-[_transfer(address,address,uint256)]
+- xref:#ERC20-_mint-address-uint256-[_mint(address,uint256)]
+- xref:#ERC20-_burn-address-uint256-[_burn(address,uint256)]
+- xref:#ERC20-_approve-address-address-uint256-[_approve(address,address,uint256)]
+- xref:#ERC20-_burnFrom-address-uint256-[_burnFrom(address,uint256)]
+- xref:#IERC20-totalSupply--[totalSupply()]
+- xref:#IERC20-balanceOf-address-[balanceOf(address)]
+- xref:#IERC20-transfer-address-uint256-[transfer(address,uint256)]
+- xref:#IERC20-allowance-address-address-[allowance(address,address)]
+- xref:#IERC20-approve-address-uint256-[approve(address,uint256)]
+- xref:#IERC20-transferFrom-address-address-uint256-[transferFrom(address,address,uint256)]
+- xref:#Context-constructor--[constructor()]
+- xref:#Context-_msgSender--[_msgSender()]
+- xref:#Context-_msgData--[_msgData()]
+
+- xref:#ERC20Snapshot-Snapshot-uint256-[Snapshot(uint256)]
+- xref:#IERC20-Transfer-address-address-uint256-[Transfer(address,address,uint256)]
+- xref:#IERC20-Approval-address-address-uint256-[Approval(address,address,uint256)]
+
+[[ERC20Snapshot-snapshot--]]
+=== snapshot() → uint256
+
+
+
+[[ERC20Snapshot-balanceOfAt-address-uint256-]]
+=== balanceOfAt(address account, uint256 snapshotId) → uint256
+
+
+
+[[ERC20Snapshot-totalSupplyAt-uint256-]]
+=== totalSupplyAt(uint256 snapshotId) → uint256
+
+
+
+[[ERC20Snapshot-_transfer-address-address-uint256-]]
+=== _transfer(address from, address to, uint256 value)
+
+
+
+[[ERC20Snapshot-_mint-address-uint256-]]
+=== _mint(address account, uint256 value)
+
+
+
+[[ERC20Snapshot-_burn-address-uint256-]]
+=== _burn(address account, uint256 value)
+
+
+
+[[ERC20Snapshot-Snapshot-uint256-]]
+=== Snapshot(uint256 id)
+
+
+
+
+
+:TokenVesting: pass:normal[xref:#TokenVesting[`TokenVesting`]]
+:constructor: pass:normal[xref:#TokenVesting-constructor-address-uint256-uint256-uint256-bool-[`constructor`]]
+:beneficiary: pass:normal[xref:#TokenVesting-beneficiary--[`beneficiary`]]
+:cliff: pass:normal[xref:#TokenVesting-cliff--[`cliff`]]
+:start: pass:normal[xref:#TokenVesting-start--[`start`]]
+:duration: pass:normal[xref:#TokenVesting-duration--[`duration`]]
+:revocable: pass:normal[xref:#TokenVesting-revocable--[`revocable`]]
+:released: pass:normal[xref:#TokenVesting-released-address-[`released`]]
+:revoked: pass:normal[xref:#TokenVesting-revoked-address-[`revoked`]]
+:release: pass:normal[xref:#TokenVesting-release-contract-IERC20-[`release`]]
+:revoke: pass:normal[xref:#TokenVesting-revoke-contract-IERC20-[`revoke`]]
+:TokensReleased: pass:normal[xref:#TokenVesting-TokensReleased-address-uint256-[`TokensReleased`]]
+:TokenVestingRevoked: pass:normal[xref:#TokenVesting-TokenVestingRevoked-address-[`TokenVestingRevoked`]]
+
+[[TokenVesting]]
+== `TokenVesting`
+
+A token holder contract that can release its token balance gradually like a
+typical vesting scheme, with a cliff and vesting period. Optionally revocable by the
+owner.
+
+- xref:#Ownable-onlyOwner--[onlyOwner()]
+
+- xref:#TokenVesting-constructor-address-uint256-uint256-uint256-bool-[constructor(address,uint256,uint256,uint256,bool)]
+- xref:#TokenVesting-beneficiary--[beneficiary()]
+- xref:#TokenVesting-cliff--[cliff()]
+- xref:#TokenVesting-start--[start()]
+- xref:#TokenVesting-duration--[duration()]
+- xref:#TokenVesting-revocable--[revocable()]
+- xref:#TokenVesting-released-address-[released(address)]
+- xref:#TokenVesting-revoked-address-[revoked(address)]
+- xref:#TokenVesting-release-contract-IERC20-[release(contract IERC20)]
+- xref:#TokenVesting-revoke-contract-IERC20-[revoke(contract IERC20)]
+- xref:#Ownable-constructor--[constructor()]
+- xref:#Ownable-owner--[owner()]
+- xref:#Ownable-isOwner--[isOwner()]
+- xref:#Ownable-renounceOwnership--[renounceOwnership()]
+- xref:#Ownable-transferOwnership-address-[transferOwnership(address)]
+- xref:#Ownable-_transferOwnership-address-[_transferOwnership(address)]
+- xref:#Context-constructor--[constructor()]
+- xref:#Context-_msgSender--[_msgSender()]
+- xref:#Context-_msgData--[_msgData()]
+
+- xref:#TokenVesting-TokensReleased-address-uint256-[TokensReleased(address,uint256)]
+- xref:#TokenVesting-TokenVestingRevoked-address-[TokenVestingRevoked(address)]
+- xref:#Ownable-OwnershipTransferred-address-address-[OwnershipTransferred(address,address)]
+
+[[TokenVesting-constructor-address-uint256-uint256-uint256-bool-]]
+=== constructor(address beneficiary, uint256 start, uint256 cliffDuration, uint256 duration, bool revocable)
+
+Creates a vesting contract that vests its balance of any ERC20 token to the
+beneficiary, gradually in a linear fashion until start + duration. By then all
+of the balance will have vested.
+
+
+[[TokenVesting-beneficiary--]]
+=== beneficiary() → address
+
+
+
+[[TokenVesting-cliff--]]
+=== cliff() → uint256
+
+
+
+[[TokenVesting-start--]]
+=== start() → uint256
+
+
+
+[[TokenVesting-duration--]]
+=== duration() → uint256
+
+
+
+[[TokenVesting-revocable--]]
+=== revocable() → bool
+
+
+
+[[TokenVesting-released-address-]]
+=== released(address token) → uint256
+
+
+
+[[TokenVesting-revoked-address-]]
+=== revoked(address token) → bool
+
+
+
+[[TokenVesting-release-contract-IERC20-]]
+=== release(contract IERC20 token)
+
+
+
+[[TokenVesting-revoke-contract-IERC20-]]
+=== revoke(contract IERC20 token)
+
+
+
+[[TokenVesting-TokensReleased-address-uint256-]]
+=== TokensReleased(address token, uint256 amount)
+
+
+
+[[TokenVesting-TokenVestingRevoked-address-]]
+=== TokenVestingRevoked(address token)
+
+
+
+
+
+== Miscellaneous
+
+:Counters: pass:normal[xref:#Counters[`Counters`]]
+:current: pass:normal[xref:#Counters-current-struct-Counters-Counter-[`current`]]
+:increment: pass:normal[xref:#Counters-increment-struct-Counters-Counter-[`increment`]]
+:decrement: pass:normal[xref:#Counters-decrement-struct-Counters-Counter-[`decrement`]]
+
+[[Counters]]
+== `Counters`
+
+Provides counters that can only be incremented or decremented by one. This can be used e.g. to track the number
+of elements in a mapping, issuing ERC721 ids, or counting request ids.
+
+Include with `using Counters for Counters.Counter;`
+Since it is not possible to overflow a 256 bit integer with increments of one, `increment` can skip the {SafeMath}
+overflow check, thereby saving gas. This does assume however correct usage, in that the underlying `_value` is never
+directly accessed.
+
+
+- xref:#Counters-current-struct-Counters-Counter-[current(struct Counters.Counter)]
+- xref:#Counters-increment-struct-Counters-Counter-[increment(struct Counters.Counter)]
+- xref:#Counters-decrement-struct-Counters-Counter-[decrement(struct Counters.Counter)]
+
+
+[[Counters-current-struct-Counters-Counter-]]
+=== current(struct Counters.Counter counter) → uint256
+
+
+
+[[Counters-increment-struct-Counters-Counter-]]
+=== increment(struct Counters.Counter counter)
+
+
+
+[[Counters-decrement-struct-Counters-Counter-]]
+=== decrement(struct Counters.Counter counter)
+
+
+
+
+
+:SignedSafeMath: pass:normal[xref:#SignedSafeMath[`SignedSafeMath`]]
+:mul: pass:normal[xref:#SignedSafeMath-mul-int256-int256-[`mul`]]
+:div: pass:normal[xref:#SignedSafeMath-div-int256-int256-[`div`]]
+:sub: pass:normal[xref:#SignedSafeMath-sub-int256-int256-[`sub`]]
+:add: pass:normal[xref:#SignedSafeMath-add-int256-int256-[`add`]]
+
+[[SignedSafeMath]]
+== `SignedSafeMath`
+
+Signed math operations with safety checks that revert on error.
+
+
+- xref:#SignedSafeMath-mul-int256-int256-[mul(int256,int256)]
+- xref:#SignedSafeMath-div-int256-int256-[div(int256,int256)]
+- xref:#SignedSafeMath-sub-int256-int256-[sub(int256,int256)]
+- xref:#SignedSafeMath-add-int256-int256-[add(int256,int256)]
+
+
+[[SignedSafeMath-mul-int256-int256-]]
+=== mul(int256 a, int256 b) → int256
+
+Multiplies two signed integers, reverts on overflow.
+
+[[SignedSafeMath-div-int256-int256-]]
+=== div(int256 a, int256 b) → int256
+
+Integer division of two signed integers truncating the quotient, reverts on division by zero.
+
+[[SignedSafeMath-sub-int256-int256-]]
+=== sub(int256 a, int256 b) → int256
+
+Subtracts two signed integers, reverts on overflow.
+
+[[SignedSafeMath-add-int256-int256-]]
+=== add(int256 a, int256 b) → int256
+
+Adds two signed integers, reverts on overflow.
+
+
+
+== ERC 1046
+
+

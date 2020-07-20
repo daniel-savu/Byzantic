@@ -1,0 +1,670 @@
+= Gas Station Network (GSN)
+
+_Available since v2.4.0._
+
+This set of contracts provide all the tools required to make a contract callable via the https://gsn.openzeppelin.com[Gas Station Network].
+
+TIP: If you're new to the GSN, head over to our xref:learn::sending-gasless-transactions.adoc[overview of the system] and basic guide to xref:ROOT:gsn.adoc[creating a GSN-capable contract].
+
+The core contract a recipient must inherit from is {GSNRecipient}: it includes all necessary interfaces, as well as some helper methods to make interacting with the GSN easier.
+
+Utilities to make writing xref:ROOT:gsn-strategies.adoc[GSN strategies] easy are available in {GSNRecipient}, or you can simply use one of our pre-made strategies:
+
+* {GSNRecipientERC20Fee} charges the end user for gas costs in an application-specific xref:ROOT:tokens.adoc#ERC20[ERC20 token]
+* {GSNRecipientSignature} accepts all relayed calls that have been signed by a trusted third party (e.g. a private key in a backend)
+
+You can also take a look at the two contract interfaces that make up the GSN protocol: {IRelayRecipient} and {IRelayHub}, but you won't need to use those directly.
+
+== Recipient
+
+:GSNRecipient: pass:normal[xref:#GSNRecipient[`GSNRecipient`]]
+:POST_RELAYED_CALL_MAX_GAS: pass:normal[xref:#GSNRecipient-POST_RELAYED_CALL_MAX_GAS-uint256[`POST_RELAYED_CALL_MAX_GAS`]]
+:getHubAddr: pass:normal[xref:#GSNRecipient-getHubAddr--[`getHubAddr`]]
+:_upgradeRelayHub: pass:normal[xref:#GSNRecipient-_upgradeRelayHub-address-[`_upgradeRelayHub`]]
+:relayHubVersion: pass:normal[xref:#GSNRecipient-relayHubVersion--[`relayHubVersion`]]
+:_withdrawDeposits: pass:normal[xref:#GSNRecipient-_withdrawDeposits-uint256-address-payable-[`_withdrawDeposits`]]
+:_msgSender: pass:normal[xref:#GSNRecipient-_msgSender--[`_msgSender`]]
+:_msgData: pass:normal[xref:#GSNRecipient-_msgData--[`_msgData`]]
+:preRelayedCall: pass:normal[xref:#GSNRecipient-preRelayedCall-bytes-[`preRelayedCall`]]
+:_preRelayedCall: pass:normal[xref:#GSNRecipient-_preRelayedCall-bytes-[`_preRelayedCall`]]
+:postRelayedCall: pass:normal[xref:#GSNRecipient-postRelayedCall-bytes-bool-uint256-bytes32-[`postRelayedCall`]]
+:_postRelayedCall: pass:normal[xref:#GSNRecipient-_postRelayedCall-bytes-bool-uint256-bytes32-[`_postRelayedCall`]]
+:_approveRelayedCall: pass:normal[xref:#GSNRecipient-_approveRelayedCall--[`_approveRelayedCall`]]
+:_approveRelayedCall: pass:normal[xref:#GSNRecipient-_approveRelayedCall-bytes-[`_approveRelayedCall`]]
+:_rejectRelayedCall: pass:normal[xref:#GSNRecipient-_rejectRelayedCall-uint256-[`_rejectRelayedCall`]]
+:_computeCharge: pass:normal[xref:#GSNRecipient-_computeCharge-uint256-uint256-uint256-[`_computeCharge`]]
+:RelayHubChanged: pass:normal[xref:#GSNRecipient-RelayHubChanged-address-address-[`RelayHubChanged`]]
+
+[[GSNRecipient]]
+== `GSNRecipient`
+
+Base GSN recipient contract: includes the {IRelayRecipient} interface
+and enables GSN support on all contracts in the inheritance tree.
+
+TIP: This contract is abstract. The functions {IRelayRecipient-acceptRelayedCall},
+{_preRelayedCall}, and {_postRelayedCall} are not implemented and must be
+provided by derived contracts. See the
+xref:ROOT:gsn-strategies.adoc#gsn-strategies[GSN strategies] for more
+information on how to use the pre-built {GSNRecipientSignature} and
+{GSNRecipientERC20Fee}, or how to write your own.
+
+
+- xref:#GSNRecipient-getHubAddr--[getHubAddr()]
+- xref:#GSNRecipient-_upgradeRelayHub-address-[_upgradeRelayHub(address)]
+- xref:#GSNRecipient-relayHubVersion--[relayHubVersion()]
+- xref:#GSNRecipient-_withdrawDeposits-uint256-address-payable-[_withdrawDeposits(uint256,address payable)]
+- xref:#GSNRecipient-_msgSender--[_msgSender()]
+- xref:#GSNRecipient-_msgData--[_msgData()]
+- xref:#GSNRecipient-preRelayedCall-bytes-[preRelayedCall(bytes)]
+- xref:#GSNRecipient-_preRelayedCall-bytes-[_preRelayedCall(bytes)]
+- xref:#GSNRecipient-postRelayedCall-bytes-bool-uint256-bytes32-[postRelayedCall(bytes,bool,uint256,bytes32)]
+- xref:#GSNRecipient-_postRelayedCall-bytes-bool-uint256-bytes32-[_postRelayedCall(bytes,bool,uint256,bytes32)]
+- xref:#GSNRecipient-_approveRelayedCall--[_approveRelayedCall()]
+- xref:#GSNRecipient-_approveRelayedCall-bytes-[_approveRelayedCall(bytes)]
+- xref:#GSNRecipient-_rejectRelayedCall-uint256-[_rejectRelayedCall(uint256)]
+- xref:#GSNRecipient-_computeCharge-uint256-uint256-uint256-[_computeCharge(uint256,uint256,uint256)]
+- xref:#Context-constructor--[constructor()]
+- xref:#Context-_msgSender--[_msgSender()]
+- xref:#Context-_msgData--[_msgData()]
+- xref:#IRelayRecipient-getHubAddr--[getHubAddr()]
+- xref:#IRelayRecipient-acceptRelayedCall-address-address-bytes-uint256-uint256-uint256-uint256-bytes-uint256-[acceptRelayedCall(address,address,bytes,uint256,uint256,uint256,uint256,bytes,uint256)]
+- xref:#IRelayRecipient-preRelayedCall-bytes-[preRelayedCall(bytes)]
+- xref:#IRelayRecipient-postRelayedCall-bytes-bool-uint256-bytes32-[postRelayedCall(bytes,bool,uint256,bytes32)]
+
+- xref:#GSNRecipient-RelayHubChanged-address-address-[RelayHubChanged(address,address)]
+
+[[GSNRecipient-getHubAddr--]]
+=== getHubAddr() → address
+
+Returns the address of the {IRelayHub} contract for this recipient.
+
+[[GSNRecipient-_upgradeRelayHub-address-]]
+=== _upgradeRelayHub(address newRelayHub)
+
+Switches to a new {IRelayHub} instance. This method is added for future-proofing: there's no reason to not
+use the default instance.
+
+IMPORTANT: After upgrading, the {GSNRecipient} will no longer be able to receive relayed calls from the old
+{IRelayHub} instance. Additionally, all funds should be previously withdrawn via {_withdrawDeposits}.
+
+[[GSNRecipient-relayHubVersion--]]
+=== relayHubVersion() → string
+
+Returns the version string of the {IRelayHub} for which this recipient implementation was built. If
+{_upgradeRelayHub} is used, the new {IRelayHub} instance should be compatible with this version.
+
+[[GSNRecipient-_withdrawDeposits-uint256-address-payable-]]
+=== _withdrawDeposits(uint256 amount, address payable payee)
+
+Withdraws the recipient's deposits in `RelayHub`.
+
+Derived contracts should expose this in an external interface with proper access control.
+
+[[GSNRecipient-_msgSender--]]
+=== _msgSender() → address payable
+
+Replacement for msg.sender. Returns the actual sender of a transaction: msg.sender for regular transactions,
+and the end-user for GSN relayed calls (where msg.sender is actually `RelayHub`).
+
+IMPORTANT: Contracts derived from {GSNRecipient} should never use `msg.sender`, and use {_msgSender} instead.
+
+[[GSNRecipient-_msgData--]]
+=== _msgData() → bytes
+
+Replacement for msg.data. Returns the actual calldata of a transaction: msg.data for regular transactions,
+and a reduced version for GSN relayed calls (where msg.data contains additional information).
+
+IMPORTANT: Contracts derived from {GSNRecipient} should never use `msg.data`, and use {_msgData} instead.
+
+[[GSNRecipient-preRelayedCall-bytes-]]
+=== preRelayedCall(bytes context) → bytes32
+
+See `IRelayRecipient.preRelayedCall`.
+
+This function should not be overriden directly, use `_preRelayedCall` instead.
+
+* Requirements:
+
+- the caller must be the `RelayHub` contract.
+
+[[GSNRecipient-_preRelayedCall-bytes-]]
+=== _preRelayedCall(bytes context) → bytes32
+
+See `IRelayRecipient.preRelayedCall`.
+
+Called by `GSNRecipient.preRelayedCall`, which asserts the caller is the `RelayHub` contract. Derived contracts
+must implement this function with any relayed-call preprocessing they may wish to do.
+
+
+[[GSNRecipient-postRelayedCall-bytes-bool-uint256-bytes32-]]
+=== postRelayedCall(bytes context, bool success, uint256 actualCharge, bytes32 preRetVal)
+
+See `IRelayRecipient.postRelayedCall`.
+
+This function should not be overriden directly, use `_postRelayedCall` instead.
+
+* Requirements:
+
+- the caller must be the `RelayHub` contract.
+
+[[GSNRecipient-_postRelayedCall-bytes-bool-uint256-bytes32-]]
+=== _postRelayedCall(bytes context, bool success, uint256 actualCharge, bytes32 preRetVal)
+
+See `IRelayRecipient.postRelayedCall`.
+
+Called by `GSNRecipient.postRelayedCall`, which asserts the caller is the `RelayHub` contract. Derived contracts
+must implement this function with any relayed-call postprocessing they may wish to do.
+
+
+[[GSNRecipient-_approveRelayedCall--]]
+=== _approveRelayedCall() → uint256, bytes
+
+Return this in acceptRelayedCall to proceed with the execution of a relayed call. Note that this contract
+will be charged a fee by RelayHub
+
+[[GSNRecipient-_approveRelayedCall-bytes-]]
+=== _approveRelayedCall(bytes context) → uint256, bytes
+
+See `GSNRecipient._approveRelayedCall`.
+
+This overload forwards `context` to _preRelayedCall and _postRelayedCall.
+
+[[GSNRecipient-_rejectRelayedCall-uint256-]]
+=== _rejectRelayedCall(uint256 errorCode) → uint256, bytes
+
+Return this in acceptRelayedCall to impede execution of a relayed call. No fees will be charged.
+
+[[GSNRecipient-_computeCharge-uint256-uint256-uint256-]]
+=== _computeCharge(uint256 gas, uint256 gasPrice, uint256 serviceFee) → uint256
+
+
+
+[[GSNRecipient-RelayHubChanged-address-address-]]
+=== RelayHubChanged(address oldRelayHub, address newRelayHub)
+
+Emitted when a contract changes its {IRelayHub} contract to a new one.
+
+
+
+== Strategies
+
+:GSNRecipientSignature: pass:normal[xref:#GSNRecipientSignature[`GSNRecipientSignature`]]
+:constructor: pass:normal[xref:#GSNRecipientSignature-constructor-address-[`constructor`]]
+:acceptRelayedCall: pass:normal[xref:#GSNRecipientSignature-acceptRelayedCall-address-address-bytes-uint256-uint256-uint256-uint256-bytes-uint256-[`acceptRelayedCall`]]
+:_preRelayedCall: pass:normal[xref:#GSNRecipientSignature-_preRelayedCall-bytes-[`_preRelayedCall`]]
+:_postRelayedCall: pass:normal[xref:#GSNRecipientSignature-_postRelayedCall-bytes-bool-uint256-bytes32-[`_postRelayedCall`]]
+
+[[GSNRecipientSignature]]
+== `GSNRecipientSignature`
+
+A xref:ROOT:gsn-strategies.adoc#gsn-strategies[GSN strategy] that allows relayed transactions through when they are
+accompanied by the signature of a trusted signer. The intent is for this signature to be generated by a server that
+performs validations off-chain. Note that nothing is charged to the user in this scheme. Thus, the server should make
+sure to account for this in their economic and threat model.
+
+
+- xref:#GSNRecipientSignature-constructor-address-[constructor(address)]
+- xref:#GSNRecipientSignature-acceptRelayedCall-address-address-bytes-uint256-uint256-uint256-uint256-bytes-uint256-[acceptRelayedCall(address,address,bytes,uint256,uint256,uint256,uint256,bytes,uint256)]
+- xref:#GSNRecipientSignature-_preRelayedCall-bytes-[_preRelayedCall(bytes)]
+- xref:#GSNRecipientSignature-_postRelayedCall-bytes-bool-uint256-bytes32-[_postRelayedCall(bytes,bool,uint256,bytes32)]
+- xref:#GSNRecipient-getHubAddr--[getHubAddr()]
+- xref:#GSNRecipient-_upgradeRelayHub-address-[_upgradeRelayHub(address)]
+- xref:#GSNRecipient-relayHubVersion--[relayHubVersion()]
+- xref:#GSNRecipient-_withdrawDeposits-uint256-address-payable-[_withdrawDeposits(uint256,address payable)]
+- xref:#GSNRecipient-_msgSender--[_msgSender()]
+- xref:#GSNRecipient-_msgData--[_msgData()]
+- xref:#GSNRecipient-preRelayedCall-bytes-[preRelayedCall(bytes)]
+- xref:#GSNRecipient-_preRelayedCall-bytes-[_preRelayedCall(bytes)]
+- xref:#GSNRecipient-postRelayedCall-bytes-bool-uint256-bytes32-[postRelayedCall(bytes,bool,uint256,bytes32)]
+- xref:#GSNRecipient-_postRelayedCall-bytes-bool-uint256-bytes32-[_postRelayedCall(bytes,bool,uint256,bytes32)]
+- xref:#GSNRecipient-_approveRelayedCall--[_approveRelayedCall()]
+- xref:#GSNRecipient-_approveRelayedCall-bytes-[_approveRelayedCall(bytes)]
+- xref:#GSNRecipient-_rejectRelayedCall-uint256-[_rejectRelayedCall(uint256)]
+- xref:#GSNRecipient-_computeCharge-uint256-uint256-uint256-[_computeCharge(uint256,uint256,uint256)]
+- xref:#Context-constructor--[constructor()]
+- xref:#Context-_msgSender--[_msgSender()]
+- xref:#Context-_msgData--[_msgData()]
+- xref:#IRelayRecipient-getHubAddr--[getHubAddr()]
+- xref:#IRelayRecipient-acceptRelayedCall-address-address-bytes-uint256-uint256-uint256-uint256-bytes-uint256-[acceptRelayedCall(address,address,bytes,uint256,uint256,uint256,uint256,bytes,uint256)]
+- xref:#IRelayRecipient-preRelayedCall-bytes-[preRelayedCall(bytes)]
+- xref:#IRelayRecipient-postRelayedCall-bytes-bool-uint256-bytes32-[postRelayedCall(bytes,bool,uint256,bytes32)]
+
+- xref:#GSNRecipient-RelayHubChanged-address-address-[RelayHubChanged(address,address)]
+
+[[GSNRecipientSignature-constructor-address-]]
+=== constructor(address trustedSigner)
+
+Sets the trusted signer that is going to be producing signatures to approve relayed calls.
+
+[[GSNRecipientSignature-acceptRelayedCall-address-address-bytes-uint256-uint256-uint256-uint256-bytes-uint256-]]
+=== acceptRelayedCall(address relay, address from, bytes encodedFunction, uint256 transactionFee, uint256 gasPrice, uint256 gasLimit, uint256 nonce, bytes approvalData, uint256) → uint256, bytes
+
+Ensures that only transactions with a trusted signature can be relayed through the GSN.
+
+[[GSNRecipientSignature-_preRelayedCall-bytes-]]
+=== _preRelayedCall(bytes) → bytes32
+
+
+
+[[GSNRecipientSignature-_postRelayedCall-bytes-bool-uint256-bytes32-]]
+=== _postRelayedCall(bytes, bool, uint256, bytes32)
+
+
+
+
+:GSNRecipientERC20Fee: pass:normal[xref:#GSNRecipientERC20Fee[`GSNRecipientERC20Fee`]]
+:constructor: pass:normal[xref:#GSNRecipientERC20Fee-constructor-string-string-[`constructor`]]
+:token: pass:normal[xref:#GSNRecipientERC20Fee-token--[`token`]]
+:_mint: pass:normal[xref:#GSNRecipientERC20Fee-_mint-address-uint256-[`_mint`]]
+:acceptRelayedCall: pass:normal[xref:#GSNRecipientERC20Fee-acceptRelayedCall-address-address-bytes-uint256-uint256-uint256-uint256-bytes-uint256-[`acceptRelayedCall`]]
+:_preRelayedCall: pass:normal[xref:#GSNRecipientERC20Fee-_preRelayedCall-bytes-[`_preRelayedCall`]]
+:_postRelayedCall: pass:normal[xref:#GSNRecipientERC20Fee-_postRelayedCall-bytes-bool-uint256-bytes32-[`_postRelayedCall`]]
+
+[[GSNRecipientERC20Fee]]
+== `GSNRecipientERC20Fee`
+
+A xref:ROOT:gsn-strategies.adoc#gsn-strategies[GSN strategy] that charges transaction fees in a special purpose ERC20
+token, which we refer to as the gas payment token. The amount charged is exactly the amount of Ether charged to the
+recipient. This means that the token is essentially pegged to the value of Ether.
+
+The distribution strategy of the gas payment token to users is not defined by this contract. It's a mintable token
+whose only minter is the recipient, so the strategy must be implemented in a derived contract, making use of the
+internal {_mint} function.
+
+
+- xref:#GSNRecipientERC20Fee-constructor-string-string-[constructor(string,string)]
+- xref:#GSNRecipientERC20Fee-token--[token()]
+- xref:#GSNRecipientERC20Fee-_mint-address-uint256-[_mint(address,uint256)]
+- xref:#GSNRecipientERC20Fee-acceptRelayedCall-address-address-bytes-uint256-uint256-uint256-uint256-bytes-uint256-[acceptRelayedCall(address,address,bytes,uint256,uint256,uint256,uint256,bytes,uint256)]
+- xref:#GSNRecipientERC20Fee-_preRelayedCall-bytes-[_preRelayedCall(bytes)]
+- xref:#GSNRecipientERC20Fee-_postRelayedCall-bytes-bool-uint256-bytes32-[_postRelayedCall(bytes,bool,uint256,bytes32)]
+- xref:#GSNRecipient-getHubAddr--[getHubAddr()]
+- xref:#GSNRecipient-_upgradeRelayHub-address-[_upgradeRelayHub(address)]
+- xref:#GSNRecipient-relayHubVersion--[relayHubVersion()]
+- xref:#GSNRecipient-_withdrawDeposits-uint256-address-payable-[_withdrawDeposits(uint256,address payable)]
+- xref:#GSNRecipient-_msgSender--[_msgSender()]
+- xref:#GSNRecipient-_msgData--[_msgData()]
+- xref:#GSNRecipient-preRelayedCall-bytes-[preRelayedCall(bytes)]
+- xref:#GSNRecipient-_preRelayedCall-bytes-[_preRelayedCall(bytes)]
+- xref:#GSNRecipient-postRelayedCall-bytes-bool-uint256-bytes32-[postRelayedCall(bytes,bool,uint256,bytes32)]
+- xref:#GSNRecipient-_postRelayedCall-bytes-bool-uint256-bytes32-[_postRelayedCall(bytes,bool,uint256,bytes32)]
+- xref:#GSNRecipient-_approveRelayedCall--[_approveRelayedCall()]
+- xref:#GSNRecipient-_approveRelayedCall-bytes-[_approveRelayedCall(bytes)]
+- xref:#GSNRecipient-_rejectRelayedCall-uint256-[_rejectRelayedCall(uint256)]
+- xref:#GSNRecipient-_computeCharge-uint256-uint256-uint256-[_computeCharge(uint256,uint256,uint256)]
+- xref:#Context-constructor--[constructor()]
+- xref:#Context-_msgSender--[_msgSender()]
+- xref:#Context-_msgData--[_msgData()]
+- xref:#IRelayRecipient-getHubAddr--[getHubAddr()]
+- xref:#IRelayRecipient-acceptRelayedCall-address-address-bytes-uint256-uint256-uint256-uint256-bytes-uint256-[acceptRelayedCall(address,address,bytes,uint256,uint256,uint256,uint256,bytes,uint256)]
+- xref:#IRelayRecipient-preRelayedCall-bytes-[preRelayedCall(bytes)]
+- xref:#IRelayRecipient-postRelayedCall-bytes-bool-uint256-bytes32-[postRelayedCall(bytes,bool,uint256,bytes32)]
+
+- xref:#GSNRecipient-RelayHubChanged-address-address-[RelayHubChanged(address,address)]
+
+[[GSNRecipientERC20Fee-constructor-string-string-]]
+=== constructor(string name, string symbol)
+
+The arguments to the constructor are the details that the gas payment token will have: `name` and `symbol`. `decimals` is hard-coded to 18.
+
+[[GSNRecipientERC20Fee-token--]]
+=== token() → contract IERC20
+
+Returns the gas payment token.
+
+[[GSNRecipientERC20Fee-_mint-address-uint256-]]
+=== _mint(address account, uint256 amount)
+
+Internal function that mints the gas payment token. Derived contracts should expose this function in their public API, with proper access control mechanisms.
+
+[[GSNRecipientERC20Fee-acceptRelayedCall-address-address-bytes-uint256-uint256-uint256-uint256-bytes-uint256-]]
+=== acceptRelayedCall(address, address from, bytes, uint256 transactionFee, uint256 gasPrice, uint256, uint256, bytes, uint256 maxPossibleCharge) → uint256, bytes
+
+Ensures that only users with enough gas payment token balance can have transactions relayed through the GSN.
+
+[[GSNRecipientERC20Fee-_preRelayedCall-bytes-]]
+=== _preRelayedCall(bytes context) → bytes32
+
+Implements the precharge to the user. The maximum possible charge (depending on gas limit, gas price, and
+fee) will be deducted from the user balance of gas payment token. Note that this is an overestimation of the
+actual charge, necessary because we cannot predict how much gas the execution will actually need. The remainder
+is returned to the user in {_postRelayedCall}.
+
+[[GSNRecipientERC20Fee-_postRelayedCall-bytes-bool-uint256-bytes32-]]
+=== _postRelayedCall(bytes context, bool, uint256 actualCharge, bytes32)
+
+Returns to the user the extra amount that was previously charged, once the actual execution cost is known.
+
+
+
+== Protocol
+
+:IRelayRecipient: pass:normal[xref:#IRelayRecipient[`IRelayRecipient`]]
+:getHubAddr: pass:normal[xref:#IRelayRecipient-getHubAddr--[`getHubAddr`]]
+:acceptRelayedCall: pass:normal[xref:#IRelayRecipient-acceptRelayedCall-address-address-bytes-uint256-uint256-uint256-uint256-bytes-uint256-[`acceptRelayedCall`]]
+:preRelayedCall: pass:normal[xref:#IRelayRecipient-preRelayedCall-bytes-[`preRelayedCall`]]
+:postRelayedCall: pass:normal[xref:#IRelayRecipient-postRelayedCall-bytes-bool-uint256-bytes32-[`postRelayedCall`]]
+
+[[IRelayRecipient]]
+== `IRelayRecipient`
+
+Base interface for a contract that will be called via the GSN from {IRelayHub}.
+
+TIP: You don't need to write an implementation yourself! Inherit from {GSNRecipient} instead.
+
+
+- xref:#IRelayRecipient-getHubAddr--[getHubAddr()]
+- xref:#IRelayRecipient-acceptRelayedCall-address-address-bytes-uint256-uint256-uint256-uint256-bytes-uint256-[acceptRelayedCall(address,address,bytes,uint256,uint256,uint256,uint256,bytes,uint256)]
+- xref:#IRelayRecipient-preRelayedCall-bytes-[preRelayedCall(bytes)]
+- xref:#IRelayRecipient-postRelayedCall-bytes-bool-uint256-bytes32-[postRelayedCall(bytes,bool,uint256,bytes32)]
+
+
+[[IRelayRecipient-getHubAddr--]]
+=== getHubAddr() → address
+
+Returns the address of the {IRelayHub} instance this recipient interacts with.
+
+[[IRelayRecipient-acceptRelayedCall-address-address-bytes-uint256-uint256-uint256-uint256-bytes-uint256-]]
+=== acceptRelayedCall(address relay, address from, bytes encodedFunction, uint256 transactionFee, uint256 gasPrice, uint256 gasLimit, uint256 nonce, bytes approvalData, uint256 maxPossibleCharge) → uint256, bytes
+
+Called by {IRelayHub} to validate if this recipient accepts being charged for a relayed call. Note that the
+recipient will be charged regardless of the execution result of the relayed call (i.e. if it reverts or not).
+
+The relay request was originated by `from` and will be served by `relay`. `encodedFunction` is the relayed call
+calldata, so its first four bytes are the function selector. The relayed call will be forwarded `gasLimit` gas,
+and the transaction executed with a gas price of at least `gasPrice`. `relay`'s fee is `transactionFee`, and the
+recipient will be charged at most `maxPossibleCharge` (in wei). `nonce` is the sender's (`from`) nonce for
+replay attack protection in {IRelayHub}, and `approvalData` is a optional parameter that can be used to hold a signature
+over all or some of the previous values.
+
+Returns a tuple, where the first value is used to indicate approval (0) or rejection (custom non-zero error code,
+values 1 to 10 are reserved) and the second one is data to be passed to the other {IRelayRecipient} functions.
+
+{acceptRelayedCall} is called with 50k gas: if it runs out during execution, the request will be considered
+rejected. A regular revert will also trigger a rejection.
+
+[[IRelayRecipient-preRelayedCall-bytes-]]
+=== preRelayedCall(bytes context) → bytes32
+
+Called by {IRelayHub} on approved relay call requests, before the relayed call is executed. This allows to e.g.
+pre-charge the sender of the transaction.
+
+`context` is the second value returned in the tuple by {acceptRelayedCall}.
+
+Returns a value to be passed to {postRelayedCall}.
+
+{preRelayedCall} is called with 100k gas: if it runs out during exection or otherwise reverts, the relayed call
+will not be executed, but the recipient will still be charged for the transaction's cost.
+
+[[IRelayRecipient-postRelayedCall-bytes-bool-uint256-bytes32-]]
+=== postRelayedCall(bytes context, bool success, uint256 actualCharge, bytes32 preRetVal)
+
+Called by {IRelayHub} on approved relay call requests, after the relayed call is executed. This allows to e.g.
+charge the user for the relayed call costs, return any overcharges from {preRelayedCall}, or perform
+contract-specific bookkeeping.
+
+`context` is the second value returned in the tuple by {acceptRelayedCall}. `success` is the execution status of
+the relayed call. `actualCharge` is an estimate of how much the recipient will be charged for the transaction,
+not including any gas used by {postRelayedCall} itself. `preRetVal` is {preRelayedCall}'s return value.
+
+
+{postRelayedCall} is called with 100k gas: if it runs out during execution or otherwise reverts, the relayed call
+and the call to {preRelayedCall} will be reverted retroactively, but the recipient will still be charged for the
+transaction's cost.
+
+
+:IRelayHub: pass:normal[xref:#IRelayHub[`IRelayHub`]]
+:stake: pass:normal[xref:#IRelayHub-stake-address-uint256-[`stake`]]
+:registerRelay: pass:normal[xref:#IRelayHub-registerRelay-uint256-string-[`registerRelay`]]
+:removeRelayByOwner: pass:normal[xref:#IRelayHub-removeRelayByOwner-address-[`removeRelayByOwner`]]
+:unstake: pass:normal[xref:#IRelayHub-unstake-address-[`unstake`]]
+:getRelay: pass:normal[xref:#IRelayHub-getRelay-address-[`getRelay`]]
+:depositFor: pass:normal[xref:#IRelayHub-depositFor-address-[`depositFor`]]
+:balanceOf: pass:normal[xref:#IRelayHub-balanceOf-address-[`balanceOf`]]
+:withdraw: pass:normal[xref:#IRelayHub-withdraw-uint256-address-payable-[`withdraw`]]
+:canRelay: pass:normal[xref:#IRelayHub-canRelay-address-address-address-bytes-uint256-uint256-uint256-uint256-bytes-bytes-[`canRelay`]]
+:relayCall: pass:normal[xref:#IRelayHub-relayCall-address-address-bytes-uint256-uint256-uint256-uint256-bytes-bytes-[`relayCall`]]
+:requiredGas: pass:normal[xref:#IRelayHub-requiredGas-uint256-[`requiredGas`]]
+:maxPossibleCharge: pass:normal[xref:#IRelayHub-maxPossibleCharge-uint256-uint256-uint256-[`maxPossibleCharge`]]
+:penalizeRepeatedNonce: pass:normal[xref:#IRelayHub-penalizeRepeatedNonce-bytes-bytes-bytes-bytes-[`penalizeRepeatedNonce`]]
+:penalizeIllegalTransaction: pass:normal[xref:#IRelayHub-penalizeIllegalTransaction-bytes-bytes-[`penalizeIllegalTransaction`]]
+:getNonce: pass:normal[xref:#IRelayHub-getNonce-address-[`getNonce`]]
+:Staked: pass:normal[xref:#IRelayHub-Staked-address-uint256-uint256-[`Staked`]]
+:RelayAdded: pass:normal[xref:#IRelayHub-RelayAdded-address-address-uint256-uint256-uint256-string-[`RelayAdded`]]
+:RelayRemoved: pass:normal[xref:#IRelayHub-RelayRemoved-address-uint256-[`RelayRemoved`]]
+:Unstaked: pass:normal[xref:#IRelayHub-Unstaked-address-uint256-[`Unstaked`]]
+:Deposited: pass:normal[xref:#IRelayHub-Deposited-address-address-uint256-[`Deposited`]]
+:Withdrawn: pass:normal[xref:#IRelayHub-Withdrawn-address-address-uint256-[`Withdrawn`]]
+:CanRelayFailed: pass:normal[xref:#IRelayHub-CanRelayFailed-address-address-address-bytes4-uint256-[`CanRelayFailed`]]
+:TransactionRelayed: pass:normal[xref:#IRelayHub-TransactionRelayed-address-address-address-bytes4-enum-IRelayHub-RelayCallStatus-uint256-[`TransactionRelayed`]]
+:Penalized: pass:normal[xref:#IRelayHub-Penalized-address-address-uint256-[`Penalized`]]
+
+[[IRelayHub]]
+== `IRelayHub`
+
+Interface for `RelayHub`, the core contract of the GSN. Users should not need to interact with this contract
+directly.
+
+See the https://github.com/OpenZeppelin/openzeppelin-gsn-helpers[OpenZeppelin GSN helpers] for more information on
+how to deploy an instance of `RelayHub` on your local test network.
+
+
+- xref:#IRelayHub-stake-address-uint256-[stake(address,uint256)]
+- xref:#IRelayHub-registerRelay-uint256-string-[registerRelay(uint256,string)]
+- xref:#IRelayHub-removeRelayByOwner-address-[removeRelayByOwner(address)]
+- xref:#IRelayHub-unstake-address-[unstake(address)]
+- xref:#IRelayHub-getRelay-address-[getRelay(address)]
+- xref:#IRelayHub-depositFor-address-[depositFor(address)]
+- xref:#IRelayHub-balanceOf-address-[balanceOf(address)]
+- xref:#IRelayHub-withdraw-uint256-address-payable-[withdraw(uint256,address payable)]
+- xref:#IRelayHub-canRelay-address-address-address-bytes-uint256-uint256-uint256-uint256-bytes-bytes-[canRelay(address,address,address,bytes,uint256,uint256,uint256,uint256,bytes,bytes)]
+- xref:#IRelayHub-relayCall-address-address-bytes-uint256-uint256-uint256-uint256-bytes-bytes-[relayCall(address,address,bytes,uint256,uint256,uint256,uint256,bytes,bytes)]
+- xref:#IRelayHub-requiredGas-uint256-[requiredGas(uint256)]
+- xref:#IRelayHub-maxPossibleCharge-uint256-uint256-uint256-[maxPossibleCharge(uint256,uint256,uint256)]
+- xref:#IRelayHub-penalizeRepeatedNonce-bytes-bytes-bytes-bytes-[penalizeRepeatedNonce(bytes,bytes,bytes,bytes)]
+- xref:#IRelayHub-penalizeIllegalTransaction-bytes-bytes-[penalizeIllegalTransaction(bytes,bytes)]
+- xref:#IRelayHub-getNonce-address-[getNonce(address)]
+
+- xref:#IRelayHub-Staked-address-uint256-uint256-[Staked(address,uint256,uint256)]
+- xref:#IRelayHub-RelayAdded-address-address-uint256-uint256-uint256-string-[RelayAdded(address,address,uint256,uint256,uint256,string)]
+- xref:#IRelayHub-RelayRemoved-address-uint256-[RelayRemoved(address,uint256)]
+- xref:#IRelayHub-Unstaked-address-uint256-[Unstaked(address,uint256)]
+- xref:#IRelayHub-Deposited-address-address-uint256-[Deposited(address,address,uint256)]
+- xref:#IRelayHub-Withdrawn-address-address-uint256-[Withdrawn(address,address,uint256)]
+- xref:#IRelayHub-CanRelayFailed-address-address-address-bytes4-uint256-[CanRelayFailed(address,address,address,bytes4,uint256)]
+- xref:#IRelayHub-TransactionRelayed-address-address-address-bytes4-enum-IRelayHub-RelayCallStatus-uint256-[TransactionRelayed(address,address,address,bytes4,enum IRelayHub.RelayCallStatus,uint256)]
+- xref:#IRelayHub-Penalized-address-address-uint256-[Penalized(address,address,uint256)]
+
+[[IRelayHub-stake-address-uint256-]]
+=== stake(address relayaddr, uint256 unstakeDelay)
+
+Adds stake to a relay and sets its `unstakeDelay`. If the relay does not exist, it is created, and the caller
+of this function becomes its owner. If the relay already exists, only the owner can call this function. A relay
+cannot be its own owner.
+
+All Ether in this function call will be added to the relay's stake.
+Its unstake delay will be assigned to `unstakeDelay`, but the new value must be greater or equal to the current one.
+
+Emits a {Staked} event.
+
+[[IRelayHub-registerRelay-uint256-string-]]
+=== registerRelay(uint256 transactionFee, string url)
+
+Registers the caller as a relay.
+The relay must be staked for, and not be a contract (i.e. this function must be called directly from an EOA).
+
+This function can be called multiple times, emitting new {RelayAdded} events. Note that the received
+`transactionFee` is not enforced by {relayCall}.
+
+Emits a {RelayAdded} event.
+
+[[IRelayHub-removeRelayByOwner-address-]]
+=== removeRelayByOwner(address relay)
+
+Removes (deregisters) a relay. Unregistered (but staked for) relays can also be removed.
+
+Can only be called by the owner of the relay. After the relay's `unstakeDelay` has elapsed, {unstake} will be
+callable.
+
+Emits a {RelayRemoved} event.
+
+[[IRelayHub-unstake-address-]]
+=== unstake(address relay)
+
+
+
+[[IRelayHub-getRelay-address-]]
+=== getRelay(address relay) → uint256 totalStake, uint256 unstakeDelay, uint256 unstakeTime, address payable owner, enum IRelayHub.RelayState state
+
+Returns a relay's status. Note that relays can be deleted when unstaked or penalized, causing this function
+to return an empty entry.
+
+[[IRelayHub-depositFor-address-]]
+=== depositFor(address target)
+
+Deposits Ether for a contract, so that it can receive (and pay for) relayed transactions.
+
+Unused balance can only be withdrawn by the contract itself, by calling {withdraw}.
+
+Emits a {Deposited} event.
+
+[[IRelayHub-balanceOf-address-]]
+=== balanceOf(address target) → uint256
+
+Returns an account's deposits. These can be either a contracts's funds, or a relay owner's revenue.
+
+[[IRelayHub-withdraw-uint256-address-payable-]]
+=== withdraw(uint256 amount, address payable dest)
+
+
+
+[[IRelayHub-canRelay-address-address-address-bytes-uint256-uint256-uint256-uint256-bytes-bytes-]]
+=== canRelay(address relay, address from, address to, bytes encodedFunction, uint256 transactionFee, uint256 gasPrice, uint256 gasLimit, uint256 nonce, bytes signature, bytes approvalData) → uint256 status, bytes recipientContext
+
+Checks if the `RelayHub` will accept a relayed operation.
+Multiple things must be true for this to happen:
+- all arguments must be signed for by the sender (`from`)
+- the sender's nonce must be the current one
+- the recipient must accept this transaction (via {acceptRelayedCall})
+
+Returns a `PreconditionCheck` value (`OK` when the transaction can be relayed), or a recipient-specific error
+code if it returns one in {acceptRelayedCall}.
+
+[[IRelayHub-relayCall-address-address-bytes-uint256-uint256-uint256-uint256-bytes-bytes-]]
+=== relayCall(address from, address to, bytes encodedFunction, uint256 transactionFee, uint256 gasPrice, uint256 gasLimit, uint256 nonce, bytes signature, bytes approvalData)
+
+Relays a transaction.
+
+For this to succeed, multiple conditions must be met:
+- {canRelay} must `return PreconditionCheck.OK`
+- the sender must be a registered relay
+- the transaction's gas price must be larger or equal to the one that was requested by the sender
+- the transaction must have enough gas to not run out of gas if all internal transactions (calls to the
+recipient) use all gas available to them
+- the recipient must have enough balance to pay the relay for the worst-case scenario (i.e. when all gas is
+spent)
+
+If all conditions are met, the call will be relayed and the recipient charged. {preRelayedCall}, the encoded
+function and {postRelayedCall} will be called in that order.
+
+Parameters:
+- `from`: the client originating the request
+- `to`: the target {IRelayRecipient} contract
+- `encodedFunction`: the function call to relay, including data
+- `transactionFee`: fee (%) the relay takes over actual gas cost
+- `gasPrice`: gas price the client is willing to pay
+- `gasLimit`: gas to forward when calling the encoded function
+- `nonce`: client's nonce
+- `signature`: client's signature over all previous params, plus the relay and RelayHub addresses
+- `approvalData`: dapp-specific data forwared to {acceptRelayedCall}. This value is *not* verified by the
+`RelayHub`, but it still can be used for e.g. a signature.
+
+Emits a {TransactionRelayed} event.
+
+[[IRelayHub-requiredGas-uint256-]]
+=== requiredGas(uint256 relayedCallStipend) → uint256
+
+Returns how much gas should be forwarded to a call to {relayCall}, in order to relay a transaction that will
+spend up to `relayedCallStipend` gas.
+
+[[IRelayHub-maxPossibleCharge-uint256-uint256-uint256-]]
+=== maxPossibleCharge(uint256 relayedCallStipend, uint256 gasPrice, uint256 transactionFee) → uint256
+
+Returns the maximum recipient charge, given the amount of gas forwarded, gas price and relay fee.
+
+[[IRelayHub-penalizeRepeatedNonce-bytes-bytes-bytes-bytes-]]
+=== penalizeRepeatedNonce(bytes unsignedTx1, bytes signature1, bytes unsignedTx2, bytes signature2)
+
+Penalize a relay that signed two transactions using the same nonce (making only the first one valid) and
+different data (gas price, gas limit, etc. may be different).
+
+The (unsigned) transaction data and signature for both transactions must be provided.
+
+[[IRelayHub-penalizeIllegalTransaction-bytes-bytes-]]
+=== penalizeIllegalTransaction(bytes unsignedTx, bytes signature)
+
+Penalize a relay that sent a transaction that didn't target `RelayHub`'s {registerRelay} or {relayCall}.
+
+[[IRelayHub-getNonce-address-]]
+=== getNonce(address from) → uint256
+
+Returns an account's nonce in `RelayHub`.
+
+[[IRelayHub-Staked-address-uint256-uint256-]]
+=== Staked(address relay, uint256 stake, uint256 unstakeDelay)
+
+Emitted when a relay's stake or unstakeDelay are increased
+
+[[IRelayHub-RelayAdded-address-address-uint256-uint256-uint256-string-]]
+=== RelayAdded(address relay, address owner, uint256 transactionFee, uint256 stake, uint256 unstakeDelay, string url)
+
+Emitted when a relay is registered or re-registerd. Looking at these events (and filtering out
+{RelayRemoved} events) lets a client discover the list of available relays.
+
+[[IRelayHub-RelayRemoved-address-uint256-]]
+=== RelayRemoved(address relay, uint256 unstakeTime)
+
+Emitted when a relay is removed (deregistered). `unstakeTime` is the time when unstake will be callable.
+
+[[IRelayHub-Unstaked-address-uint256-]]
+=== Unstaked(address relay, uint256 stake)
+
+Emitted when a relay is unstaked for, including the returned stake.
+
+[[IRelayHub-Deposited-address-address-uint256-]]
+=== Deposited(address recipient, address from, uint256 amount)
+
+Emitted when {depositFor} is called, including the amount and account that was funded.
+
+[[IRelayHub-Withdrawn-address-address-uint256-]]
+=== Withdrawn(address account, address dest, uint256 amount)
+
+Emitted when an account withdraws funds from `RelayHub`.
+
+[[IRelayHub-CanRelayFailed-address-address-address-bytes4-uint256-]]
+=== CanRelayFailed(address relay, address from, address to, bytes4 selector, uint256 reason)
+
+Emitted when an attempt to relay a call failed.
+
+This can happen due to incorrect {relayCall} arguments, or the recipient not accepting the relayed call. The
+actual relayed call was not executed, and the recipient not charged.
+
+The `reason` parameter contains an error code: values 1-10 correspond to `PreconditionCheck` entries, and values
+over 10 are custom recipient error codes returned from {acceptRelayedCall}.
+
+[[IRelayHub-TransactionRelayed-address-address-address-bytes4-enum-IRelayHub-RelayCallStatus-uint256-]]
+=== TransactionRelayed(address relay, address from, address to, bytes4 selector, enum IRelayHub.RelayCallStatus status, uint256 charge)
+
+Emitted when a transaction is relayed. 
+Useful when monitoring a relay's operation and relayed calls to a contract
+
+Note that the actual encoded function might be reverted: this is indicated in the `status` parameter.
+
+`charge` is the Ether value deducted from the recipient's balance, paid to the relay's owner.
+
+[[IRelayHub-Penalized-address-address-uint256-]]
+=== Penalized(address relay, address sender, uint256 amount)
+
+Emitted when a relay is penalized.
+
+

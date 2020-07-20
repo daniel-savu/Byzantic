@@ -1,0 +1,583 @@
+= ERC 777
+This set of interfaces and contracts are all related to the [ERC777 token standard](https://eips.ethereum.org/EIPS/eip-777).
+
+TIP: For an overview of ERC777 tokens and a walkthrough on how to create a token contract read our xref:ROOT:tokens.adoc#ERC777[ERC777 guide].
+
+The token behavior itself is implemented in the core contracts: {IERC777}, {ERC777}.
+
+Additionally there are interfaces used to develop contracts that react to token movements: {IERC777Sender}, {IERC777Recipient}.
+
+== Core
+
+:IERC777: pass:normal[xref:#IERC777[`IERC777`]]
+:name: pass:normal[xref:#IERC777-name--[`name`]]
+:symbol: pass:normal[xref:#IERC777-symbol--[`symbol`]]
+:granularity: pass:normal[xref:#IERC777-granularity--[`granularity`]]
+:totalSupply: pass:normal[xref:#IERC777-totalSupply--[`totalSupply`]]
+:balanceOf: pass:normal[xref:#IERC777-balanceOf-address-[`balanceOf`]]
+:send: pass:normal[xref:#IERC777-send-address-uint256-bytes-[`send`]]
+:burn: pass:normal[xref:#IERC777-burn-uint256-bytes-[`burn`]]
+:isOperatorFor: pass:normal[xref:#IERC777-isOperatorFor-address-address-[`isOperatorFor`]]
+:authorizeOperator: pass:normal[xref:#IERC777-authorizeOperator-address-[`authorizeOperator`]]
+:revokeOperator: pass:normal[xref:#IERC777-revokeOperator-address-[`revokeOperator`]]
+:defaultOperators: pass:normal[xref:#IERC777-defaultOperators--[`defaultOperators`]]
+:operatorSend: pass:normal[xref:#IERC777-operatorSend-address-address-uint256-bytes-bytes-[`operatorSend`]]
+:operatorBurn: pass:normal[xref:#IERC777-operatorBurn-address-uint256-bytes-bytes-[`operatorBurn`]]
+:Sent: pass:normal[xref:#IERC777-Sent-address-address-address-uint256-bytes-bytes-[`Sent`]]
+:Minted: pass:normal[xref:#IERC777-Minted-address-address-uint256-bytes-bytes-[`Minted`]]
+:Burned: pass:normal[xref:#IERC777-Burned-address-address-uint256-bytes-bytes-[`Burned`]]
+:AuthorizedOperator: pass:normal[xref:#IERC777-AuthorizedOperator-address-address-[`AuthorizedOperator`]]
+:RevokedOperator: pass:normal[xref:#IERC777-RevokedOperator-address-address-[`RevokedOperator`]]
+
+[[IERC777]]
+== `IERC777`
+
+Interface of the ERC777Token standard as defined in the EIP.
+
+This contract uses the
+https://eips.ethereum.org/EIPS/eip-1820[ERC1820 registry standard] to let
+token holders and recipients react to token movements by using setting implementers
+for the associated interfaces in said registry. See {IERC1820Registry} and
+{ERC1820Implementer}.
+
+
+- xref:#IERC777-name--[name()]
+- xref:#IERC777-symbol--[symbol()]
+- xref:#IERC777-granularity--[granularity()]
+- xref:#IERC777-totalSupply--[totalSupply()]
+- xref:#IERC777-balanceOf-address-[balanceOf(address)]
+- xref:#IERC777-send-address-uint256-bytes-[send(address,uint256,bytes)]
+- xref:#IERC777-burn-uint256-bytes-[burn(uint256,bytes)]
+- xref:#IERC777-isOperatorFor-address-address-[isOperatorFor(address,address)]
+- xref:#IERC777-authorizeOperator-address-[authorizeOperator(address)]
+- xref:#IERC777-revokeOperator-address-[revokeOperator(address)]
+- xref:#IERC777-defaultOperators--[defaultOperators()]
+- xref:#IERC777-operatorSend-address-address-uint256-bytes-bytes-[operatorSend(address,address,uint256,bytes,bytes)]
+- xref:#IERC777-operatorBurn-address-uint256-bytes-bytes-[operatorBurn(address,uint256,bytes,bytes)]
+
+- xref:#IERC777-Sent-address-address-address-uint256-bytes-bytes-[Sent(address,address,address,uint256,bytes,bytes)]
+- xref:#IERC777-Minted-address-address-uint256-bytes-bytes-[Minted(address,address,uint256,bytes,bytes)]
+- xref:#IERC777-Burned-address-address-uint256-bytes-bytes-[Burned(address,address,uint256,bytes,bytes)]
+- xref:#IERC777-AuthorizedOperator-address-address-[AuthorizedOperator(address,address)]
+- xref:#IERC777-RevokedOperator-address-address-[RevokedOperator(address,address)]
+
+[[IERC777-name--]]
+=== name() → string
+
+Returns the name of the token.
+
+[[IERC777-symbol--]]
+=== symbol() → string
+
+Returns the symbol of the token, usually a shorter version of the
+name.
+
+[[IERC777-granularity--]]
+=== granularity() → uint256
+
+Returns the smallest part of the token that is not divisible. This
+means all token operations (creation, movement and destruction) must have
+amounts that are a multiple of this number.
+
+For most token contracts, this value will equal 1.
+
+[[IERC777-totalSupply--]]
+=== totalSupply() → uint256
+
+Returns the amount of tokens in existence.
+
+[[IERC777-balanceOf-address-]]
+=== balanceOf(address owner) → uint256
+
+Returns the amount of tokens owned by an account (`owner`).
+
+[[IERC777-send-address-uint256-bytes-]]
+=== send(address recipient, uint256 amount, bytes data)
+
+Moves `amount` tokens from the caller's account to `recipient`.
+
+If send or receive hooks are registered for the caller and `recipient`,
+the corresponding functions will be called with `data` and empty
+`operatorData`. See {IERC777Sender} and {IERC777Recipient}.
+
+Emits a {Sent} event.
+
+Requirements
+
+- the caller must have at least `amount` tokens.
+- `recipient` cannot be the zero address.
+- if `recipient` is a contract, it must implement the {IERC777Recipient}
+interface.
+
+[[IERC777-burn-uint256-bytes-]]
+=== burn(uint256 amount, bytes data)
+
+Destroys `amount` tokens from the caller's account, reducing the
+total supply.
+
+If a send hook is registered for the caller, the corresponding function
+will be called with `data` and empty `operatorData`. See {IERC777Sender}.
+
+Emits a {Burned} event.
+
+Requirements
+
+- the caller must have at least `amount` tokens.
+
+[[IERC777-isOperatorFor-address-address-]]
+=== isOperatorFor(address operator, address tokenHolder) → bool
+
+Returns true if an account is an operator of `tokenHolder`.
+Operators can send and burn tokens on behalf of their owners. All
+accounts are their own operator.
+
+See {operatorSend} and {operatorBurn}.
+
+[[IERC777-authorizeOperator-address-]]
+=== authorizeOperator(address operator)
+
+Make an account an operator of the caller.
+
+See {isOperatorFor}.
+
+Emits an {AuthorizedOperator} event.
+
+Requirements
+
+- `operator` cannot be calling address.
+
+[[IERC777-revokeOperator-address-]]
+=== revokeOperator(address operator)
+
+Make an account an operator of the caller.
+
+See {isOperatorFor} and {defaultOperators}.
+
+Emits a {RevokedOperator} event.
+
+Requirements
+
+- `operator` cannot be calling address.
+
+[[IERC777-defaultOperators--]]
+=== defaultOperators() → address[]
+
+Returns the list of default operators. These accounts are operators
+for all token holders, even if {authorizeOperator} was never called on
+them.
+
+This list is immutable, but individual holders may revoke these via
+{revokeOperator}, in which case {isOperatorFor} will return false.
+
+[[IERC777-operatorSend-address-address-uint256-bytes-bytes-]]
+=== operatorSend(address sender, address recipient, uint256 amount, bytes data, bytes operatorData)
+
+Moves `amount` tokens from `sender` to `recipient`. The caller must
+be an operator of `sender`.
+
+If send or receive hooks are registered for `sender` and `recipient`,
+the corresponding functions will be called with `data` and
+`operatorData`. See {IERC777Sender} and {IERC777Recipient}.
+
+Emits a {Sent} event.
+
+Requirements
+
+- `sender` cannot be the zero address.
+- `sender` must have at least `amount` tokens.
+- the caller must be an operator for `sender`.
+- `recipient` cannot be the zero address.
+- if `recipient` is a contract, it must implement the {IERC777Recipient}
+interface.
+
+[[IERC777-operatorBurn-address-uint256-bytes-bytes-]]
+=== operatorBurn(address account, uint256 amount, bytes data, bytes operatorData)
+
+Destoys `amount` tokens from `account`, reducing the total supply.
+The caller must be an operator of `account`.
+
+If a send hook is registered for `account`, the corresponding function
+will be called with `data` and `operatorData`. See {IERC777Sender}.
+
+Emits a {Burned} event.
+
+Requirements
+
+- `account` cannot be the zero address.
+- `account` must have at least `amount` tokens.
+- the caller must be an operator for `account`.
+
+[[IERC777-Sent-address-address-address-uint256-bytes-bytes-]]
+=== Sent(address operator, address from, address to, uint256 amount, bytes data, bytes operatorData)
+
+
+
+[[IERC777-Minted-address-address-uint256-bytes-bytes-]]
+=== Minted(address operator, address to, uint256 amount, bytes data, bytes operatorData)
+
+
+
+[[IERC777-Burned-address-address-uint256-bytes-bytes-]]
+=== Burned(address operator, address from, uint256 amount, bytes data, bytes operatorData)
+
+
+
+[[IERC777-AuthorizedOperator-address-address-]]
+=== AuthorizedOperator(address operator, address tokenHolder)
+
+
+
+[[IERC777-RevokedOperator-address-address-]]
+=== RevokedOperator(address operator, address tokenHolder)
+
+
+
+
+
+:ERC777: pass:normal[xref:#ERC777[`ERC777`]]
+:ERC1820_REGISTRY: pass:normal[xref:#ERC777-ERC1820_REGISTRY-contract-IERC1820Registry[`ERC1820_REGISTRY`]]
+:constructor: pass:normal[xref:#ERC777-constructor-string-string-address---[`constructor`]]
+:name: pass:normal[xref:#ERC777-name--[`name`]]
+:symbol: pass:normal[xref:#ERC777-symbol--[`symbol`]]
+:decimals: pass:normal[xref:#ERC777-decimals--[`decimals`]]
+:granularity: pass:normal[xref:#ERC777-granularity--[`granularity`]]
+:totalSupply: pass:normal[xref:#ERC777-totalSupply--[`totalSupply`]]
+:balanceOf: pass:normal[xref:#ERC777-balanceOf-address-[`balanceOf`]]
+:send: pass:normal[xref:#ERC777-send-address-uint256-bytes-[`send`]]
+:transfer: pass:normal[xref:#ERC777-transfer-address-uint256-[`transfer`]]
+:burn: pass:normal[xref:#ERC777-burn-uint256-bytes-[`burn`]]
+:isOperatorFor: pass:normal[xref:#ERC777-isOperatorFor-address-address-[`isOperatorFor`]]
+:authorizeOperator: pass:normal[xref:#ERC777-authorizeOperator-address-[`authorizeOperator`]]
+:revokeOperator: pass:normal[xref:#ERC777-revokeOperator-address-[`revokeOperator`]]
+:defaultOperators: pass:normal[xref:#ERC777-defaultOperators--[`defaultOperators`]]
+:operatorSend: pass:normal[xref:#ERC777-operatorSend-address-address-uint256-bytes-bytes-[`operatorSend`]]
+:operatorBurn: pass:normal[xref:#ERC777-operatorBurn-address-uint256-bytes-bytes-[`operatorBurn`]]
+:allowance: pass:normal[xref:#ERC777-allowance-address-address-[`allowance`]]
+:approve: pass:normal[xref:#ERC777-approve-address-uint256-[`approve`]]
+:transferFrom: pass:normal[xref:#ERC777-transferFrom-address-address-uint256-[`transferFrom`]]
+:_mint: pass:normal[xref:#ERC777-_mint-address-address-uint256-bytes-bytes-[`_mint`]]
+:_send: pass:normal[xref:#ERC777-_send-address-address-address-uint256-bytes-bytes-bool-[`_send`]]
+:_burn: pass:normal[xref:#ERC777-_burn-address-address-uint256-bytes-bytes-[`_burn`]]
+:_approve: pass:normal[xref:#ERC777-_approve-address-address-uint256-[`_approve`]]
+:_callTokensToSend: pass:normal[xref:#ERC777-_callTokensToSend-address-address-address-uint256-bytes-bytes-[`_callTokensToSend`]]
+:_callTokensReceived: pass:normal[xref:#ERC777-_callTokensReceived-address-address-address-uint256-bytes-bytes-bool-[`_callTokensReceived`]]
+
+[[ERC777]]
+== `ERC777`
+
+Implementation of the {IERC777} interface.
+
+This implementation is agnostic to the way tokens are created. This means
+that a supply mechanism has to be added in a derived contract using {_mint}.
+
+Support for ERC20 is included in this contract, as specified by the EIP: both
+the ERC777 and ERC20 interfaces can be safely used when interacting with it.
+Both {IERC777-Sent} and {IERC20-Transfer} events are emitted on token
+movements.
+
+Additionally, the {IERC777-granularity} value is hard-coded to `1`, meaning that there
+are no special restrictions in the amount of tokens that created, moved, or
+destroyed. This makes integration with ERC20 applications seamless.
+
+
+- xref:#ERC777-constructor-string-string-address---[constructor(string,string,address[])]
+- xref:#ERC777-name--[name()]
+- xref:#ERC777-symbol--[symbol()]
+- xref:#ERC777-decimals--[decimals()]
+- xref:#ERC777-granularity--[granularity()]
+- xref:#ERC777-totalSupply--[totalSupply()]
+- xref:#ERC777-balanceOf-address-[balanceOf(address)]
+- xref:#ERC777-send-address-uint256-bytes-[send(address,uint256,bytes)]
+- xref:#ERC777-transfer-address-uint256-[transfer(address,uint256)]
+- xref:#ERC777-burn-uint256-bytes-[burn(uint256,bytes)]
+- xref:#ERC777-isOperatorFor-address-address-[isOperatorFor(address,address)]
+- xref:#ERC777-authorizeOperator-address-[authorizeOperator(address)]
+- xref:#ERC777-revokeOperator-address-[revokeOperator(address)]
+- xref:#ERC777-defaultOperators--[defaultOperators()]
+- xref:#ERC777-operatorSend-address-address-uint256-bytes-bytes-[operatorSend(address,address,uint256,bytes,bytes)]
+- xref:#ERC777-operatorBurn-address-uint256-bytes-bytes-[operatorBurn(address,uint256,bytes,bytes)]
+- xref:#ERC777-allowance-address-address-[allowance(address,address)]
+- xref:#ERC777-approve-address-uint256-[approve(address,uint256)]
+- xref:#ERC777-transferFrom-address-address-uint256-[transferFrom(address,address,uint256)]
+- xref:#ERC777-_mint-address-address-uint256-bytes-bytes-[_mint(address,address,uint256,bytes,bytes)]
+- xref:#ERC777-_send-address-address-address-uint256-bytes-bytes-bool-[_send(address,address,address,uint256,bytes,bytes,bool)]
+- xref:#ERC777-_burn-address-address-uint256-bytes-bytes-[_burn(address,address,uint256,bytes,bytes)]
+- xref:#ERC777-_approve-address-address-uint256-[_approve(address,address,uint256)]
+- xref:#ERC777-_callTokensToSend-address-address-address-uint256-bytes-bytes-[_callTokensToSend(address,address,address,uint256,bytes,bytes)]
+- xref:#ERC777-_callTokensReceived-address-address-address-uint256-bytes-bytes-bool-[_callTokensReceived(address,address,address,uint256,bytes,bytes,bool)]
+- xref:#IERC20-totalSupply--[totalSupply()]
+- xref:#IERC20-balanceOf-address-[balanceOf(address)]
+- xref:#IERC20-transfer-address-uint256-[transfer(address,uint256)]
+- xref:#IERC20-allowance-address-address-[allowance(address,address)]
+- xref:#IERC20-approve-address-uint256-[approve(address,uint256)]
+- xref:#IERC20-transferFrom-address-address-uint256-[transferFrom(address,address,uint256)]
+- xref:#IERC777-name--[name()]
+- xref:#IERC777-symbol--[symbol()]
+- xref:#IERC777-granularity--[granularity()]
+- xref:#IERC777-totalSupply--[totalSupply()]
+- xref:#IERC777-balanceOf-address-[balanceOf(address)]
+- xref:#IERC777-send-address-uint256-bytes-[send(address,uint256,bytes)]
+- xref:#IERC777-burn-uint256-bytes-[burn(uint256,bytes)]
+- xref:#IERC777-isOperatorFor-address-address-[isOperatorFor(address,address)]
+- xref:#IERC777-authorizeOperator-address-[authorizeOperator(address)]
+- xref:#IERC777-revokeOperator-address-[revokeOperator(address)]
+- xref:#IERC777-defaultOperators--[defaultOperators()]
+- xref:#IERC777-operatorSend-address-address-uint256-bytes-bytes-[operatorSend(address,address,uint256,bytes,bytes)]
+- xref:#IERC777-operatorBurn-address-uint256-bytes-bytes-[operatorBurn(address,uint256,bytes,bytes)]
+- xref:#Context-constructor--[constructor()]
+- xref:#Context-_msgSender--[_msgSender()]
+- xref:#Context-_msgData--[_msgData()]
+
+- xref:#IERC20-Transfer-address-address-uint256-[Transfer(address,address,uint256)]
+- xref:#IERC20-Approval-address-address-uint256-[Approval(address,address,uint256)]
+- xref:#IERC777-Sent-address-address-address-uint256-bytes-bytes-[Sent(address,address,address,uint256,bytes,bytes)]
+- xref:#IERC777-Minted-address-address-uint256-bytes-bytes-[Minted(address,address,uint256,bytes,bytes)]
+- xref:#IERC777-Burned-address-address-uint256-bytes-bytes-[Burned(address,address,uint256,bytes,bytes)]
+- xref:#IERC777-AuthorizedOperator-address-address-[AuthorizedOperator(address,address)]
+- xref:#IERC777-RevokedOperator-address-address-[RevokedOperator(address,address)]
+
+[[ERC777-constructor-string-string-address---]]
+=== constructor(string name, string symbol, address[] defaultOperators)
+
+`defaultOperators` may be an empty array.
+
+[[ERC777-name--]]
+=== name() → string
+
+See {IERC777-name}.
+
+[[ERC777-symbol--]]
+=== symbol() → string
+
+See {IERC777-symbol}.
+
+[[ERC777-decimals--]]
+=== decimals() → uint8
+
+See {ERC20Detailed-decimals}.
+
+Always returns 18, as per the
+[ERC777 EIP](https://eips.ethereum.org/EIPS/eip-777#backward-compatibility).
+
+[[ERC777-granularity--]]
+=== granularity() → uint256
+
+See {IERC777-granularity}.
+
+This implementation always returns `1`.
+
+[[ERC777-totalSupply--]]
+=== totalSupply() → uint256
+
+See {IERC777-totalSupply}.
+
+[[ERC777-balanceOf-address-]]
+=== balanceOf(address tokenHolder) → uint256
+
+Returns the amount of tokens owned by an account (`tokenHolder`).
+
+[[ERC777-send-address-uint256-bytes-]]
+=== send(address recipient, uint256 amount, bytes data)
+
+See {IERC777-send}.
+
+Also emits a {IERC20-Transfer} event for ERC20 compatibility.
+
+[[ERC777-transfer-address-uint256-]]
+=== transfer(address recipient, uint256 amount) → bool
+
+See {IERC20-transfer}.
+
+Unlike `send`, `recipient` is _not_ required to implement the {IERC777Recipient}
+interface if it is a contract.
+
+Also emits a {Sent} event.
+
+[[ERC777-burn-uint256-bytes-]]
+=== burn(uint256 amount, bytes data)
+
+See {IERC777-burn}.
+
+Also emits a {IERC20-Transfer} event for ERC20 compatibility.
+
+[[ERC777-isOperatorFor-address-address-]]
+=== isOperatorFor(address operator, address tokenHolder) → bool
+
+See {IERC777-isOperatorFor}.
+
+[[ERC777-authorizeOperator-address-]]
+=== authorizeOperator(address operator)
+
+See {IERC777-authorizeOperator}.
+
+[[ERC777-revokeOperator-address-]]
+=== revokeOperator(address operator)
+
+See {IERC777-revokeOperator}.
+
+[[ERC777-defaultOperators--]]
+=== defaultOperators() → address[]
+
+See {IERC777-defaultOperators}.
+
+[[ERC777-operatorSend-address-address-uint256-bytes-bytes-]]
+=== operatorSend(address sender, address recipient, uint256 amount, bytes data, bytes operatorData)
+
+See {IERC777-operatorSend}.
+
+Emits {Sent} and {IERC20-Transfer} events.
+
+[[ERC777-operatorBurn-address-uint256-bytes-bytes-]]
+=== operatorBurn(address account, uint256 amount, bytes data, bytes operatorData)
+
+See {IERC777-operatorBurn}.
+
+Emits {Burned} and {IERC20-Transfer} events.
+
+[[ERC777-allowance-address-address-]]
+=== allowance(address holder, address spender) → uint256
+
+See {IERC20-allowance}.
+
+Note that operator and allowance concepts are orthogonal: operators may
+not have allowance, and accounts with allowance may not be operators
+themselves.
+
+[[ERC777-approve-address-uint256-]]
+=== approve(address spender, uint256 value) → bool
+
+See {IERC20-approve}.
+
+Note that accounts cannot have allowance issued by their operators.
+
+[[ERC777-transferFrom-address-address-uint256-]]
+=== transferFrom(address holder, address recipient, uint256 amount) → bool
+
+See {IERC20-transferFrom}.
+
+Note that operator and allowance concepts are orthogonal: operators cannot
+call `transferFrom` (unless they have allowance), and accounts with
+allowance cannot call `operatorSend` (unless they are operators).
+
+Emits {Sent}, {IERC20-Transfer} and {IERC20-Approval} events.
+
+[[ERC777-_mint-address-address-uint256-bytes-bytes-]]
+=== _mint(address operator, address account, uint256 amount, bytes userData, bytes operatorData)
+
+Creates `amount` tokens and assigns them to `account`, increasing
+the total supply.
+
+If a send hook is registered for `account`, the corresponding function
+will be called with `operator`, `data` and `operatorData`.
+
+See {IERC777Sender} and {IERC777Recipient}.
+
+Emits {Minted} and {IERC20-Transfer} events.
+
+Requirements
+
+- `account` cannot be the zero address.
+- if `account` is a contract, it must implement the {IERC777Recipient}
+interface.
+
+[[ERC777-_send-address-address-address-uint256-bytes-bytes-bool-]]
+=== _send(address operator, address from, address to, uint256 amount, bytes userData, bytes operatorData, bool requireReceptionAck)
+
+Send tokens
+
+
+[[ERC777-_burn-address-address-uint256-bytes-bytes-]]
+=== _burn(address operator, address from, uint256 amount, bytes data, bytes operatorData)
+
+Burn tokens
+
+
+[[ERC777-_approve-address-address-uint256-]]
+=== _approve(address holder, address spender, uint256 value)
+
+See {ERC20-_approve}.
+
+Note that accounts cannot have allowance issued by their operators.
+
+[[ERC777-_callTokensToSend-address-address-address-uint256-bytes-bytes-]]
+=== _callTokensToSend(address operator, address from, address to, uint256 amount, bytes userData, bytes operatorData)
+
+Call from.tokensToSend() if the interface is registered
+
+
+[[ERC777-_callTokensReceived-address-address-address-uint256-bytes-bytes-bool-]]
+=== _callTokensReceived(address operator, address from, address to, uint256 amount, bytes userData, bytes operatorData, bool requireReceptionAck)
+
+Call to.tokensReceived() if the interface is registered. Reverts if the recipient is a contract but
+tokensReceived() was not registered for the recipient
+
+
+
+
+== Hooks
+
+:IERC777Sender: pass:normal[xref:#IERC777Sender[`IERC777Sender`]]
+:tokensToSend: pass:normal[xref:#IERC777Sender-tokensToSend-address-address-address-uint256-bytes-bytes-[`tokensToSend`]]
+
+[[IERC777Sender]]
+== `IERC777Sender`
+
+Interface of the ERC777TokensSender standard as defined in the EIP.
+
+{IERC777} Token holders can be notified of operations performed on their
+tokens by having a contract implement this interface (contract holders can be
+their own implementer) and registering it on the
+https://eips.ethereum.org/EIPS/eip-1820[ERC1820 global registry].
+
+See {IERC1820Registry} and {ERC1820Implementer}.
+
+
+- xref:#IERC777Sender-tokensToSend-address-address-address-uint256-bytes-bytes-[tokensToSend(address,address,address,uint256,bytes,bytes)]
+
+
+[[IERC777Sender-tokensToSend-address-address-address-uint256-bytes-bytes-]]
+=== tokensToSend(address operator, address from, address to, uint256 amount, bytes userData, bytes operatorData)
+
+Called by an {IERC777} token contract whenever a registered holder's
+(`from`) tokens are about to be moved or destroyed. The type of operation
+is conveyed by `to` being the zero address or not.
+
+This call occurs _before_ the token contract's state is updated, so
+{IERC777-balanceOf}, etc., can be used to query the pre-operation state.
+
+This function may revert to prevent the operation from being executed.
+
+
+
+:IERC777Recipient: pass:normal[xref:#IERC777Recipient[`IERC777Recipient`]]
+:tokensReceived: pass:normal[xref:#IERC777Recipient-tokensReceived-address-address-address-uint256-bytes-bytes-[`tokensReceived`]]
+
+[[IERC777Recipient]]
+== `IERC777Recipient`
+
+Interface of the ERC777TokensRecipient standard as defined in the EIP.
+
+Accounts can be notified of {IERC777} tokens being sent to them by having a
+contract implement this interface (contract holders can be their own
+implementer) and registering it on the
+https://eips.ethereum.org/EIPS/eip-1820[ERC1820 global registry].
+
+See {IERC1820Registry} and {ERC1820Implementer}.
+
+
+- xref:#IERC777Recipient-tokensReceived-address-address-address-uint256-bytes-bytes-[tokensReceived(address,address,address,uint256,bytes,bytes)]
+
+
+[[IERC777Recipient-tokensReceived-address-address-address-uint256-bytes-bytes-]]
+=== tokensReceived(address operator, address from, address to, uint256 amount, bytes userData, bytes operatorData)
+
+Called by an {IERC777} token contract whenever tokens are being
+moved or created into a registered account (`to`). The type of operation
+is conveyed by `from` being the zero address or not.
+
+This call occurs _after_ the token contract's state is updated, so
+{IERC777-balanceOf}, etc., can be used to query the post-operation state.
+
+This function may revert to prevent the operation from being executed.
+
+

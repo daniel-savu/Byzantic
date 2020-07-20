@@ -1,0 +1,90 @@
+= Lifecycle
+
+== Pausable
+
+:Pausable: pass:normal[xref:#Pausable[`Pausable`]]
+:whenNotPaused: pass:normal[xref:#Pausable-whenNotPaused--[`whenNotPaused`]]
+:whenPaused: pass:normal[xref:#Pausable-whenPaused--[`whenPaused`]]
+:constructor: pass:normal[xref:#Pausable-constructor--[`constructor`]]
+:paused: pass:normal[xref:#Pausable-paused--[`paused`]]
+:pause: pass:normal[xref:#Pausable-pause--[`pause`]]
+:unpause: pass:normal[xref:#Pausable-unpause--[`unpause`]]
+:Paused: pass:normal[xref:#Pausable-Paused-address-[`Paused`]]
+:Unpaused: pass:normal[xref:#Pausable-Unpaused-address-[`Unpaused`]]
+
+[[Pausable]]
+== `Pausable`
+
+Contract module which allows children to implement an emergency stop
+mechanism that can be triggered by an authorized account.
+
+This module is used through inheritance. It will make available the
+modifiers `whenNotPaused` and `whenPaused`, which can be applied to
+the functions of your contract. Note that they will not be pausable by
+simply including this module, only once the modifiers are put in place.
+
+- xref:#Pausable-whenNotPaused--[whenNotPaused()]
+- xref:#Pausable-whenPaused--[whenPaused()]
+- xref:#PauserRole-onlyPauser--[onlyPauser()]
+
+- xref:#Pausable-constructor--[constructor()]
+- xref:#Pausable-paused--[paused()]
+- xref:#Pausable-pause--[pause()]
+- xref:#Pausable-unpause--[unpause()]
+- xref:#PauserRole-constructor--[constructor()]
+- xref:#PauserRole-isPauser-address-[isPauser(address)]
+- xref:#PauserRole-addPauser-address-[addPauser(address)]
+- xref:#PauserRole-renouncePauser--[renouncePauser()]
+- xref:#PauserRole-_addPauser-address-[_addPauser(address)]
+- xref:#PauserRole-_removePauser-address-[_removePauser(address)]
+- xref:#Context-constructor--[constructor()]
+- xref:#Context-_msgSender--[_msgSender()]
+- xref:#Context-_msgData--[_msgData()]
+
+- xref:#Pausable-Paused-address-[Paused(address)]
+- xref:#Pausable-Unpaused-address-[Unpaused(address)]
+- xref:#PauserRole-PauserAdded-address-[PauserAdded(address)]
+- xref:#PauserRole-PauserRemoved-address-[PauserRemoved(address)]
+
+[[Pausable-whenNotPaused--]]
+=== whenNotPaused()
+
+Modifier to make a function callable only when the contract is not paused.
+
+[[Pausable-whenPaused--]]
+=== whenPaused()
+
+Modifier to make a function callable only when the contract is paused.
+
+[[Pausable-constructor--]]
+=== constructor()
+
+Initializes the contract in unpaused state. Assigns the Pauser role
+to the deployer.
+
+[[Pausable-paused--]]
+=== paused() → bool
+
+Returns true if the contract is paused, and false otherwise.
+
+[[Pausable-pause--]]
+=== pause()
+
+Called by a pauser to pause, triggers stopped state.
+
+[[Pausable-unpause--]]
+=== unpause()
+
+Called by a pauser to unpause, returns to normal state.
+
+[[Pausable-Paused-address-]]
+=== Paused(address account)
+
+Emitted when the pause is triggered by a pauser (`account`).
+
+[[Pausable-Unpaused-address-]]
+=== Unpaused(address account)
+
+Emitted when the pause is lifted by a pauser (`account`).
+
+

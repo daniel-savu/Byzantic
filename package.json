@@ -1,0 +1,37 @@
+{
+  "name": "Byzantic",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@nomiclabs/buidler": "^1.3.8",
+    "@nomiclabs/buidler-ethers": "^1.3.3",
+    "@nomiclabs/buidler-truffle5": "^1.3.4",
+    "@nomiclabs/buidler-waffle": "^1.3.4",
+    "@nomiclabs/buidler-web3": "^1.3.4",
+    "@openzeppelin/contracts-ethereum-package": "^3.0.0",
+    "@studydefi/money-legos": "^2.3.2",
+    "@types/chai": "^4.2.11",
+    "@types/mocha": "^7.0.2",
+    "@types/node": "^14.0.11",
+    "abi-decoder": "^2.3.0",
+    "axios": "^0.19.2",
+    "chai": "^4.2.0",
+    "ethereum-waffle": "^2.5.1",
+    "ethers": "^4.0.47",
+    "npm": "^6.14.6",
+    "openzeppelin-solidity": "^3.0.1",
+    "ts-node": "^8.10.2",
+    "typescript": "^3.9.5",
+    "web3": "^1.2.8"
+  },
+  "dependencies": {
+    "solc": "^0.5.17",
+    "truffle": "^5.1.31"
+  }
+}
