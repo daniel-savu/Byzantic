@@ -63,14 +63,14 @@ npm install --save-dev
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-The test showcases the usage of Byzantic in a Simple Lending Protocol with mock Dai (a basic ERC-20 token).
+The test showcases how Byzantic can be used to aggregate reputation from two identical "simple lending protocols" (SimpleLending and SimpleLendingTwo). For testing purposes, a basic ERC-20 token was used to mock Dai. Exchange price between ETH and DaiMock is based on the liquidity available in the lending protocols.
+
+There is no need to connect to an Ethereum node, as Buidler runs the tests in its custom Buidler EVM, which facilitates debugging.
 
 Run:
 ```sh
 npx buidler test
 ```
-
-There is no need to connect to an Ethereum node, as Buidler runs the tests in its custom Buidler EVM, which facilitates debugging.
 
 
 
