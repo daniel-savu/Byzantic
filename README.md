@@ -72,8 +72,7 @@ Run:
 npx buidler test
 ```
 
-To learn how to integrate with Byzantic, follow the tests in `test/byzantic.ts`. Moreover, check out the documentation static HTML page in `docs/website/build/contracts/1/index.html`, generated automatically using [solidity-docgen](https://github.com/OpenZeppelin/solidity-docgen) and [Antora](https://antora.org/).
-
+To learn how to integrate with Byzantic, follow the tests in `test/byzantic.ts`. Moreover, check out the [Documentation static HTML page](docs/website/build/contracts/1/index.html), generated automatically using [solidity-docgen](https://github.com/OpenZeppelin/solidity-docgen) and [Antora](https://antora.org/).
 
 
 <!-- ROADMAP -->
