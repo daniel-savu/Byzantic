@@ -1,12 +1,9 @@
-
-
 site:
-  title: Antora Demo Site
+  title: Byzantic Docs
   url: https://my-antora-demo-site.org 
-  start_page: component-b::index.adoc 
 content:
   sources:
-  - url: ../
+  - url: ../../
     start_path: docs
 ui:
   bundle:

@@ -1,0 +1,6 @@
+#!/bin/bash
+
+solidity-docgen --solc-module ./node_modules/solc -t docs -s readmes -x adoc -o docs/modules/ROOT/pages
+cd docs/website
+antora antora-playbook.yml
+

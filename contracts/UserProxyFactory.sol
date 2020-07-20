@@ -1,7 +1,7 @@
 pragma solidity ^0.5.0;
 
 import "./LBCR.sol";
-import "./Byzantic.sol";
+import "./WebOfTrust.sol";
 import "./UserProxy.sol";
 import "./SimpleLendingProxy.sol";
 import "@nomiclabs/buidler/console.sol";
@@ -14,24 +14,24 @@ contract UserProxyFactory is Ownable {
 
     LBCR simpleLendingLBCR;
     LBCR simpleLendingTwoLBCR;
-    Byzantic byzantic;
+    WebOfTrust webOfTrust;
     mapping (address => bool) isAgentInitialized;
 
     constructor(
         address simpleLendingLBCRAddress,
         address simpleLendingTwoLBCRAddress,
-        address payable byzanticAddress
+        address payable webOfTrustAddress
     ) public {
         simpleLendingLBCR = LBCR(simpleLendingLBCRAddress);
         simpleLendingTwoLBCR = LBCR(simpleLendingTwoLBCRAddress);
-        byzantic = Byzantic(byzanticAddress);
+        webOfTrust = WebOfTrust(webOfTrustAddress);
     }
 
     function() external payable {}
 
     function addAgent() public {
         if (!isAgentInitialized[msg.sender]) {
-            UserProxy userProxy = new UserProxy(msg.sender, address(byzantic));
+            UserProxy userProxy = new UserProxy(msg.sender, address(webOfTrust));
             userAddressToUserProxy[msg.sender] = userProxy;
             userProxyToUserAddress[address(userProxy)] = msg.sender;
             simpleLendingLBCR.registerAgent(address(userProxy));

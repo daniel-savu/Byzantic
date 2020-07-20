@@ -4,7 +4,7 @@ pragma solidity ^0.5.0;
 import "@openzeppelin/contracts/ownership/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@nomiclabs/buidler/console.sol";
-import "../Byzantic.sol";
+import "../WebOfTrust.sol";
 
 
 
@@ -14,14 +14,14 @@ contract SimpleLending is Ownable {
     mapping(address => uint) reserveLiquidity;
     address[] reserves;
     uint baseCollateralisationRate;
-    Byzantic byzantic;
+    WebOfTrust webOfTrust;
     address ethAddress = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
     uint256 collateralizationDecimals = 3; // decimals to calculate collateral factor
     uint conversionDecimals = 25;
 
-    constructor(address payable byzanticAddress, uint baseCollateralisationRateValue) public {
+    constructor(address payable webOfTrustAddress, uint baseCollateralisationRateValue) public {
         baseCollateralisationRate = baseCollateralisationRateValue;
-        byzantic = Byzantic(byzanticAddress);
+        webOfTrust = WebOfTrust(webOfTrustAddress);
         reserves.push(ethAddress);
     }
 
@@ -71,11 +71,11 @@ contract SimpleLending is Ownable {
 
     function liquidate(address borrower, address collateralReserve, address loanReserve, uint256 loanAmount) public payable {
         // need to retrieve the collateralization ratio of 'account'
-        // from the Byzantic contract
+        // from the WebOfTrust contract
         // and check whether user is undercollateralized
         (uint deposits, ) = getAccountDeposits(borrower);
         (uint borrows, ) = getAccountBorrows(borrower);
-        uint accountCollateralizationRatio = baseCollateralisationRate * byzantic.getAggregateAgentFactorForProtocol(borrower, address(this));
+        uint accountCollateralizationRatio = baseCollateralisationRate * webOfTrust.getAggregateAgentFactorForProtocol(borrower, address(this));
         uint availableCollateral = deposits - borrows * accountCollateralizationRatio;
         // deposits and borrows are expressed as numbers multiplied by 10 ** conversionDecimals
         availableCollateral = divideByConversionDecimals(availableCollateral);
@@ -156,7 +156,7 @@ contract SimpleLending is Ownable {
         console.log("in getBorrowableAmountInETH");
         (uint deposits, ) = getAccountDeposits(account);
         (uint borrows, ) = getAccountBorrows(account);
-        uint accountCollateralizationRatio = baseCollateralisationRate * byzantic.getAggregateAgentFactorForProtocol(account, address(this));
+        uint accountCollateralizationRatio = baseCollateralisationRate * webOfTrust.getAggregateAgentFactorForProtocol(account, address(this));
         uint borrowableAmountInETH = (deposits / accountCollateralizationRatio) - borrows;
         console.log("borrowableAmountInETH *(10^25):");
         console.log(borrowableAmountInETH);
@@ -166,7 +166,7 @@ contract SimpleLending is Ownable {
     function getCollateralInUse(address account) public returns (uint, uint) {
         (uint deposits, ) = getAccountDeposits(account);
         (uint borrows, ) = getAccountBorrows(account);
-        uint accountCollateralizationRatio = baseCollateralisationRate * byzantic.getAggregateAgentFactorForProtocol(account, address(this));
+        uint accountCollateralizationRatio = baseCollateralisationRate * webOfTrust.getAggregateAgentFactorForProtocol(account, address(this));
         uint collateralInUse = deposits - (borrows * accountCollateralizationRatio);
         return (collateralInUse, conversionDecimals);
     }

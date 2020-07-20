@@ -4,7 +4,7 @@ import "@openzeppelin/contracts/ownership/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "./LBCR.sol";
 import "@nomiclabs/buidler/console.sol";
-import "./Byzantic.sol";
+import "./WebOfTrust.sol";
 import "./UserProxy.sol";
 import "./UserProxyFactory.sol";
 import "./SimpleLending/SimpleLending.sol";
@@ -24,16 +24,16 @@ contract SimpleLendingTwoProxy is Ownable {
     uint256 liquidationCallAction;
     uint256 flashLoanAction;
     uint256 redeemAction;
-    Byzantic byzantic;
+    WebOfTrust webOfTrust;
     UserProxyFactory userProxyFactory;
 
     constructor(
         address lbcrAddress,
-        address payable byzanticAddress,
+        address payable webOfTrustAddress,
         address payable UserProxyFactoryAddress
     ) public {
         lbcr = LBCR(lbcrAddress);
-        byzantic = Byzantic(byzanticAddress);
+        webOfTrust = WebOfTrust(webOfTrustAddress);
         userProxyFactory = UserProxyFactory(UserProxyFactoryAddress);
         depositAction = 1;
         borrowAction = 2;
@@ -63,7 +63,7 @@ contract SimpleLendingTwoProxy is Ownable {
     // LendingPool contract
 
     function deposit(address reserve, uint256 amount) public {
-        address simpleLendingTwoAddress = byzantic.getSimpleLendingTwoAddress();
+        address simpleLendingTwoAddress = webOfTrust.getSimpleLendingTwoAddress();
         bytes memory abiEncoding = abi.encodeWithSignature(
             "deposit(address,uint256)",
             reserve,
@@ -78,7 +78,7 @@ contract SimpleLendingTwoProxy is Ownable {
     }
 
     function borrow(address reserve, uint256 amount) public {
-        address simpleLendingTwoAddress = byzantic.getSimpleLendingTwoAddress();
+        address simpleLendingTwoAddress = webOfTrust.getSimpleLendingTwoAddress();
         bytes memory abiEncoding = abi.encodeWithSignature(
             "borrow(address,uint256)",
             reserve,

@@ -1,0 +1,767 @@
+NOTE: This page is incomplete. We're working to improve it. Stay tuned!
+
+
+
+== Core
+
+:WebOfTrust: pass:normal[xref:#WebOfTrust[`WebOfTrust`]]
+:aETHAddress: pass:normal[xref:#WebOfTrust-aETHAddress-address[`aETHAddress`]]
+:userProxyFactory: pass:normal[xref:#WebOfTrust-userProxyFactory-contract-UserProxyFactory[`userProxyFactory`]]
+:lbcrs: pass:normal[xref:#WebOfTrust-lbcrs-contract-LBCR--[`lbcrs`]]
+:protocolToLBCR: pass:normal[xref:#WebOfTrust-protocolToLBCR-mapping-address----address-[`protocolToLBCR`]]
+:simpleLendingLBCR: pass:normal[xref:#WebOfTrust-simpleLendingLBCR-contract-LBCR[`simpleLendingLBCR`]]
+:simpleLendingTwoLBCR: pass:normal[xref:#WebOfTrust-simpleLendingTwoLBCR-contract-LBCR[`simpleLendingTwoLBCR`]]
+:simpleLending: pass:normal[xref:#WebOfTrust-simpleLending-contract-SimpleLending[`simpleLending`]]
+:simpleLendingTwo: pass:normal[xref:#WebOfTrust-simpleLendingTwo-contract-SimpleLending[`simpleLendingTwo`]]
+:simpleLendingProxy: pass:normal[xref:#WebOfTrust-simpleLendingProxy-contract-SimpleLendingProxy[`simpleLendingProxy`]]
+:simpleLendingTwoProxy: pass:normal[xref:#WebOfTrust-simpleLendingTwoProxy-contract-SimpleLendingTwoProxy[`simpleLendingTwoProxy`]]
+:fallback: pass:normal[xref:#WebOfTrust-fallback--[`fallback`]]
+:getUserProxyFactoryAddress: pass:normal[xref:#WebOfTrust-getUserProxyFactoryAddress--[`getUserProxyFactoryAddress`]]
+:getSimpleLendingLBCR: pass:normal[xref:#WebOfTrust-getSimpleLendingLBCR--[`getSimpleLendingLBCR`]]
+:getSimpleLendingTwoLBCR: pass:normal[xref:#WebOfTrust-getSimpleLendingTwoLBCR--[`getSimpleLendingTwoLBCR`]]
+:getSimpleLendingAddress: pass:normal[xref:#WebOfTrust-getSimpleLendingAddress--[`getSimpleLendingAddress`]]
+:getSimpleLendingTwoAddress: pass:normal[xref:#WebOfTrust-getSimpleLendingTwoAddress--[`getSimpleLendingTwoAddress`]]
+:getAggregateAgentFactorForProtocol: pass:normal[xref:#WebOfTrust-getAggregateAgentFactorForProtocol-address-address-[`getAggregateAgentFactorForProtocol`]]
+:aggregateLBCRsForProtocol: pass:normal[xref:#WebOfTrust-aggregateLBCRsForProtocol-address-address-[`aggregateLBCRsForProtocol`]]
+:moveFundsToUserProxy: pass:normal[xref:#WebOfTrust-moveFundsToUserProxy-address-address-uint256-[`moveFundsToUserProxy`]]
+:setSimpleLendingProxy: pass:normal[xref:#WebOfTrust-setSimpleLendingProxy-address-payable-[`setSimpleLendingProxy`]]
+:getSimpleLendingProxy: pass:normal[xref:#WebOfTrust-getSimpleLendingProxy--[`getSimpleLendingProxy`]]
+:getSimpleLendingTwoProxy: pass:normal[xref:#WebOfTrust-getSimpleLendingTwoProxy--[`getSimpleLendingTwoProxy`]]
+:curateLBCRs: pass:normal[xref:#WebOfTrust-curateLBCRs--[`curateLBCRs`]]
+
+[[WebOfTrust]]
+== `WebOfTrust`
+
+
+
+
+- xref:#WebOfTrust-fallback--[fallback()]
+- xref:#WebOfTrust-getUserProxyFactoryAddress--[getUserProxyFactoryAddress()]
+- xref:#WebOfTrust-getSimpleLendingLBCR--[getSimpleLendingLBCR()]
+- xref:#WebOfTrust-getSimpleLendingTwoLBCR--[getSimpleLendingTwoLBCR()]
+- xref:#WebOfTrust-getSimpleLendingAddress--[getSimpleLendingAddress()]
+- xref:#WebOfTrust-getSimpleLendingTwoAddress--[getSimpleLendingTwoAddress()]
+- xref:#WebOfTrust-getAggregateAgentFactorForProtocol-address-address-[getAggregateAgentFactorForProtocol(address,address)]
+- xref:#WebOfTrust-aggregateLBCRsForProtocol-address-address-[aggregateLBCRsForProtocol(address,address)]
+- xref:#WebOfTrust-moveFundsToUserProxy-address-address-uint256-[moveFundsToUserProxy(address,address,uint256)]
+- xref:#WebOfTrust-setSimpleLendingProxy-address-payable-[setSimpleLendingProxy(address payable)]
+- xref:#WebOfTrust-getSimpleLendingProxy--[getSimpleLendingProxy()]
+- xref:#WebOfTrust-getSimpleLendingTwoProxy--[getSimpleLendingTwoProxy()]
+- xref:#WebOfTrust-curateLBCRs--[curateLBCRs()]
+
+
+[[WebOfTrust-fallback--]]
+=== fallback()
+
+
+
+[[WebOfTrust-getUserProxyFactoryAddress--]]
+=== getUserProxyFactoryAddress() → address
+
+
+
+[[WebOfTrust-getSimpleLendingLBCR--]]
+=== getSimpleLendingLBCR() → address
+
+
+
+[[WebOfTrust-getSimpleLendingTwoLBCR--]]
+=== getSimpleLendingTwoLBCR() → address
+
+
+
+[[WebOfTrust-getSimpleLendingAddress--]]
+=== getSimpleLendingAddress() → address
+
+
+
+[[WebOfTrust-getSimpleLendingTwoAddress--]]
+=== getSimpleLendingTwoAddress() → address
+
+
+
+[[WebOfTrust-getAggregateAgentFactorForProtocol-address-address-]]
+=== getAggregateAgentFactorForProtocol(address agent, address protocol) → uint256
+
+Uses information from all LBCRs and the subjective measures
+of compatibility between them to compute how much collateral a
+user should pay.
+
+[[WebOfTrust-aggregateLBCRsForProtocol-address-address-]]
+=== aggregateLBCRsForProtocol(address agent, address protocol) → uint256
+
+
+
+[[WebOfTrust-moveFundsToUserProxy-address-address-uint256-]]
+=== moveFundsToUserProxy(address agentOwner, address _reserve, uint256 _amount)
+
+
+
+[[WebOfTrust-setSimpleLendingProxy-address-payable-]]
+=== setSimpleLendingProxy(address payable simpleLendingProxyAddress)
+
+
+
+[[WebOfTrust-getSimpleLendingProxy--]]
+=== getSimpleLendingProxy() → address
+
+
+
+[[WebOfTrust-getSimpleLendingTwoProxy--]]
+=== getSimpleLendingTwoProxy() → address
+
+
+
+[[WebOfTrust-curateLBCRs--]]
+=== curateLBCRs()
+
+
+
+
+
+:UserProxy: pass:normal[xref:#UserProxy[`UserProxy`]]
+:onlyAuthorised: pass:normal[xref:#UserProxy-onlyAuthorised--[`onlyAuthorised`]]
+:onlyAgentOwner: pass:normal[xref:#UserProxy-onlyAgentOwner--[`onlyAgentOwner`]]
+:agentOwner: pass:normal[xref:#UserProxy-agentOwner-address[`agentOwner`]]
+:INT256_MAX: pass:normal[xref:#UserProxy-INT256_MAX-uint256[`INT256_MAX`]]
+:authorisedContracts: pass:normal[xref:#UserProxy-authorisedContracts-address--[`authorisedContracts`]]
+:aETHAddress: pass:normal[xref:#UserProxy-aETHAddress-address[`aETHAddress`]]
+:LendingPoolAddressesProviderAddress: pass:normal[xref:#UserProxy-LendingPoolAddressesProviderAddress-address[`LendingPoolAddressesProviderAddress`]]
+:agentFundsInPool: pass:normal[xref:#UserProxy-agentFundsInPool-mapping-address----int256-[`agentFundsInPool`]]
+:lbcrs: pass:normal[xref:#UserProxy-lbcrs-contract-LBCR--[`lbcrs`]]
+:webOfTrustContract: pass:normal[xref:#UserProxy-webOfTrustContract-contract-WebOfTrust[`webOfTrustContract`]]
+:constructor: pass:normal[xref:#UserProxy-constructor-address-address-payable-[`constructor`]]
+:fallback: pass:normal[xref:#UserProxy-fallback--[`fallback`]]
+:addAuthorisedContract: pass:normal[xref:#UserProxy-addAuthorisedContract-address-[`addAuthorisedContract`]]
+:addLBCR: pass:normal[xref:#UserProxy-addLBCR-address-[`addLBCR`]]
+:hasEnoughFunds: pass:normal[xref:#UserProxy-hasEnoughFunds-address-uint256-[`hasEnoughFunds`]]
+:withdrawFunds: pass:normal[xref:#UserProxy-withdrawFunds-address-uint256-[`withdrawFunds`]]
+:depositFunds: pass:normal[xref:#UserProxy-depositFunds-address-uint256-[`depositFunds`]]
+:getTotalBalance: pass:normal[xref:#UserProxy-getTotalBalance-address-[`getTotalBalance`]]
+:proxyCall: pass:normal[xref:#UserProxy-proxyCall-address-bytes-[`proxyCall`]]
+:proxyCall: pass:normal[xref:#UserProxy-proxyCall-address-bytes-address-uint256-[`proxyCall`]]
+
+[[UserProxy]]
+== `UserProxy`
+
+
+
+- xref:#UserProxy-onlyAuthorised--[onlyAuthorised()]
+- xref:#UserProxy-onlyAgentOwner--[onlyAgentOwner()]
+- xref:#Ownable-onlyOwner--[onlyOwner()]
+
+- xref:#UserProxy-constructor-address-address-payable-[constructor(address,address payable)]
+- xref:#UserProxy-fallback--[fallback()]
+- xref:#UserProxy-addAuthorisedContract-address-[addAuthorisedContract(address)]
+- xref:#UserProxy-addLBCR-address-[addLBCR(address)]
+- xref:#UserProxy-hasEnoughFunds-address-uint256-[hasEnoughFunds(address,uint256)]
+- xref:#UserProxy-withdrawFunds-address-uint256-[withdrawFunds(address,uint256)]
+- xref:#UserProxy-depositFunds-address-uint256-[depositFunds(address,uint256)]
+- xref:#UserProxy-getTotalBalance-address-[getTotalBalance(address)]
+- xref:#UserProxy-proxyCall-address-bytes-[proxyCall(address,bytes)]
+- xref:#UserProxy-proxyCall-address-bytes-address-uint256-[proxyCall(address,bytes,address,uint256)]
+- xref:#Ownable-constructor--[constructor()]
+- xref:#Ownable-owner--[owner()]
+- xref:#Ownable-isOwner--[isOwner()]
+- xref:#Ownable-renounceOwnership--[renounceOwnership()]
+- xref:#Ownable-transferOwnership-address-[transferOwnership(address)]
+- xref:#Ownable-_transferOwnership-address-[_transferOwnership(address)]
+- xref:#Context-constructor--[constructor()]
+- xref:#Context-_msgSender--[_msgSender()]
+- xref:#Context-_msgData--[_msgData()]
+
+- xref:#Ownable-OwnershipTransferred-address-address-[OwnershipTransferred(address,address)]
+
+[[UserProxy-onlyAuthorised--]]
+=== onlyAuthorised()
+
+
+
+[[UserProxy-onlyAgentOwner--]]
+=== onlyAgentOwner()
+
+
+
+[[UserProxy-constructor-address-address-payable-]]
+=== constructor(address agent, address payable webOfTrustAddress)
+
+
+
+[[UserProxy-fallback--]]
+=== fallback()
+
+
+
+[[UserProxy-addAuthorisedContract-address-]]
+=== addAuthorisedContract(address authorisedContract)
+
+
+
+[[UserProxy-addLBCR-address-]]
+=== addLBCR(address lbcrAddress)
+
+
+
+[[UserProxy-hasEnoughFunds-address-uint256-]]
+=== hasEnoughFunds(address reserve, uint256 amount) → bool
+
+
+
+[[UserProxy-withdrawFunds-address-uint256-]]
+=== withdrawFunds(address _reserve, uint256 _amount)
+
+
+
+[[UserProxy-depositFunds-address-uint256-]]
+=== depositFunds(address _reserve, uint256 _amount)
+
+
+
+[[UserProxy-getTotalBalance-address-]]
+=== getTotalBalance(address _reserve) → uint256
+
+
+
+[[UserProxy-proxyCall-address-bytes-]]
+=== proxyCall(address target, bytes abiEncoding) → bool
+
+
+
+[[UserProxy-proxyCall-address-bytes-address-uint256-]]
+=== proxyCall(address target, bytes abiEncoding, address reserve, uint256 amount) → bool
+
+
+
+
+
+== Example Protocol Integrations
+
+
+:SimpleLending: pass:normal[xref:#SimpleLending[`SimpleLending`]]
+:enoughLiquidity: pass:normal[xref:#SimpleLending-enoughLiquidity-address-uint256-[`enoughLiquidity`]]
+:userDeposits: pass:normal[xref:#SimpleLending-userDeposits-mapping-address----mapping-address----uint256--[`userDeposits`]]
+:userLoans: pass:normal[xref:#SimpleLending-userLoans-mapping-address----mapping-address----uint256--[`userLoans`]]
+:reserveLiquidity: pass:normal[xref:#SimpleLending-reserveLiquidity-mapping-address----uint256-[`reserveLiquidity`]]
+:reserves: pass:normal[xref:#SimpleLending-reserves-address--[`reserves`]]
+:baseCollateralisationRate: pass:normal[xref:#SimpleLending-baseCollateralisationRate-uint256[`baseCollateralisationRate`]]
+:webOfTrust: pass:normal[xref:#SimpleLending-webOfTrust-contract-WebOfTrust[`webOfTrust`]]
+:ethAddress: pass:normal[xref:#SimpleLending-ethAddress-address[`ethAddress`]]
+:collateralizationDecimals: pass:normal[xref:#SimpleLending-collateralizationDecimals-uint256[`collateralizationDecimals`]]
+:conversionDecimals: pass:normal[xref:#SimpleLending-conversionDecimals-uint256[`conversionDecimals`]]
+:constructor: pass:normal[xref:#SimpleLending-constructor-address-payable-uint256-[`constructor`]]
+:fallback: pass:normal[xref:#SimpleLending-fallback--[`fallback`]]
+:setBaseCollateralisationRate: pass:normal[xref:#SimpleLending-setBaseCollateralisationRate-uint256-[`setBaseCollateralisationRate`]]
+:getBaseCollateralisationRate: pass:normal[xref:#SimpleLending-getBaseCollateralisationRate--[`getBaseCollateralisationRate`]]
+:addReserve: pass:normal[xref:#SimpleLending-addReserve-address-[`addReserve`]]
+:deposit: pass:normal[xref:#SimpleLending-deposit-address-uint256-[`deposit`]]
+:borrow: pass:normal[xref:#SimpleLending-borrow-address-uint256-[`borrow`]]
+:repay: pass:normal[xref:#SimpleLending-repay-address-uint256-address-[`repay`]]
+:liquidate: pass:normal[xref:#SimpleLending-liquidate-address-address-address-uint256-[`liquidate`]]
+:redeem: pass:normal[xref:#SimpleLending-redeem-address-uint256-[`redeem`]]
+:makePayment: pass:normal[xref:#SimpleLending-makePayment-address-uint256-address-payable-[`makePayment`]]
+:hasEnoughCollateral: pass:normal[xref:#SimpleLending-hasEnoughCollateral-address-uint256-[`hasEnoughCollateral`]]
+:getAccountDeposits: pass:normal[xref:#SimpleLending-getAccountDeposits-address-[`getAccountDeposits`]]
+:getAccountBorrows: pass:normal[xref:#SimpleLending-getAccountBorrows-address-[`getAccountBorrows`]]
+:getBorrowableAmountInETH: pass:normal[xref:#SimpleLending-getBorrowableAmountInETH-address-[`getBorrowableAmountInETH`]]
+:getCollateralInUse: pass:normal[xref:#SimpleLending-getCollateralInUse-address-[`getCollateralInUse`]]
+:conversionRate: pass:normal[xref:#SimpleLending-conversionRate-address-address-[`conversionRate`]]
+:convert: pass:normal[xref:#SimpleLending-convert-address-address-uint256-[`convert`]]
+:divideByConversionDecimals: pass:normal[xref:#SimpleLending-divideByConversionDecimals-uint256-[`divideByConversionDecimals`]]
+
+[[SimpleLending]]
+== `SimpleLending`
+
+
+
+- xref:#SimpleLending-enoughLiquidity-address-uint256-[enoughLiquidity(address,uint256)]
+- xref:#Ownable-onlyOwner--[onlyOwner()]
+
+- xref:#SimpleLending-constructor-address-payable-uint256-[constructor(address payable,uint256)]
+- xref:#SimpleLending-fallback--[fallback()]
+- xref:#SimpleLending-setBaseCollateralisationRate-uint256-[setBaseCollateralisationRate(uint256)]
+- xref:#SimpleLending-getBaseCollateralisationRate--[getBaseCollateralisationRate()]
+- xref:#SimpleLending-addReserve-address-[addReserve(address)]
+- xref:#SimpleLending-deposit-address-uint256-[deposit(address,uint256)]
+- xref:#SimpleLending-borrow-address-uint256-[borrow(address,uint256)]
+- xref:#SimpleLending-repay-address-uint256-address-[repay(address,uint256,address)]
+- xref:#SimpleLending-liquidate-address-address-address-uint256-[liquidate(address,address,address,uint256)]
+- xref:#SimpleLending-redeem-address-uint256-[redeem(address,uint256)]
+- xref:#SimpleLending-makePayment-address-uint256-address-payable-[makePayment(address,uint256,address payable)]
+- xref:#SimpleLending-hasEnoughCollateral-address-uint256-[hasEnoughCollateral(address,uint256)]
+- xref:#SimpleLending-getAccountDeposits-address-[getAccountDeposits(address)]
+- xref:#SimpleLending-getAccountBorrows-address-[getAccountBorrows(address)]
+- xref:#SimpleLending-getBorrowableAmountInETH-address-[getBorrowableAmountInETH(address)]
+- xref:#SimpleLending-getCollateralInUse-address-[getCollateralInUse(address)]
+- xref:#SimpleLending-conversionRate-address-address-[conversionRate(address,address)]
+- xref:#SimpleLending-convert-address-address-uint256-[convert(address,address,uint256)]
+- xref:#SimpleLending-divideByConversionDecimals-uint256-[divideByConversionDecimals(uint256)]
+- xref:#Ownable-constructor--[constructor()]
+- xref:#Ownable-owner--[owner()]
+- xref:#Ownable-isOwner--[isOwner()]
+- xref:#Ownable-renounceOwnership--[renounceOwnership()]
+- xref:#Ownable-transferOwnership-address-[transferOwnership(address)]
+- xref:#Ownable-_transferOwnership-address-[_transferOwnership(address)]
+- xref:#Context-constructor--[constructor()]
+- xref:#Context-_msgSender--[_msgSender()]
+- xref:#Context-_msgData--[_msgData()]
+
+- xref:#Ownable-OwnershipTransferred-address-address-[OwnershipTransferred(address,address)]
+
+[[SimpleLending-enoughLiquidity-address-uint256-]]
+=== enoughLiquidity(address reserve, uint256 amount)
+
+
+
+[[SimpleLending-constructor-address-payable-uint256-]]
+=== constructor(address payable webOfTrustAddress, uint256 baseCollateralisationRateValue)
+
+
+
+[[SimpleLending-fallback--]]
+=== fallback()
+
+
+
+[[SimpleLending-setBaseCollateralisationRate-uint256-]]
+=== setBaseCollateralisationRate(uint256 baseCollateralisationRateValue)
+
+
+
+[[SimpleLending-getBaseCollateralisationRate--]]
+=== getBaseCollateralisationRate() → uint256
+
+
+
+[[SimpleLending-addReserve-address-]]
+=== addReserve(address newReserve)
+
+
+
+[[SimpleLending-deposit-address-uint256-]]
+=== deposit(address reserve, uint256 amount)
+
+
+
+[[SimpleLending-borrow-address-uint256-]]
+=== borrow(address reserve, uint256 amount)
+
+
+
+[[SimpleLending-repay-address-uint256-address-]]
+=== repay(address reserve, uint256 amount, address onBehalf)
+
+
+
+[[SimpleLending-liquidate-address-address-address-uint256-]]
+=== liquidate(address borrower, address collateralReserve, address loanReserve, uint256 loanAmount)
+
+
+
+[[SimpleLending-redeem-address-uint256-]]
+=== redeem(address reserve, uint256 amount)
+
+
+
+[[SimpleLending-makePayment-address-uint256-address-payable-]]
+=== makePayment(address reserve, uint256 amount, address payable payee)
+
+
+
+[[SimpleLending-hasEnoughCollateral-address-uint256-]]
+=== hasEnoughCollateral(address reserve, uint256 amount) → bool
+
+
+
+[[SimpleLending-getAccountDeposits-address-]]
+=== getAccountDeposits(address account) → uint256, uint256
+
+
+
+[[SimpleLending-getAccountBorrows-address-]]
+=== getAccountBorrows(address account) → uint256, uint256
+
+
+
+[[SimpleLending-getBorrowableAmountInETH-address-]]
+=== getBorrowableAmountInETH(address account) → uint256, uint256
+
+
+
+[[SimpleLending-getCollateralInUse-address-]]
+=== getCollateralInUse(address account) → uint256, uint256
+
+
+
+[[SimpleLending-conversionRate-address-address-]]
+=== conversionRate(address fromReserve, address toReserve) → uint256, uint256
+
+
+
+[[SimpleLending-convert-address-address-uint256-]]
+=== convert(address fromReserve, address toReserve, uint256 amount) → uint256, uint256
+
+
+
+[[SimpleLending-divideByConversionDecimals-uint256-]]
+=== divideByConversionDecimals(uint256 x) → uint256
+
+
+
+
+
+== Interacting with a protocol integration
+
+:SimpleLendingProxy: pass:normal[xref:#SimpleLendingProxy[`SimpleLendingProxy`]]
+:LendingPoolAddressesProviderAddress: pass:normal[xref:#SimpleLendingProxy-LendingPoolAddressesProviderAddress-address[`LendingPoolAddressesProviderAddress`]]
+:aETHAddress: pass:normal[xref:#SimpleLendingProxy-aETHAddress-address[`aETHAddress`]]
+:aETHContractAddress: pass:normal[xref:#SimpleLendingProxy-aETHContractAddress-address[`aETHContractAddress`]]
+:daiAddress: pass:normal[xref:#SimpleLendingProxy-daiAddress-address[`daiAddress`]]
+:lbcr: pass:normal[xref:#SimpleLendingProxy-lbcr-contract-LBCR[`lbcr`]]
+:depositAction: pass:normal[xref:#SimpleLendingProxy-depositAction-uint256[`depositAction`]]
+:borrowAction: pass:normal[xref:#SimpleLendingProxy-borrowAction-uint256[`borrowAction`]]
+:repayAction: pass:normal[xref:#SimpleLendingProxy-repayAction-uint256[`repayAction`]]
+:liquidateAction: pass:normal[xref:#SimpleLendingProxy-liquidateAction-uint256[`liquidateAction`]]
+:flashLoanAction: pass:normal[xref:#SimpleLendingProxy-flashLoanAction-uint256[`flashLoanAction`]]
+:redeemAction: pass:normal[xref:#SimpleLendingProxy-redeemAction-uint256[`redeemAction`]]
+:webOfTrust: pass:normal[xref:#SimpleLendingProxy-webOfTrust-contract-WebOfTrust[`webOfTrust`]]
+:userProxyFactory: pass:normal[xref:#SimpleLendingProxy-userProxyFactory-contract-UserProxyFactory[`userProxyFactory`]]
+:constructor: pass:normal[xref:#SimpleLendingProxy-constructor-address-address-payable-address-payable-[`constructor`]]
+:fallback: pass:normal[xref:#SimpleLendingProxy-fallback--[`fallback`]]
+:curate: pass:normal[xref:#SimpleLendingProxy-curate--[`curate`]]
+:getAgentFactor: pass:normal[xref:#SimpleLendingProxy-getAgentFactor-address-[`getAgentFactor`]]
+:getAgentScore: pass:normal[xref:#SimpleLendingProxy-getAgentScore-address-[`getAgentScore`]]
+:deposit: pass:normal[xref:#SimpleLendingProxy-deposit-address-uint256-[`deposit`]]
+:borrow: pass:normal[xref:#SimpleLendingProxy-borrow-address-uint256-[`borrow`]]
+:repay: pass:normal[xref:#SimpleLendingProxy-repay-address-uint256-address-[`repay`]]
+:liquidate: pass:normal[xref:#SimpleLendingProxy-liquidate-address-address-address-uint256-[`liquidate`]]
+:redeem: pass:normal[xref:#SimpleLendingProxy-redeem-address-uint256-[`redeem`]]
+
+[[SimpleLendingProxy]]
+== `SimpleLendingProxy`
+
+
+
+- xref:#Ownable-onlyOwner--[onlyOwner()]
+
+- xref:#SimpleLendingProxy-constructor-address-address-payable-address-payable-[constructor(address,address payable,address payable)]
+- xref:#SimpleLendingProxy-fallback--[fallback()]
+- xref:#SimpleLendingProxy-curate--[curate()]
+- xref:#SimpleLendingProxy-getAgentFactor-address-[getAgentFactor(address)]
+- xref:#SimpleLendingProxy-getAgentScore-address-[getAgentScore(address)]
+- xref:#SimpleLendingProxy-deposit-address-uint256-[deposit(address,uint256)]
+- xref:#SimpleLendingProxy-borrow-address-uint256-[borrow(address,uint256)]
+- xref:#SimpleLendingProxy-repay-address-uint256-address-[repay(address,uint256,address)]
+- xref:#SimpleLendingProxy-liquidate-address-address-address-uint256-[liquidate(address,address,address,uint256)]
+- xref:#SimpleLendingProxy-redeem-address-uint256-[redeem(address,uint256)]
+- xref:#Ownable-constructor--[constructor()]
+- xref:#Ownable-owner--[owner()]
+- xref:#Ownable-isOwner--[isOwner()]
+- xref:#Ownable-renounceOwnership--[renounceOwnership()]
+- xref:#Ownable-transferOwnership-address-[transferOwnership(address)]
+- xref:#Ownable-_transferOwnership-address-[_transferOwnership(address)]
+- xref:#Context-constructor--[constructor()]
+- xref:#Context-_msgSender--[_msgSender()]
+- xref:#Context-_msgData--[_msgData()]
+
+- xref:#Ownable-OwnershipTransferred-address-address-[OwnershipTransferred(address,address)]
+
+[[SimpleLendingProxy-constructor-address-address-payable-address-payable-]]
+=== constructor(address lbcrAddress, address payable webOfTrustAddress, address payable UserProxyFactoryAddress)
+
+
+
+[[SimpleLendingProxy-fallback--]]
+=== fallback()
+
+
+
+[[SimpleLendingProxy-curate--]]
+=== curate()
+
+
+
+[[SimpleLendingProxy-getAgentFactor-address-]]
+=== getAgentFactor(address agent) → uint256
+
+
+
+[[SimpleLendingProxy-getAgentScore-address-]]
+=== getAgentScore(address agent) → uint256
+
+
+
+[[SimpleLendingProxy-deposit-address-uint256-]]
+=== deposit(address reserve, uint256 amount)
+
+
+
+[[SimpleLendingProxy-borrow-address-uint256-]]
+=== borrow(address reserve, uint256 amount)
+
+
+
+[[SimpleLendingProxy-repay-address-uint256-address-]]
+=== repay(address reserve, uint256 amount, address onbehalf)
+
+
+
+[[SimpleLendingProxy-liquidate-address-address-address-uint256-]]
+=== liquidate(address borrower, address collateralReserve, address loanReserve, uint256 loanAmount)
+
+
+
+[[SimpleLendingProxy-redeem-address-uint256-]]
+=== redeem(address reserve, uint256 amount)
+
+
+
+
+
+== Layered Behaviour-Curated Registry
+
+:ILBCR: pass:normal[xref:#ILBCR[`ILBCR`]]
+:getCompatibilityScoreWith: pass:normal[xref:#ILBCR-getCompatibilityScoreWith-address-[`getCompatibilityScoreWith`]]
+:setCompatibilityScoreWith: pass:normal[xref:#ILBCR-setCompatibilityScoreWith-address-uint256-[`setCompatibilityScoreWith`]]
+
+[[ILBCR]]
+== `ILBCR`
+
+
+
+
+- xref:#ILBCR-getCompatibilityScoreWith-address-[getCompatibilityScoreWith(address)]
+- xref:#ILBCR-setCompatibilityScoreWith-address-uint256-[setCompatibilityScoreWith(address,uint256)]
+
+
+[[ILBCR-getCompatibilityScoreWith-address-]]
+=== getCompatibilityScoreWith(address protocol) → uint256
+
+
+
+[[ILBCR-setCompatibilityScoreWith-address-uint256-]]
+=== setCompatibilityScoreWith(address protocol, uint256 score)
+
+
+
+
+
+:LBCR: pass:normal[xref:#LBCR[`LBCR`]]
+:onlyAuthorised: pass:normal[xref:#LBCR-onlyAuthorised--[`onlyAuthorised`]]
+:authorisedContracts: pass:normal[xref:#LBCR-authorisedContracts-address--[`authorisedContracts`]]
+:_decimals: pass:normal[xref:#LBCR-_decimals-uint256[`_decimals`]]
+:_layers: pass:normal[xref:#LBCR-_layers-uint256--[`_layers`]]
+:_lower: pass:normal[xref:#LBCR-_lower-mapping-uint256----uint256-[`_lower`]]
+:_upper: pass:normal[xref:#LBCR-_upper-mapping-uint256----uint256-[`_upper`]]
+:_factors: pass:normal[xref:#LBCR-_factors-mapping-uint256----uint256-[`_factors`]]
+:_rewards: pass:normal[xref:#LBCR-_rewards-mapping-uint256----uint256-[`_rewards`]]
+:_assignments: pass:normal[xref:#LBCR-_assignments-mapping-uint256----mapping-address----uint256--[`_assignments`]]
+:_scores: pass:normal[xref:#LBCR-_scores-mapping-uint256----mapping-address----uint256--[`_scores`]]
+:_interactionCount: pass:normal[xref:#LBCR-_interactionCount-mapping-address----uint256-[`_interactionCount`]]
+:_round: pass:normal[xref:#LBCR-_round-uint256[`_round`]]
+:_agents: pass:normal[xref:#LBCR-_agents-mapping-address----bool-[`_agents`]]
+:_blockperiod: pass:normal[xref:#LBCR-_blockperiod-uint256[`_blockperiod`]]
+:_start: pass:normal[xref:#LBCR-_start-uint256[`_start`]]
+:_end: pass:normal[xref:#LBCR-_end-uint256[`_end`]]
+:compatibilityScores: pass:normal[xref:#LBCR-compatibilityScores-mapping-address----uint256-[`compatibilityScores`]]
+:addAuthorisedContract: pass:normal[xref:#LBCR-addAuthorisedContract-address-[`addAuthorisedContract`]]
+:getCompatibilityScoreWith: pass:normal[xref:#LBCR-getCompatibilityScoreWith-address-[`getCompatibilityScoreWith`]]
+:setCompatibilityScoreWith: pass:normal[xref:#LBCR-setCompatibilityScoreWith-address-uint256-[`setCompatibilityScoreWith`]]
+:getLayers: pass:normal[xref:#LBCR-getLayers--[`getLayers`]]
+:setLayers: pass:normal[xref:#LBCR-setLayers-uint8---[`setLayers`]]
+:resetLayers: pass:normal[xref:#LBCR-resetLayers--[`resetLayers`]]
+:addLayer: pass:normal[xref:#LBCR-addLayer-uint256-[`addLayer`]]
+:getAgentFactor: pass:normal[xref:#LBCR-getAgentFactor-address-[`getAgentFactor`]]
+:getFactor: pass:normal[xref:#LBCR-getFactor-uint256-[`getFactor`]]
+:setFactor: pass:normal[xref:#LBCR-setFactor-uint256-uint256-[`setFactor`]]
+:getReward: pass:normal[xref:#LBCR-getReward-uint256-[`getReward`]]
+:setReward: pass:normal[xref:#LBCR-setReward-uint256-uint256-[`setReward`]]
+:getBounds: pass:normal[xref:#LBCR-getBounds-uint256-[`getBounds`]]
+:setBounds: pass:normal[xref:#LBCR-setBounds-uint256-uint256-uint256-[`setBounds`]]
+:getAssignment: pass:normal[xref:#LBCR-getAssignment-address-[`getAssignment`]]
+:getScore: pass:normal[xref:#LBCR-getScore-address-[`getScore`]]
+:getInteractionCount: pass:normal[xref:#LBCR-getInteractionCount-address-[`getInteractionCount`]]
+:registerAgent: pass:normal[xref:#LBCR-registerAgent-address-[`registerAgent`]]
+:update: pass:normal[xref:#LBCR-update-address-uint256-[`update`]]
+:curate: pass:normal[xref:#LBCR-curate--[`curate`]]
+:NewBound: pass:normal[xref:#LBCR-NewBound-uint256-uint256-[`NewBound`]]
+:RegisterAgent: pass:normal[xref:#LBCR-RegisterAgent-address-[`RegisterAgent`]]
+:Update: pass:normal[xref:#LBCR-Update-address-uint256-uint256-[`Update`]]
+:Curate: pass:normal[xref:#LBCR-Curate-uint256-uint256-uint256-[`Curate`]]
+
+[[LBCR]]
+== `LBCR`
+
+
+
+- xref:#LBCR-onlyAuthorised--[onlyAuthorised()]
+- xref:#Ownable-onlyOwner--[onlyOwner()]
+
+- xref:#LBCR-addAuthorisedContract-address-[addAuthorisedContract(address)]
+- xref:#LBCR-getCompatibilityScoreWith-address-[getCompatibilityScoreWith(address)]
+- xref:#LBCR-setCompatibilityScoreWith-address-uint256-[setCompatibilityScoreWith(address,uint256)]
+- xref:#LBCR-getLayers--[getLayers()]
+- xref:#LBCR-setLayers-uint8---[setLayers(uint8[])]
+- xref:#LBCR-resetLayers--[resetLayers()]
+- xref:#LBCR-addLayer-uint256-[addLayer(uint256)]
+- xref:#LBCR-getAgentFactor-address-[getAgentFactor(address)]
+- xref:#LBCR-getFactor-uint256-[getFactor(uint256)]
+- xref:#LBCR-setFactor-uint256-uint256-[setFactor(uint256,uint256)]
+- xref:#LBCR-getReward-uint256-[getReward(uint256)]
+- xref:#LBCR-setReward-uint256-uint256-[setReward(uint256,uint256)]
+- xref:#LBCR-getBounds-uint256-[getBounds(uint256)]
+- xref:#LBCR-setBounds-uint256-uint256-uint256-[setBounds(uint256,uint256,uint256)]
+- xref:#LBCR-getAssignment-address-[getAssignment(address)]
+- xref:#LBCR-getScore-address-[getScore(address)]
+- xref:#LBCR-getInteractionCount-address-[getInteractionCount(address)]
+- xref:#LBCR-registerAgent-address-[registerAgent(address)]
+- xref:#LBCR-update-address-uint256-[update(address,uint256)]
+- xref:#LBCR-curate--[curate()]
+- xref:#Ownable-constructor--[constructor()]
+- xref:#Ownable-owner--[owner()]
+- xref:#Ownable-isOwner--[isOwner()]
+- xref:#Ownable-renounceOwnership--[renounceOwnership()]
+- xref:#Ownable-transferOwnership-address-[transferOwnership(address)]
+- xref:#Ownable-_transferOwnership-address-[_transferOwnership(address)]
+- xref:#Context-constructor--[constructor()]
+- xref:#Context-_msgSender--[_msgSender()]
+- xref:#Context-_msgData--[_msgData()]
+
+- xref:#LBCR-NewBound-uint256-uint256-[NewBound(uint256,uint256)]
+- xref:#LBCR-RegisterAgent-address-[RegisterAgent(address)]
+- xref:#LBCR-Update-address-uint256-uint256-[Update(address,uint256,uint256)]
+- xref:#LBCR-Curate-uint256-uint256-uint256-[Curate(uint256,uint256,uint256)]
+- xref:#Ownable-OwnershipTransferred-address-address-[OwnershipTransferred(address,address)]
+
+[[LBCR-onlyAuthorised--]]
+=== onlyAuthorised()
+
+
+
+[[LBCR-addAuthorisedContract-address-]]
+=== addAuthorisedContract(address authorisedContract)
+
+
+
+[[LBCR-getCompatibilityScoreWith-address-]]
+=== getCompatibilityScoreWith(address protocol) → uint256
+
+
+
+[[LBCR-setCompatibilityScoreWith-address-uint256-]]
+=== setCompatibilityScoreWith(address protocol, uint256 score)
+
+
+
+[[LBCR-getLayers--]]
+=== getLayers() → uint256[]
+
+
+
+[[LBCR-setLayers-uint8---]]
+=== setLayers(uint8[] layers)
+
+
+
+[[LBCR-resetLayers--]]
+=== resetLayers()
+
+
+
+[[LBCR-addLayer-uint256-]]
+=== addLayer(uint256 layer)
+
+
+
+[[LBCR-getAgentFactor-address-]]
+=== getAgentFactor(address agent) → uint256
+
+
+
+[[LBCR-getFactor-uint256-]]
+=== getFactor(uint256 layer) → uint256
+
+
+
+[[LBCR-setFactor-uint256-uint256-]]
+=== setFactor(uint256 layer, uint256 factor) → bool
+
+
+
+[[LBCR-getReward-uint256-]]
+=== getReward(uint256 action) → uint256
+
+
+
+[[LBCR-setReward-uint256-uint256-]]
+=== setReward(uint256 action, uint256 reward) → bool
+
+
+
+[[LBCR-getBounds-uint256-]]
+=== getBounds(uint256 layer) → uint256, uint256
+
+
+
+[[LBCR-setBounds-uint256-uint256-uint256-]]
+=== setBounds(uint256 layer, uint256 lower, uint256 upper) → bool
+
+
+
+[[LBCR-getAssignment-address-]]
+=== getAssignment(address agent) → uint256 assignment
+
+
+
+[[LBCR-getScore-address-]]
+=== getScore(address agent) → uint256
+
+
+
+[[LBCR-getInteractionCount-address-]]
+=== getInteractionCount(address agent) → uint256
+
+
+
+[[LBCR-registerAgent-address-]]
+=== registerAgent(address agent) → bool
+
+
+
+[[LBCR-update-address-uint256-]]
+=== update(address agent, uint256 action) → bool
+
+
+
+[[LBCR-curate--]]
+=== curate() → bool
+
+
+
+[[LBCR-NewBound-uint256-uint256-]]
+=== NewBound(uint256 lower, uint256 upper)
+
+
+
+[[LBCR-RegisterAgent-address-]]
+=== RegisterAgent(address agent)
+
+
+
+[[LBCR-Update-address-uint256-uint256-]]
+=== Update(address agent, uint256 reward, uint256 score)
+
+
+
+[[LBCR-Curate-uint256-uint256-uint256-]]
+=== Curate(uint256 round, uint256 start, uint256 end)
+
+
+
+
+
+
+
+
+
+
+

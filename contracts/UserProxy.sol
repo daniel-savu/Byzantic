@@ -2,7 +2,7 @@ pragma solidity ^0.5.0;
 
 import "@openzeppelin/contracts/ownership/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "./Byzantic.sol";
+import "./WebOfTrust.sol";
 import "./LBCR.sol";
 import "@nomiclabs/buidler/console.sol";
 
@@ -17,11 +17,11 @@ contract UserProxy is Ownable {
     address constant LendingPoolAddressesProviderAddress = 0x24a42fD28C976A61Df5D00D0599C34c4f90748c8;
     mapping(address => int256) agentFundsInPool;
     LBCR[] lbcrs;
-    Byzantic byzanticContract;
+    WebOfTrust webOfTrustContract;
 
 
-    constructor(address agent, address payable byzanticAddress) public {
-        byzanticContract = Byzantic(byzanticAddress);
+    constructor(address agent, address payable webOfTrustAddress) public {
+        webOfTrustContract = WebOfTrust(webOfTrustAddress);
         addAuthorisedContract(msg.sender);
         agentOwner = agent;
     }

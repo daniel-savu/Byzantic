@@ -4,7 +4,7 @@ import "@openzeppelin/contracts/ownership/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "./LBCR.sol";
 import "@nomiclabs/buidler/console.sol";
-import "./Byzantic.sol";
+import "./WebOfTrust.sol";
 import "./UserProxy.sol";
 import "./UserProxyFactory.sol";
 import "./SimpleLending/SimpleLending.sol";
@@ -24,16 +24,16 @@ contract SimpleLendingProxy is Ownable {
     uint256 liquidateAction;
     uint256 flashLoanAction;
     uint256 redeemAction;
-    Byzantic byzantic;
+    WebOfTrust webOfTrust;
     UserProxyFactory userProxyFactory;
 
     constructor(
         address lbcrAddress,
-        address payable byzanticAddress,
+        address payable webOfTrustAddress,
         address payable UserProxyFactoryAddress
     ) public {
         lbcr = LBCR(lbcrAddress);
-        byzantic = Byzantic(byzanticAddress);
+        webOfTrust = WebOfTrust(webOfTrustAddress);
         userProxyFactory = UserProxyFactory(UserProxyFactoryAddress);
         depositAction = 1;
         borrowAction = 2;
@@ -63,7 +63,7 @@ contract SimpleLendingProxy is Ownable {
     // LendingPool contract
 
     function deposit(address reserve, uint256 amount) public {
-        address simpleLendingAddress = byzantic.getSimpleLendingAddress();
+        address simpleLendingAddress = webOfTrust.getSimpleLendingAddress();
         bytes memory abiEncoding = abi.encodeWithSignature(
             "deposit(address,uint256)",
             reserve,
@@ -77,7 +77,7 @@ contract SimpleLendingProxy is Ownable {
     }
 
     function borrow(address reserve, uint256 amount) public {
-        address simpleLendingAddress = byzantic.getSimpleLendingAddress();
+        address simpleLendingAddress = webOfTrust.getSimpleLendingAddress();
         bytes memory abiEncoding = abi.encodeWithSignature(
             "borrow(address,uint256)",
             reserve,
@@ -90,7 +90,7 @@ contract SimpleLendingProxy is Ownable {
     }
 
     function repay(address reserve, uint256 amount, address onbehalf) public {
-        address simpleLendingAddress = byzantic.getSimpleLendingAddress();
+        address simpleLendingAddress = webOfTrust.getSimpleLendingAddress();
         bytes memory abiEncoding = abi.encodeWithSignature(
             "repay(address,uint256,address)",
             reserve,
@@ -104,7 +104,7 @@ contract SimpleLendingProxy is Ownable {
     }
 
     function liquidate(address borrower, address collateralReserve, address loanReserve, uint256 loanAmount) public {
-        address simpleLendingAddress = byzantic.getSimpleLendingAddress();
+        address simpleLendingAddress = webOfTrust.getSimpleLendingAddress();
         bytes memory abiEncoding = abi.encodeWithSignature(
             "liquidate(address,address,address,uint256)",
             borrower,
@@ -119,7 +119,7 @@ contract SimpleLendingProxy is Ownable {
     }
 
     function redeem(address reserve, uint256 amount) public {
-        address simpleLendingAddress = byzantic.getSimpleLendingAddress();
+        address simpleLendingAddress = webOfTrust.getSimpleLendingAddress();
         bytes memory abiEncoding = abi.encodeWithSignature(
             "redeem(address,uint256)",
             reserve,

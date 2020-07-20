@@ -12,7 +12,7 @@ async function deployContract(name: string) {
 
 async function main() {
   await deployContract("LBCR");
-  await deployContract("Byzantic");
+  await deployContract("WebOfTrust");
 }
   
   main()

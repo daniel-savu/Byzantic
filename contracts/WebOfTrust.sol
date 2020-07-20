@@ -12,7 +12,7 @@ import "./ILBCR.sol";
 // import "node_modules/@studydefi/money-legos/compound/contracts/ICEther.sol";
 
 
-contract Byzantic {
+contract WebOfTrust {
     address constant aETHAddress = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
     UserProxyFactory userProxyFactory;
     LBCR[] lbcrs;
@@ -90,6 +90,11 @@ contract Byzantic {
         return address(simpleLendingTwo);
     }
 
+    /**
+     * @dev Uses information from all LBCRs and the subjective measures
+     * of compatibility between them to compute how much collateral a
+     * user should pay.
+     */
     function getAggregateAgentFactorForProtocol(address agent, address protocol) public returns (uint256) {
         // a factor of 1500 is equal to 1.5 times the collateral
         uint aggregateAgentFactor = aggregateLBCRsForProtocol(agent, protocol);

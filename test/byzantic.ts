@@ -11,7 +11,7 @@ var web3 = env.web3;
 var artifacts = env.artifacts;
 var contract = env.contract;
 
-const Byzantic = artifacts.require("Byzantic");
+const WebOfTrust = artifacts.require("WebOfTrust");
 const SimpleLendingProxy = artifacts.require("SimpleLendingProxy");
 const UserProxyFactory = artifacts.require("UserProxyFactory");
 const userProxy = artifacts.require("UserProxy");
@@ -32,19 +32,19 @@ const aETHContract = new web3.eth.Contract(ATokenABI, aETHToken)
 const daiAddress = '0x6B175474E89094C44Da98b954EedeAC495271d0F' // mainnet
 const daiAmount = '1'
 
-let byzantic: typeof Byzantic
-let accs: typeof Byzantic
-let simpleLending: typeof Byzantic
-let simpleLendingTwo: typeof Byzantic
+let webOfTrust: typeof WebOfTrust
+let accs: typeof WebOfTrust
+let simpleLending: typeof WebOfTrust
+let simpleLendingTwo: typeof WebOfTrust
 let simpleLendingAddress: any
 let simpleLendingTwoAddress: any
-let daiMock: typeof Byzantic
+let daiMock: typeof WebOfTrust
 
 
 contract("SimpleLending Protocol", accounts => {
 
-    async function initializeSimpleLendingLBCR(byzantic: typeof Byzantic) {
-        const simpleLendingLBCRAddress = await byzantic.getSimpleLendingLBCR();
+    async function initializeSimpleLendingLBCR(webOfTrust: typeof WebOfTrust) {
+        const simpleLendingLBCRAddress = await webOfTrust.getSimpleLendingLBCR();
         let simpleLendingLayers = [1, 2, 3, 4, 5];
         let simpleLendingLayerFactors = [1000, 900, 850, 800, 750];
         let simpleLendingLayerLowerBounds = [0, 20, 40, 60, 80];
@@ -52,8 +52,8 @@ contract("SimpleLending Protocol", accounts => {
         await initializeLBCR(simpleLendingLBCRAddress, simpleLendingLayers, simpleLendingLayerFactors, simpleLendingLayerLowerBounds, simpleLendingLayerUpperBounds);
     }
 
-    async function initializeSimpleLendingTwoLBCR(byzantic: typeof Byzantic) {
-        const simpleLendingLBCRAddress = await byzantic.getSimpleLendingTwoLBCR();
+    async function initializeSimpleLendingTwoLBCR(webOfTrust: typeof WebOfTrust) {
+        const simpleLendingLBCRAddress = await webOfTrust.getSimpleLendingTwoLBCR();
         let simpleLendingLayers = [1, 2, 3, 4, 5];
         let simpleLendingLayerFactors = [1000, 900, 850, 800, 750];
         let simpleLendingLayerLowerBounds = [0, 20, 40, 60, 80];
@@ -93,9 +93,9 @@ contract("SimpleLending Protocol", accounts => {
 
     async function initializeLendingProtocol(protocolAddress: string) {
         if(protocolAddress == simpleLendingAddress) {
-            await initializeSimpleLendingLBCR(byzantic);
+            await initializeSimpleLendingLBCR(webOfTrust);
         } else {
-            await initializeSimpleLendingTwoLBCR(byzantic);
+            await initializeSimpleLendingTwoLBCR(webOfTrust);
         }
         let lendingProtocol = await SimpleLending.at(protocolAddress);
         lendingProtocol.addReserve(daiMock.address);
@@ -138,13 +138,13 @@ contract("SimpleLending Protocol", accounts => {
 
     before(async function() {
         accs = await web3.eth.getAccounts();
-        byzantic = await Byzantic.new();
+        webOfTrust = await WebOfTrust.new();
         daiMock = await DaiMock.new();
 
-        simpleLendingAddress = await byzantic.getSimpleLendingAddress();
+        simpleLendingAddress = await webOfTrust.getSimpleLendingAddress();
         simpleLending = await initializeLendingProtocol(simpleLendingAddress);
 
-        simpleLendingTwoAddress = await byzantic.getSimpleLendingTwoAddress();
+        simpleLendingTwoAddress = await webOfTrust.getSimpleLendingTwoAddress();
         simpleLendingTwo = await initializeLendingProtocol(simpleLendingTwoAddress);
 
         // let daiMocks = await daiMock.balanceOf(simpleLending.address)
@@ -161,10 +161,10 @@ contract("SimpleLending Protocol", accounts => {
     });
 
     xit("Should deposit to SimpleLending", async function () {
-        const userProxyFactoryAddress = await byzantic.getUserProxyFactoryAddress();
+        const userProxyFactoryAddress = await webOfTrust.getUserProxyFactoryAddress();
         const userProxyFactory = await UserProxyFactory.at(userProxyFactoryAddress);
         await userProxyFactory.addAgent();
-        const simpleLendingProxyAddress = await byzantic.getSimpleLendingProxy();
+        const simpleLendingProxyAddress = await webOfTrust.getSimpleLendingProxy();
         const simpleLendingProxy = await SimpleLendingProxy.at(simpleLendingProxyAddress);
 
         const userProxyAddress = await userProxyFactory.getUserProxyAddress(accs[0]);
@@ -181,7 +181,7 @@ contract("SimpleLending Protocol", accounts => {
         );
 
         console.log("The base collateralization ratio in SimpleLending is 150%");
-        // await byzantic.getAggregateAgentFactor(up.address); //prints to console in buidler
+        // await webOfTrust.getAggregateAgentFactor(up.address); //prints to console in buidler
         
         tr = await simpleLendingProxy.deposit(
             ethAddress,
@@ -200,8 +200,8 @@ contract("SimpleLending Protocol", accounts => {
         // const agentScore = await simpleLendingLBCR.getScore(up.address);
         // console.log(`the score of the agent in Byzantic (before round end): ${agentScore}`);
         console.log("Ending round. User wil be promoted to a higher layer.");
-        await byzantic.curateLBCRs();
-        // await byzantic.getAggregateAgentFactor(up.address); //prints to console in buidler
+        await webOfTrust.curateLBCRs();
+        // await webOfTrust.getAggregateAgentFactor(up.address); //prints to console in buidler
         await simpleLending.getBorrowableAmountInETH(up.address); //prints to console in buidler
 
         let conversionRate = await simpleLending.conversionRate(daiMock.address, ethAddress);
@@ -209,10 +209,10 @@ contract("SimpleLending Protocol", accounts => {
     });
 
     xit("Should deposit to, borrow from and repay to SimpleLending", async function () {
-        const userProxyFactoryAddress = await byzantic.getUserProxyFactoryAddress();
+        const userProxyFactoryAddress = await webOfTrust.getUserProxyFactoryAddress();
         const userProxyFactory = await UserProxyFactory.at(userProxyFactoryAddress);
         await userProxyFactory.addAgent();
-        const simpleLendingProxyAddress = await byzantic.getSimpleLendingProxy();
+        const simpleLendingProxyAddress = await webOfTrust.getSimpleLendingProxy();
         const simpleLendingProxy = await SimpleLendingProxy.at(simpleLendingProxyAddress);
 
         const userProxyAddress = await userProxyFactory.getUserProxyAddress(accs[0]);
@@ -229,7 +229,7 @@ contract("SimpleLending Protocol", accounts => {
         );
 
         console.log("The base collateralization ratio in SimpleLending is 150%");
-        // await byzantic.getAggregateAgentFactor(up.address); //prints to console in buidler
+        // await webOfTrust.getAggregateAgentFactor(up.address); //prints to console in buidler
         
         tr = await simpleLendingProxy.deposit(
             ethAddress,
@@ -247,7 +247,7 @@ contract("SimpleLending Protocol", accounts => {
         // const agentScore = await simpleLendingLBCR.getScore(up.address);
         // console.log(`the score of the agent in Byzantic (before round end): ${agentScore}`);
         console.log("Ending round. User wil be promoted to a higher layer.");
-        await byzantic.curateLBCRs();
+        await webOfTrust.curateLBCRs();
         await simpleLending.getBorrowableAmountInETH(up.address); //prints to console in buidler
 
         let conversionRate = await simpleLending.conversionRate(daiMock.address, ethAddress);
@@ -283,14 +283,14 @@ contract("SimpleLending Protocol", accounts => {
     });
 
     it("Should deposit to SimpleLending and SimpleLendingTwo", async function () {
-        const userProxyFactoryAddress = await byzantic.getUserProxyFactoryAddress();
+        const userProxyFactoryAddress = await webOfTrust.getUserProxyFactoryAddress();
         const userProxyFactory = await UserProxyFactory.at(userProxyFactoryAddress);
         await userProxyFactory.addAgent();
 
-        const simpleLendingProxyAddress = await byzantic.getSimpleLendingProxy();
+        const simpleLendingProxyAddress = await webOfTrust.getSimpleLendingProxy();
         const simpleLendingProxy = await SimpleLendingProxy.at(simpleLendingProxyAddress);
 
-        const simpleLendingTwoProxyAddress = await byzantic.getSimpleLendingTwoProxy();
+        const simpleLendingTwoProxyAddress = await webOfTrust.getSimpleLendingTwoProxy();
         const simpleLendingTwoProxy = await SimpleLendingProxy.at(simpleLendingTwoProxyAddress);
 
         const userProxyAddress = await userProxyFactory.getUserProxyAddress(accs[0]);
@@ -335,7 +335,7 @@ contract("SimpleLending Protocol", accounts => {
         console.log();
         
         console.log("Ending round. User wil be promoted to a higher layer in SimpleLending, but not in SimpleLendingTwo.");
-        await byzantic.curateLBCRs();
+        await webOfTrust.curateLBCRs();
         console.log();
 
         console.log("Borrowable amount in SimpleLending:");
@@ -363,7 +363,7 @@ contract("SimpleLending Protocol", accounts => {
 //         // const FlashLoanExecutor = artifacts.require("FlashLoanExecutor");
 
 //         this.timeout(1000000);
-//         const t = await Byzantic.new();
+//         const t = await WebOfTrust.new();
 //         await t.addAgent();
 //         const taAddress = await t.getByzanticAaveProxy({
 //             from: myWalletAddress,
@@ -424,7 +424,7 @@ contract("SimpleLending Protocol", accounts => {
 //         // Make the deposit transaction via LendingPool contract
 //         const lpContract = new web3.eth.Contract(LendingPoolABI, lpAddress)
 
-//         const t = await Byzantic.new();
+//         const t = await WebOfTrust.new();
 //         await t.addAgent();
 //         const taAddress = await t.getByzanticAaveProxy({
 //             from: myWalletAddress,
