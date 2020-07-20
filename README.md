@@ -77,7 +77,9 @@ There is no need to connect to an Ethereum node, as Buidler runs the tests in it
 <!-- ROADMAP -->
 ## Roadmap
 
-See the [open issues](https://github.com/savudani8/Byzantic/issues) for a list of proposed features (and known issues).
+* Preserve user privacy by using [AZTEC](https://www.aztecprotocol.com/) to obfuscate transactions.
+* Perform stress testing of the protocol using statistical methods, to prove its reliability in the face of price shocks (similar to the approach in [this research paper](https://arxiv.org/pdf/2002.08099.pdf)).
+* See the [open issues](https://github.com/savudani8/Byzantic/issues) for a list of proposed features (and known issues).
 
 
 <!-- LICENSE -->
@@ -88,7 +90,6 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 
 <!-- MARKDOWN LINKS & IMAGES -->
-<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 [contributors-shield]: https://img.shields.io/github/contributors/savudani8/Byzantic.svg?style=flat-square
 [contributors-url]: https://github.com/savudani8/Byzantic/graphs/contributors
 [forks-shield]: https://img.shields.io/github/forks/savudani8/Byzantic.svg?style=flat-square
