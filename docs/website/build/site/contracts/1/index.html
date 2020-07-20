@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Untitled :: Byzantic Docs</title>
+    <link rel="canonical" href="https://my-antora-demo-site.org/contracts/1/index.html">
+    <meta name="generator" content="Antora 2.3.3">
+    <link rel="stylesheet" href="../../_/css/site.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://my-antora-demo-site.org">Byzantic Docs</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="#">Home</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Products</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Product A</a>
+            <a class="navbar-item" href="#">Product B</a>
+            <a class="navbar-item" href="#">Product C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Services</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Service A</a>
+            <a class="navbar-item" href="#">Service B</a>
+            <a class="navbar-item" href="#">Service C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Resources</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Resource A</a>
+            <a class="navbar-item" href="#">Resource B</a>
+            <a class="navbar-item" href="#">Resource C</a>
+          </div>
+        </div>
+        <div class="navbar-item">
+          <span class="control">
+            <a class="button is-primary" href="#">Download</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="contracts" data-version="1">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="index.html">Contracts</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item is-current-page" data-depth="1">
+    <a class="nav-link" href="index.html">Byzantic</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Contracts</span>
+    <span class="version">1</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <span class="title">Contracts</span>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="index.html">1</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">Contracts</a></li>
+    <li><a href="index.html">Byzantic</a></li>
+  </ul>
+</nav>
+  <div class="edit-this-page"><a href="file:///Users/dani/dani/Pro/facultate/Master/Term_3_Dissertation/byzantic//docs/modules/ROOT/pages/index.adoc">Edit this Page</a></div>
+</div>
+  <div class="content">
+<article class="doc">
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+This page is incomplete. We&#8217;re working to improve it. Stay tuned!
+</td>
+</tr>
+</table>
+</div>
+<div class="sect1">
+<h2 id="_core"><a class="anchor" href="#_core"></a>Core</h2>
+<div class="sectionbody">
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="WebOfTrust"><a class="anchor" href="#WebOfTrust"></a><code>WebOfTrust</code></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#WebOfTrust-fallback--">fallback()</a></p>
+</li>
+<li>
+<p><a href="#WebOfTrust-getUserProxyFactoryAddress--">getUserProxyFactoryAddress()</a></p>
+</li>
+<li>
+<p><a href="#WebOfTrust-getSimpleLendingLBCR--">getSimpleLendingLBCR()</a></p>
+</li>
+<li>
+<p><a href="#WebOfTrust-getSimpleLendingTwoLBCR--">getSimpleLendingTwoLBCR()</a></p>
+</li>
+<li>
+<p><a href="#WebOfTrust-getSimpleLendingAddress--">getSimpleLendingAddress()</a></p>
+</li>
+<li>
+<p><a href="#WebOfTrust-getSimpleLendingTwoAddress--">getSimpleLendingTwoAddress()</a></p>
+</li>
+<li>
+<p><a href="#WebOfTrust-getAggregateAgentFactorForProtocol-address-address-">getAggregateAgentFactorForProtocol(address,address)</a></p>
+</li>
+<li>
+<p><a href="#WebOfTrust-aggregateLBCRsForProtocol-address-address-">aggregateLBCRsForProtocol(address,address)</a></p>
+</li>
+<li>
+<p><a href="#WebOfTrust-moveFundsToUserProxy-address-address-uint256-">moveFundsToUserProxy(address,address,uint256)</a></p>
+</li>
+<li>
+<p><a href="#WebOfTrust-setSimpleLendingProxy-address-payable-">setSimpleLendingProxy(address payable)</a></p>
+</li>
+<li>
+<p><a href="#WebOfTrust-getSimpleLendingProxy--">getSimpleLendingProxy()</a></p>
+</li>
+<li>
+<p><a href="#WebOfTrust-getSimpleLendingTwoProxy--">getSimpleLendingTwoProxy()</a></p>
+</li>
+<li>
+<p><a href="#WebOfTrust-curateLBCRs--">curateLBCRs()</a></p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="WebOfTrust-fallback--"><a class="anchor" href="#WebOfTrust-fallback--"></a>fallback()</h3>
+
+</div>
+<div class="sect2">
+<h3 id="WebOfTrust-getUserProxyFactoryAddress--"><a class="anchor" href="#WebOfTrust-getUserProxyFactoryAddress--"></a>getUserProxyFactoryAddress() → address</h3>
+
+</div>
+<div class="sect2">
+<h3 id="WebOfTrust-getSimpleLendingLBCR--"><a class="anchor" href="#WebOfTrust-getSimpleLendingLBCR--"></a>getSimpleLendingLBCR() → address</h3>
+
+</div>
+<div class="sect2">
+<h3 id="WebOfTrust-getSimpleLendingTwoLBCR--"><a class="anchor" href="#WebOfTrust-getSimpleLendingTwoLBCR--"></a>getSimpleLendingTwoLBCR() → address</h3>
+
+</div>
+<div class="sect2">
+<h3 id="WebOfTrust-getSimpleLendingAddress--"><a class="anchor" href="#WebOfTrust-getSimpleLendingAddress--"></a>getSimpleLendingAddress() → address</h3>
+
+</div>
+<div class="sect2">
+<h3 id="WebOfTrust-getSimpleLendingTwoAddress--"><a class="anchor" href="#WebOfTrust-getSimpleLendingTwoAddress--"></a>getSimpleLendingTwoAddress() → address</h3>
+
+</div>
+<div class="sect2">
+<h3 id="WebOfTrust-getAggregateAgentFactorForProtocol-address-address-"><a class="anchor" href="#WebOfTrust-getAggregateAgentFactorForProtocol-address-address-"></a>getAggregateAgentFactorForProtocol(address agent, address protocol) → uint256</h3>
+<div class="paragraph">
+<p>Uses information from all LBCRs and the subjective measures
+of compatibility between them to compute how much collateral a
+user should pay.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="WebOfTrust-aggregateLBCRsForProtocol-address-address-"><a class="anchor" href="#WebOfTrust-aggregateLBCRsForProtocol-address-address-"></a>aggregateLBCRsForProtocol(address agent, address protocol) → uint256</h3>
+
+</div>
+<div class="sect2">
+<h3 id="WebOfTrust-moveFundsToUserProxy-address-address-uint256-"><a class="anchor" href="#WebOfTrust-moveFundsToUserProxy-address-address-uint256-"></a>moveFundsToUserProxy(address agentOwner, address _reserve, uint256 _amount)</h3>
+
+</div>
+<div class="sect2">
+<h3 id="WebOfTrust-setSimpleLendingProxy-address-payable-"><a class="anchor" href="#WebOfTrust-setSimpleLendingProxy-address-payable-"></a>setSimpleLendingProxy(address payable simpleLendingProxyAddress)</h3>
+
+</div>
+<div class="sect2">
+<h3 id="WebOfTrust-getSimpleLendingProxy--"><a class="anchor" href="#WebOfTrust-getSimpleLendingProxy--"></a>getSimpleLendingProxy() → address</h3>
+
+</div>
+<div class="sect2">
+<h3 id="WebOfTrust-getSimpleLendingTwoProxy--"><a class="anchor" href="#WebOfTrust-getSimpleLendingTwoProxy--"></a>getSimpleLendingTwoProxy() → address</h3>
+
+</div>
+<div class="sect2">
+<h3 id="WebOfTrust-curateLBCRs--"><a class="anchor" href="#WebOfTrust-curateLBCRs--"></a>curateLBCRs()</h3>
+
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="UserProxy"><a class="anchor" href="#UserProxy"></a><code>UserProxy</code></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#UserProxy-onlyAuthorised--">onlyAuthorised()</a></p>
+</li>
+<li>
+<p><a href="#UserProxy-onlyAgentOwner--">onlyAgentOwner()</a></p>
+</li>
+<li>
+<p><a href="#Ownable-onlyOwner--">onlyOwner()</a></p>
+</li>
+<li>
+<p><a href="#UserProxy-constructor-address-address-payable-">constructor(address,address payable)</a></p>
+</li>
+<li>
+<p><a href="#UserProxy-fallback--">fallback()</a></p>
+</li>
+<li>
+<p><a href="#UserProxy-addAuthorisedContract-address-">addAuthorisedContract(address)</a></p>
+</li>
+<li>
+<p><a href="#UserProxy-addLBCR-address-">addLBCR(address)</a></p>
+</li>
+<li>
+<p><a href="#UserProxy-hasEnoughFunds-address-uint256-">hasEnoughFunds(address,uint256)</a></p>
+</li>
+<li>
+<p><a href="#UserProxy-withdrawFunds-address-uint256-">withdrawFunds(address,uint256)</a></p>
+</li>
+<li>
+<p><a href="#UserProxy-depositFunds-address-uint256-">depositFunds(address,uint256)</a></p>
+</li>
+<li>
+<p><a href="#UserProxy-getTotalBalance-address-">getTotalBalance(address)</a></p>
+</li>
+<li>
+<p><a href="#UserProxy-proxyCall-address-bytes-">proxyCall(address,bytes)</a></p>
+</li>
+<li>
+<p><a href="#UserProxy-proxyCall-address-bytes-address-uint256-">proxyCall(address,bytes,address,uint256)</a></p>
+</li>
+<li>
+<p><a href="#Ownable-constructor--">constructor()</a></p>
+</li>
+<li>
+<p><a href="#Ownable-owner--">owner()</a></p>
+</li>
+<li>
+<p><a href="#Ownable-isOwner--">isOwner()</a></p>
+</li>
+<li>
+<p><a href="#Ownable-renounceOwnership--">renounceOwnership()</a></p>
+</li>
+<li>
+<p><a href="#Ownable-transferOwnership-address-">transferOwnership(address)</a></p>
+</li>
+<li>
+<p><a href="#Ownable-_transferOwnership-address-">_transferOwnership(address)</a></p>
+</li>
+<li>
+<p><a href="#Context-constructor--">constructor()</a></p>
+</li>
+<li>
+<p><a href="#Context-_msgSender--">_msgSender()</a></p>
+</li>
+<li>
+<p><a href="#Context-_msgData--">_msgData()</a></p>
+</li>
+<li>
+<p><a href="#Ownable-OwnershipTransferred-address-address-">OwnershipTransferred(address,address)</a></p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="UserProxy-onlyAuthorised--"><a class="anchor" href="#UserProxy-onlyAuthorised--"></a>onlyAuthorised()</h3>
+
+</div>
+<div class="sect2">
+<h3 id="UserProxy-onlyAgentOwner--"><a class="anchor" href="#UserProxy-onlyAgentOwner--"></a>onlyAgentOwner()</h3>
+
+</div>
+<div class="sect2">
+<h3 id="UserProxy-constructor-address-address-payable-"><a class="anchor" href="#UserProxy-constructor-address-address-payable-"></a>constructor(address agent, address payable webOfTrustAddress)</h3>
+
+</div>
+<div class="sect2">
+<h3 id="UserProxy-fallback--"><a class="anchor" href="#UserProxy-fallback--"></a>fallback()</h3>
+
+</div>
+<div class="sect2">
+<h3 id="UserProxy-addAuthorisedContract-address-"><a class="anchor" href="#UserProxy-addAuthorisedContract-address-"></a>addAuthorisedContract(address authorisedContract)</h3>
+
+</div>
+<div class="sect2">
+<h3 id="UserProxy-addLBCR-address-"><a class="anchor" href="#UserProxy-addLBCR-address-"></a>addLBCR(address lbcrAddress)</h3>
+
+</div>
+<div class="sect2">
+<h3 id="UserProxy-hasEnoughFunds-address-uint256-"><a class="anchor" href="#UserProxy-hasEnoughFunds-address-uint256-"></a>hasEnoughFunds(address reserve, uint256 amount) → bool</h3>
+
+</div>
+<div class="sect2">
+<h3 id="UserProxy-withdrawFunds-address-uint256-"><a class="anchor" href="#UserProxy-withdrawFunds-address-uint256-"></a>withdrawFunds(address _reserve, uint256 _amount)</h3>
+
+</div>
+<div class="sect2">
+<h3 id="UserProxy-depositFunds-address-uint256-"><a class="anchor" href="#UserProxy-depositFunds-address-uint256-"></a>depositFunds(address _reserve, uint256 _amount)</h3>
+
+</div>
+<div class="sect2">
+<h3 id="UserProxy-getTotalBalance-address-"><a class="anchor" href="#UserProxy-getTotalBalance-address-"></a>getTotalBalance(address _reserve) → uint256</h3>
+
+</div>
+<div class="sect2">
+<h3 id="UserProxy-proxyCall-address-bytes-"><a class="anchor" href="#UserProxy-proxyCall-address-bytes-"></a>proxyCall(address target, bytes abiEncoding) → bool</h3>
+
+</div>
+<div class="sect2">
+<h3 id="UserProxy-proxyCall-address-bytes-address-uint256-"><a class="anchor" href="#UserProxy-proxyCall-address-bytes-address-uint256-"></a>proxyCall(address target, bytes abiEncoding, address reserve, uint256 amount) → bool</h3>
+
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_example_protocol_integrations"><a class="anchor" href="#_example_protocol_integrations"></a>Example Protocol Integrations</h2>
+<div class="sectionbody">
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="SimpleLending"><a class="anchor" href="#SimpleLending"></a><code>SimpleLending</code></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#SimpleLending-enoughLiquidity-address-uint256-">enoughLiquidity(address,uint256)</a></p>
+</li>
+<li>
+<p><a href="#Ownable-onlyOwner--">onlyOwner()</a></p>
+</li>
+<li>
+<p><a href="#SimpleLending-constructor-address-payable-uint256-">constructor(address payable,uint256)</a></p>
+</li>
+<li>
+<p><a href="#SimpleLending-fallback--">fallback()</a></p>
+</li>
+<li>
+<p><a href="#SimpleLending-setBaseCollateralisationRate-uint256-">setBaseCollateralisationRate(uint256)</a></p>
+</li>
+<li>
+<p><a href="#SimpleLending-getBaseCollateralisationRate--">getBaseCollateralisationRate()</a></p>
+</li>
+<li>
+<p><a href="#SimpleLending-addReserve-address-">addReserve(address)</a></p>
+</li>
+<li>
+<p><a href="#SimpleLending-deposit-address-uint256-">deposit(address,uint256)</a></p>
+</li>
+<li>
+<p><a href="#SimpleLending-borrow-address-uint256-">borrow(address,uint256)</a></p>
+</li>
+<li>
+<p><a href="#SimpleLending-repay-address-uint256-address-">repay(address,uint256,address)</a></p>
+</li>
+<li>
+<p><a href="#SimpleLending-liquidate-address-address-address-uint256-">liquidate(address,address,address,uint256)</a></p>
+</li>
+<li>
+<p><a href="#SimpleLending-redeem-address-uint256-">redeem(address,uint256)</a></p>
+</li>
+<li>
+<p><a href="#SimpleLending-makePayment-address-uint256-address-payable-">makePayment(address,uint256,address payable)</a></p>
+</li>
+<li>
+<p><a href="#SimpleLending-hasEnoughCollateral-address-uint256-">hasEnoughCollateral(address,uint256)</a></p>
+</li>
+<li>
+<p><a href="#SimpleLending-getAccountDeposits-address-">getAccountDeposits(address)</a></p>
+</li>
+<li>
+<p><a href="#SimpleLending-getAccountBorrows-address-">getAccountBorrows(address)</a></p>
+</li>
+<li>
+<p><a href="#SimpleLending-getBorrowableAmountInETH-address-">getBorrowableAmountInETH(address)</a></p>
+</li>
+<li>
+<p><a href="#SimpleLending-getCollateralInUse-address-">getCollateralInUse(address)</a></p>
+</li>
+<li>
+<p><a href="#SimpleLending-conversionRate-address-address-">conversionRate(address,address)</a></p>
+</li>
+<li>
+<p><a href="#SimpleLending-convert-address-address-uint256-">convert(address,address,uint256)</a></p>
+</li>
+<li>
+<p><a href="#SimpleLending-divideByConversionDecimals-uint256-">divideByConversionDecimals(uint256)</a></p>
+</li>
+<li>
+<p><a href="#Ownable-constructor--">constructor()</a></p>
+</li>
+<li>
+<p><a href="#Ownable-owner--">owner()</a></p>
+</li>
+<li>
+<p><a href="#Ownable-isOwner--">isOwner()</a></p>
+</li>
+<li>
+<p><a href="#Ownable-renounceOwnership--">renounceOwnership()</a></p>
+</li>
+<li>
+<p><a href="#Ownable-transferOwnership-address-">transferOwnership(address)</a></p>
+</li>
+<li>
+<p><a href="#Ownable-_transferOwnership-address-">_transferOwnership(address)</a></p>
+</li>
+<li>
+<p><a href="#Context-constructor--">constructor()</a></p>
+</li>
+<li>
+<p><a href="#Context-_msgSender--">_msgSender()</a></p>
+</li>
+<li>
+<p><a href="#Context-_msgData--">_msgData()</a></p>
+</li>
+<li>
+<p><a href="#Ownable-OwnershipTransferred-address-address-">OwnershipTransferred(address,address)</a></p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="SimpleLending-enoughLiquidity-address-uint256-"><a class="anchor" href="#SimpleLending-enoughLiquidity-address-uint256-"></a>enoughLiquidity(address reserve, uint256 amount)</h3>
+
+</div>
+<div class="sect2">
+<h3 id="SimpleLending-constructor-address-payable-uint256-"><a class="anchor" href="#SimpleLending-constructor-address-payable-uint256-"></a>constructor(address payable webOfTrustAddress, uint256 baseCollateralisationRateValue)</h3>
+
+</div>
+<div class="sect2">
+<h3 id="SimpleLending-fallback--"><a class="anchor" href="#SimpleLending-fallback--"></a>fallback()</h3>
+
+</div>
+<div class="sect2">
+<h3 id="SimpleLending-setBaseCollateralisationRate-uint256-"><a class="anchor" href="#SimpleLending-setBaseCollateralisationRate-uint256-"></a>setBaseCollateralisationRate(uint256 baseCollateralisationRateValue)</h3>
+
+</div>
+<div class="sect2">
+<h3 id="SimpleLending-getBaseCollateralisationRate--"><a class="anchor" href="#SimpleLending-getBaseCollateralisationRate--"></a>getBaseCollateralisationRate() → uint256</h3>
+
+</div>
+<div class="sect2">
+<h3 id="SimpleLending-addReserve-address-"><a class="anchor" href="#SimpleLending-addReserve-address-"></a>addReserve(address newReserve)</h3>
+
+</div>
+<div class="sect2">
+<h3 id="SimpleLending-deposit-address-uint256-"><a class="anchor" href="#SimpleLending-deposit-address-uint256-"></a>deposit(address reserve, uint256 amount)</h3>
+
+</div>
+<div class="sect2">
+<h3 id="SimpleLending-borrow-address-uint256-"><a class="anchor" href="#SimpleLending-borrow-address-uint256-"></a>borrow(address reserve, uint256 amount)</h3>
+
+</div>
+<div class="sect2">
+<h3 id="SimpleLending-repay-address-uint256-address-"><a class="anchor" href="#SimpleLending-repay-address-uint256-address-"></a>repay(address reserve, uint256 amount, address onBehalf)</h3>
+
+</div>
+<div class="sect2">
+<h3 id="SimpleLending-liquidate-address-address-address-uint256-"><a class="anchor" href="#SimpleLending-liquidate-address-address-address-uint256-"></a>liquidate(address borrower, address collateralReserve, address loanReserve, uint256 loanAmount)</h3>
+
+</div>
+<div class="sect2">
+<h3 id="SimpleLending-redeem-address-uint256-"><a class="anchor" href="#SimpleLending-redeem-address-uint256-"></a>redeem(address reserve, uint256 amount)</h3>
+
+</div>
+<div class="sect2">
+<h3 id="SimpleLending-makePayment-address-uint256-address-payable-"><a class="anchor" href="#SimpleLending-makePayment-address-uint256-address-payable-"></a>makePayment(address reserve, uint256 amount, address payable payee)</h3>
+
+</div>
+<div class="sect2">
+<h3 id="SimpleLending-hasEnoughCollateral-address-uint256-"><a class="anchor" href="#SimpleLending-hasEnoughCollateral-address-uint256-"></a>hasEnoughCollateral(address reserve, uint256 amount) → bool</h3>
+
+</div>
+<div class="sect2">
+<h3 id="SimpleLending-getAccountDeposits-address-"><a class="anchor" href="#SimpleLending-getAccountDeposits-address-"></a>getAccountDeposits(address account) → uint256, uint256</h3>
+
+</div>
+<div class="sect2">
+<h3 id="SimpleLending-getAccountBorrows-address-"><a class="anchor" href="#SimpleLending-getAccountBorrows-address-"></a>getAccountBorrows(address account) → uint256, uint256</h3>
+
+</div>
+<div class="sect2">
+<h3 id="SimpleLending-getBorrowableAmountInETH-address-"><a class="anchor" href="#SimpleLending-getBorrowableAmountInETH-address-"></a>getBorrowableAmountInETH(address account) → uint256, uint256</h3>
+
+</div>
+<div class="sect2">
+<h3 id="SimpleLending-getCollateralInUse-address-"><a class="anchor" href="#SimpleLending-getCollateralInUse-address-"></a>getCollateralInUse(address account) → uint256, uint256</h3>
+
+</div>
+<div class="sect2">
+<h3 id="SimpleLending-conversionRate-address-address-"><a class="anchor" href="#SimpleLending-conversionRate-address-address-"></a>conversionRate(address fromReserve, address toReserve) → uint256, uint256</h3>
+
+</div>
+<div class="sect2">
+<h3 id="SimpleLending-convert-address-address-uint256-"><a class="anchor" href="#SimpleLending-convert-address-address-uint256-"></a>convert(address fromReserve, address toReserve, uint256 amount) → uint256, uint256</h3>
+
+</div>
+<div class="sect2">
+<h3 id="SimpleLending-divideByConversionDecimals-uint256-"><a class="anchor" href="#SimpleLending-divideByConversionDecimals-uint256-"></a>divideByConversionDecimals(uint256 x) → uint256</h3>
+
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_interacting_with_a_protocol_integration"><a class="anchor" href="#_interacting_with_a_protocol_integration"></a>Interacting with a protocol integration</h2>
+<div class="sectionbody">
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="SimpleLendingProxy"><a class="anchor" href="#SimpleLendingProxy"></a><code>SimpleLendingProxy</code></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#Ownable-onlyOwner--">onlyOwner()</a></p>
+</li>
+<li>
+<p><a href="#SimpleLendingProxy-constructor-address-address-payable-address-payable-">constructor(address,address payable,address payable)</a></p>
+</li>
+<li>
+<p><a href="#SimpleLendingProxy-fallback--">fallback()</a></p>
+</li>
+<li>
+<p><a href="#SimpleLendingProxy-curate--">curate()</a></p>
+</li>
+<li>
+<p><a href="#SimpleLendingProxy-getAgentFactor-address-">getAgentFactor(address)</a></p>
+</li>
+<li>
+<p><a href="#SimpleLendingProxy-getAgentScore-address-">getAgentScore(address)</a></p>
+</li>
+<li>
+<p><a href="#SimpleLendingProxy-deposit-address-uint256-">deposit(address,uint256)</a></p>
+</li>
+<li>
+<p><a href="#SimpleLendingProxy-borrow-address-uint256-">borrow(address,uint256)</a></p>
+</li>
+<li>
+<p><a href="#SimpleLendingProxy-repay-address-uint256-address-">repay(address,uint256,address)</a></p>
+</li>
+<li>
+<p><a href="#SimpleLendingProxy-liquidate-address-address-address-uint256-">liquidate(address,address,address,uint256)</a></p>
+</li>
+<li>
+<p><a href="#SimpleLendingProxy-redeem-address-uint256-">redeem(address,uint256)</a></p>
+</li>
+<li>
+<p><a href="#Ownable-constructor--">constructor()</a></p>
+</li>
+<li>
+<p><a href="#Ownable-owner--">owner()</a></p>
+</li>
+<li>
+<p><a href="#Ownable-isOwner--">isOwner()</a></p>
+</li>
+<li>
+<p><a href="#Ownable-renounceOwnership--">renounceOwnership()</a></p>
+</li>
+<li>
+<p><a href="#Ownable-transferOwnership-address-">transferOwnership(address)</a></p>
+</li>
+<li>
+<p><a href="#Ownable-_transferOwnership-address-">_transferOwnership(address)</a></p>
+</li>
+<li>
+<p><a href="#Context-constructor--">constructor()</a></p>
+</li>
+<li>
+<p><a href="#Context-_msgSender--">_msgSender()</a></p>
+</li>
+<li>
+<p><a href="#Context-_msgData--">_msgData()</a></p>
+</li>
+<li>
+<p><a href="#Ownable-OwnershipTransferred-address-address-">OwnershipTransferred(address,address)</a></p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="SimpleLendingProxy-constructor-address-address-payable-address-payable-"><a class="anchor" href="#SimpleLendingProxy-constructor-address-address-payable-address-payable-"></a>constructor(address lbcrAddress, address payable webOfTrustAddress, address payable UserProxyFactoryAddress)</h3>
+
+</div>
+<div class="sect2">
+<h3 id="SimpleLendingProxy-fallback--"><a class="anchor" href="#SimpleLendingProxy-fallback--"></a>fallback()</h3>
+
+</div>
+<div class="sect2">
+<h3 id="SimpleLendingProxy-curate--"><a class="anchor" href="#SimpleLendingProxy-curate--"></a>curate()</h3>
+
+</div>
+<div class="sect2">
+<h3 id="SimpleLendingProxy-getAgentFactor-address-"><a class="anchor" href="#SimpleLendingProxy-getAgentFactor-address-"></a>getAgentFactor(address agent) → uint256</h3>
+
+</div>
+<div class="sect2">
+<h3 id="SimpleLendingProxy-getAgentScore-address-"><a class="anchor" href="#SimpleLendingProxy-getAgentScore-address-"></a>getAgentScore(address agent) → uint256</h3>
+
+</div>
+<div class="sect2">
+<h3 id="SimpleLendingProxy-deposit-address-uint256-"><a class="anchor" href="#SimpleLendingProxy-deposit-address-uint256-"></a>deposit(address reserve, uint256 amount)</h3>
+
+</div>
+<div class="sect2">
+<h3 id="SimpleLendingProxy-borrow-address-uint256-"><a class="anchor" href="#SimpleLendingProxy-borrow-address-uint256-"></a>borrow(address reserve, uint256 amount)</h3>
+
+</div>
+<div class="sect2">
+<h3 id="SimpleLendingProxy-repay-address-uint256-address-"><a class="anchor" href="#SimpleLendingProxy-repay-address-uint256-address-"></a>repay(address reserve, uint256 amount, address onbehalf)</h3>
+
+</div>
+<div class="sect2">
+<h3 id="SimpleLendingProxy-liquidate-address-address-address-uint256-"><a class="anchor" href="#SimpleLendingProxy-liquidate-address-address-address-uint256-"></a>liquidate(address borrower, address collateralReserve, address loanReserve, uint256 loanAmount)</h3>
+
+</div>
+<div class="sect2">
+<h3 id="SimpleLendingProxy-redeem-address-uint256-"><a class="anchor" href="#SimpleLendingProxy-redeem-address-uint256-"></a>redeem(address reserve, uint256 amount)</h3>
+
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_layered_behaviour_curated_registry"><a class="anchor" href="#_layered_behaviour_curated_registry"></a>Layered Behaviour-Curated Registry</h2>
+<div class="sectionbody">
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="ILBCR"><a class="anchor" href="#ILBCR"></a><code>ILBCR</code></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#ILBCR-getCompatibilityScoreWith-address-">getCompatibilityScoreWith(address)</a></p>
+</li>
+<li>
+<p><a href="#ILBCR-setCompatibilityScoreWith-address-uint256-">setCompatibilityScoreWith(address,uint256)</a></p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="ILBCR-getCompatibilityScoreWith-address-"><a class="anchor" href="#ILBCR-getCompatibilityScoreWith-address-"></a>getCompatibilityScoreWith(address protocol) → uint256</h3>
+
+</div>
+<div class="sect2">
+<h3 id="ILBCR-setCompatibilityScoreWith-address-uint256-"><a class="anchor" href="#ILBCR-setCompatibilityScoreWith-address-uint256-"></a>setCompatibilityScoreWith(address protocol, uint256 score)</h3>
+
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="LBCR"><a class="anchor" href="#LBCR"></a><code>LBCR</code></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#LBCR-onlyAuthorised--">onlyAuthorised()</a></p>
+</li>
+<li>
+<p><a href="#Ownable-onlyOwner--">onlyOwner()</a></p>
+</li>
+<li>
+<p><a href="#LBCR-addAuthorisedContract-address-">addAuthorisedContract(address)</a></p>
+</li>
+<li>
+<p><a href="#LBCR-getCompatibilityScoreWith-address-">getCompatibilityScoreWith(address)</a></p>
+</li>
+<li>
+<p><a href="#LBCR-setCompatibilityScoreWith-address-uint256-">setCompatibilityScoreWith(address,uint256)</a></p>
+</li>
+<li>
+<p><a href="#LBCR-getLayers--">getLayers()</a></p>
+</li>
+<li>
+<p><a href="#LBCR-setLayers-uint8---">setLayers(uint8[</a>)]</p>
+</li>
+<li>
+<p><a href="#LBCR-resetLayers--">resetLayers()</a></p>
+</li>
+<li>
+<p><a href="#LBCR-addLayer-uint256-">addLayer(uint256)</a></p>
+</li>
+<li>
+<p><a href="#LBCR-getAgentFactor-address-">getAgentFactor(address)</a></p>
+</li>
+<li>
+<p><a href="#LBCR-getFactor-uint256-">getFactor(uint256)</a></p>
+</li>
+<li>
+<p><a href="#LBCR-setFactor-uint256-uint256-">setFactor(uint256,uint256)</a></p>
+</li>
+<li>
+<p><a href="#LBCR-getReward-uint256-">getReward(uint256)</a></p>
+</li>
+<li>
+<p><a href="#LBCR-setReward-uint256-uint256-">setReward(uint256,uint256)</a></p>
+</li>
+<li>
+<p><a href="#LBCR-getBounds-uint256-">getBounds(uint256)</a></p>
+</li>
+<li>
+<p><a href="#LBCR-setBounds-uint256-uint256-uint256-">setBounds(uint256,uint256,uint256)</a></p>
+</li>
+<li>
+<p><a href="#LBCR-getAssignment-address-">getAssignment(address)</a></p>
+</li>
+<li>
+<p><a href="#LBCR-getScore-address-">getScore(address)</a></p>
+</li>
+<li>
+<p><a href="#LBCR-getInteractionCount-address-">getInteractionCount(address)</a></p>
+</li>
+<li>
+<p><a href="#LBCR-registerAgent-address-">registerAgent(address)</a></p>
+</li>
+<li>
+<p><a href="#LBCR-update-address-uint256-">update(address,uint256)</a></p>
+</li>
+<li>
+<p><a href="#LBCR-curate--">curate()</a></p>
+</li>
+<li>
+<p><a href="#Ownable-constructor--">constructor()</a></p>
+</li>
+<li>
+<p><a href="#Ownable-owner--">owner()</a></p>
+</li>
+<li>
+<p><a href="#Ownable-isOwner--">isOwner()</a></p>
+</li>
+<li>
+<p><a href="#Ownable-renounceOwnership--">renounceOwnership()</a></p>
+</li>
+<li>
+<p><a href="#Ownable-transferOwnership-address-">transferOwnership(address)</a></p>
+</li>
+<li>
+<p><a href="#Ownable-_transferOwnership-address-">_transferOwnership(address)</a></p>
+</li>
+<li>
+<p><a href="#Context-constructor--">constructor()</a></p>
+</li>
+<li>
+<p><a href="#Context-_msgSender--">_msgSender()</a></p>
+</li>
+<li>
+<p><a href="#Context-_msgData--">_msgData()</a></p>
+</li>
+<li>
+<p><a href="#LBCR-NewBound-uint256-uint256-">NewBound(uint256,uint256)</a></p>
+</li>
+<li>
+<p><a href="#LBCR-RegisterAgent-address-">RegisterAgent(address)</a></p>
+</li>
+<li>
+<p><a href="#LBCR-Update-address-uint256-uint256-">Update(address,uint256,uint256)</a></p>
+</li>
+<li>
+<p><a href="#LBCR-Curate-uint256-uint256-uint256-">Curate(uint256,uint256,uint256)</a></p>
+</li>
+<li>
+<p><a href="#Ownable-OwnershipTransferred-address-address-">OwnershipTransferred(address,address)</a></p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="LBCR-onlyAuthorised--"><a class="anchor" href="#LBCR-onlyAuthorised--"></a>onlyAuthorised()</h3>
+
+</div>
+<div class="sect2">
+<h3 id="LBCR-addAuthorisedContract-address-"><a class="anchor" href="#LBCR-addAuthorisedContract-address-"></a>addAuthorisedContract(address authorisedContract)</h3>
+
+</div>
+<div class="sect2">
+<h3 id="LBCR-getCompatibilityScoreWith-address-"><a class="anchor" href="#LBCR-getCompatibilityScoreWith-address-"></a>getCompatibilityScoreWith(address protocol) → uint256</h3>
+
+</div>
+<div class="sect2">
+<h3 id="LBCR-setCompatibilityScoreWith-address-uint256-"><a class="anchor" href="#LBCR-setCompatibilityScoreWith-address-uint256-"></a>setCompatibilityScoreWith(address protocol, uint256 score)</h3>
+
+</div>
+<div class="sect2">
+<h3 id="LBCR-getLayers--"><a class="anchor" href="#LBCR-getLayers--"></a>getLayers() → uint256[]</h3>
+
+</div>
+<div class="sect2">
+<h3 id="LBCR-setLayers-uint8---"><a class="anchor" href="#LBCR-setLayers-uint8---"></a>setLayers(uint8[] layers)</h3>
+
+</div>
+<div class="sect2">
+<h3 id="LBCR-resetLayers--"><a class="anchor" href="#LBCR-resetLayers--"></a>resetLayers()</h3>
+
+</div>
+<div class="sect2">
+<h3 id="LBCR-addLayer-uint256-"><a class="anchor" href="#LBCR-addLayer-uint256-"></a>addLayer(uint256 layer)</h3>
+
+</div>
+<div class="sect2">
+<h3 id="LBCR-getAgentFactor-address-"><a class="anchor" href="#LBCR-getAgentFactor-address-"></a>getAgentFactor(address agent) → uint256</h3>
+
+</div>
+<div class="sect2">
+<h3 id="LBCR-getFactor-uint256-"><a class="anchor" href="#LBCR-getFactor-uint256-"></a>getFactor(uint256 layer) → uint256</h3>
+
+</div>
+<div class="sect2">
+<h3 id="LBCR-setFactor-uint256-uint256-"><a class="anchor" href="#LBCR-setFactor-uint256-uint256-"></a>setFactor(uint256 layer, uint256 factor) → bool</h3>
+
+</div>
+<div class="sect2">
+<h3 id="LBCR-getReward-uint256-"><a class="anchor" href="#LBCR-getReward-uint256-"></a>getReward(uint256 action) → uint256</h3>
+
+</div>
+<div class="sect2">
+<h3 id="LBCR-setReward-uint256-uint256-"><a class="anchor" href="#LBCR-setReward-uint256-uint256-"></a>setReward(uint256 action, uint256 reward) → bool</h3>
+
+</div>
+<div class="sect2">
+<h3 id="LBCR-getBounds-uint256-"><a class="anchor" href="#LBCR-getBounds-uint256-"></a>getBounds(uint256 layer) → uint256, uint256</h3>
+
+</div>
+<div class="sect2">
+<h3 id="LBCR-setBounds-uint256-uint256-uint256-"><a class="anchor" href="#LBCR-setBounds-uint256-uint256-uint256-"></a>setBounds(uint256 layer, uint256 lower, uint256 upper) → bool</h3>
+
+</div>
+<div class="sect2">
+<h3 id="LBCR-getAssignment-address-"><a class="anchor" href="#LBCR-getAssignment-address-"></a>getAssignment(address agent) → uint256 assignment</h3>
+
+</div>
+<div class="sect2">
+<h3 id="LBCR-getScore-address-"><a class="anchor" href="#LBCR-getScore-address-"></a>getScore(address agent) → uint256</h3>
+
+</div>
+<div class="sect2">
+<h3 id="LBCR-getInteractionCount-address-"><a class="anchor" href="#LBCR-getInteractionCount-address-"></a>getInteractionCount(address agent) → uint256</h3>
+
+</div>
+<div class="sect2">
+<h3 id="LBCR-registerAgent-address-"><a class="anchor" href="#LBCR-registerAgent-address-"></a>registerAgent(address agent) → bool</h3>
+
+</div>
+<div class="sect2">
+<h3 id="LBCR-update-address-uint256-"><a class="anchor" href="#LBCR-update-address-uint256-"></a>update(address agent, uint256 action) → bool</h3>
+
+</div>
+<div class="sect2">
+<h3 id="LBCR-curate--"><a class="anchor" href="#LBCR-curate--"></a>curate() → bool</h3>
+
+</div>
+<div class="sect2">
+<h3 id="LBCR-NewBound-uint256-uint256-"><a class="anchor" href="#LBCR-NewBound-uint256-uint256-"></a>NewBound(uint256 lower, uint256 upper)</h3>
+
+</div>
+<div class="sect2">
+<h3 id="LBCR-RegisterAgent-address-"><a class="anchor" href="#LBCR-RegisterAgent-address-"></a>RegisterAgent(address agent)</h3>
+
+</div>
+<div class="sect2">
+<h3 id="LBCR-Update-address-uint256-uint256-"><a class="anchor" href="#LBCR-Update-address-uint256-uint256-"></a>Update(address agent, uint256 reward, uint256 score)</h3>
+
+</div>
+<div class="sect2">
+<h3 id="LBCR-Curate-uint256-uint256-uint256-"><a class="anchor" href="#LBCR-Curate-uint256-uint256-uint256-"></a>Curate(uint256 round, uint256 start, uint256 end)</h3>
+
+</div>
+</div>
+</div>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>This page was built using the Antora default UI.</p>
+  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+</footer>
+<script src="../../_/js/site.js"></script>
+<script async src="../../_/js/vendor/highlight.js"></script>
+  </body>
+</html>
