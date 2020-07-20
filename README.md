@@ -20,6 +20,7 @@
 * [Getting Started](#getting-started)
   * [Prerequisites](#prerequisites)
 * [Usage](#usage)
+* [Documentation](#documentation)
 * [Roadmap](#roadmap)
 * [License](#license)
 
@@ -72,8 +73,12 @@ Run:
 npx buidler test
 ```
 
-To learn how to integrate with Byzantic, follow the tests in `test/byzantic.ts`. Moreover, check out the [Documentation static HTML page](https://htmlpreview.github.io/?https://github.com/savudani8/Byzantic/blob/master/docs/website/build/site/contracts/1/index.html), generated automatically using [solidity-docgen](https://github.com/OpenZeppelin/solidity-docgen) and [Antora](https://antora.org/).
+To learn how to integrate with Byzantic, follow the tests in `test/byzantic.ts`. Moreover, check out the [Documentation](#Documentation).
 
+
+## Documentation
+
+You can find the static HTML documentation page [here](https://htmlpreview.github.io/?https://github.com/savudani8/Byzantic/blob/master/docs/website/build/site/contracts/1/index.html), generated automatically using [solidity-docgen](https://github.com/OpenZeppelin/solidity-docgen) and [Antora](https://antora.org/).
 
 <!-- ROADMAP -->
 ## Roadmap
