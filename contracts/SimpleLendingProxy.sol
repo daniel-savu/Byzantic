@@ -15,8 +15,6 @@ contract SimpleLendingProxy is Ownable {
     address constant LendingPoolAddressesProviderAddress = 0x24a42fD28C976A61Df5D00D0599C34c4f90748c8;
     address constant aETHAddress = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
     address constant aETHContractAddress = 0x3a3A65aAb0dd2A17E3F1947bA16138cd37d08c04;
-    address constant daiAddress = 0x6B175474E89094C44Da98b954EedeAC495271d0F;
-    LBCR lbcr;
 
     uint256 depositAction;
     uint256 borrowAction;
@@ -26,15 +24,16 @@ contract SimpleLendingProxy is Ownable {
     uint256 redeemAction;
     WebOfTrust webOfTrust;
     UserProxyFactory userProxyFactory;
+    SimpleLending simpleLending;
 
     constructor(
-        address lbcrAddress,
         address payable webOfTrustAddress,
-        address payable UserProxyFactoryAddress
+        address payable UserProxyFactoryAddress,
+        address payable simpleLendingAddress
     ) public {
-        lbcr = LBCR(lbcrAddress);
         webOfTrust = WebOfTrust(webOfTrustAddress);
         userProxyFactory = UserProxyFactory(UserProxyFactoryAddress);
+        simpleLending = SimpleLending(simpleLendingAddress);
         depositAction = 1;
         borrowAction = 2;
         repayAction = 3;
@@ -45,16 +44,8 @@ contract SimpleLendingProxy is Ownable {
 
     function() external payable {}
 
-    function curate() public {
-        lbcr.curate();
-    }
-
-    function getAgentFactor(address agent) public view returns (uint256) {
-        return lbcr.getAgentFactor(agent);
-    }
-
-    function getAgentScore(address agent) public view returns (uint256) {
-        return lbcr.getScore(agent);
+    function setSimpleLendingAddress(address payable simpleLendingAddress) public onlyOwner {
+        simpleLending = SimpleLending(simpleLendingAddress);
     }
 
 
@@ -63,34 +54,30 @@ contract SimpleLendingProxy is Ownable {
     // LendingPool contract
 
     function deposit(address reserve, uint256 amount) public {
-        address simpleLendingAddress = webOfTrust.getSimpleLendingAddress();
         bytes memory abiEncoding = abi.encodeWithSignature(
             "deposit(address,uint256)",
             reserve,
             amount
         );
-        address payable a = userProxyFactory.getUserProxyAddress(msg.sender);
-        UserProxy userProxy = UserProxy(a);
-        bool success = userProxy.proxyCall(simpleLendingAddress, abiEncoding, reserve, amount);
+        UserProxy userProxy = UserProxy(userProxyFactory.getUserProxyAddress(msg.sender));
+        bool success = userProxy.proxyCall(address(simpleLending), abiEncoding, reserve, amount);
         require(success, "deposit failed");
-        lbcr.update(address(userProxy), depositAction);
+        webOfTrust.updateLBCR(address(simpleLending), address(userProxy), depositAction);
     }
 
     function borrow(address reserve, uint256 amount) public {
-        address simpleLendingAddress = webOfTrust.getSimpleLendingAddress();
         bytes memory abiEncoding = abi.encodeWithSignature(
             "borrow(address,uint256)",
             reserve,
             amount
         );
         UserProxy userProxy = UserProxy(userProxyFactory.getUserProxyAddress(msg.sender));
-        bool success = userProxy.proxyCall(simpleLendingAddress, abiEncoding);
+        bool success = userProxy.proxyCall(address(simpleLending), abiEncoding);
         require(success, "borrow failed");
-        lbcr.update(address(userProxy), borrowAction);
+        webOfTrust.updateLBCR(address(simpleLending), address(userProxy), depositAction);
     }
 
     function repay(address reserve, uint256 amount, address onbehalf) public {
-        address simpleLendingAddress = webOfTrust.getSimpleLendingAddress();
         bytes memory abiEncoding = abi.encodeWithSignature(
             "repay(address,uint256,address)",
             reserve,
@@ -98,13 +85,12 @@ contract SimpleLendingProxy is Ownable {
             onbehalf
         );
         UserProxy userProxy = UserProxy(userProxyFactory.getUserProxyAddress(msg.sender));
-        bool success = userProxy.proxyCall(simpleLendingAddress, abiEncoding, reserve, amount);
+        bool success = userProxy.proxyCall(address(simpleLending), abiEncoding, reserve, amount);
         require(success, "repayment failed");
-        lbcr.update(address(userProxy), repayAction);
+        webOfTrust.updateLBCR(address(simpleLending), address(userProxy), depositAction);
     }
 
     function liquidate(address borrower, address collateralReserve, address loanReserve, uint256 loanAmount) public {
-        address simpleLendingAddress = webOfTrust.getSimpleLendingAddress();
         bytes memory abiEncoding = abi.encodeWithSignature(
             "liquidate(address,address,address,uint256)",
             borrower,
@@ -113,22 +99,21 @@ contract SimpleLendingProxy is Ownable {
             loanAmount
         );
         UserProxy userProxy = UserProxy(userProxyFactory.getUserProxyAddress(msg.sender));
-        bool success = userProxy.proxyCall(simpleLendingAddress, abiEncoding, loanReserve, loanAmount);
+        bool success = userProxy.proxyCall(address(simpleLending), abiEncoding, loanReserve, loanAmount);
         require(success, "liquidation failed");
-        lbcr.update(address(userProxy), liquidateAction);
+        webOfTrust.updateLBCR(address(simpleLending), address(userProxy), depositAction);
     }
 
     function redeem(address reserve, uint256 amount) public {
-        address simpleLendingAddress = webOfTrust.getSimpleLendingAddress();
         bytes memory abiEncoding = abi.encodeWithSignature(
             "redeem(address,uint256)",
             reserve,
             amount
         );
         UserProxy userProxy = UserProxy(userProxyFactory.getUserProxyAddress(msg.sender));
-        bool success = userProxy.proxyCall(simpleLendingAddress, abiEncoding);
+        bool success = userProxy.proxyCall(address(simpleLending), abiEncoding);
         require(success, "redeem failed");
-        lbcr.update(address(userProxy), redeemAction);
+        webOfTrust.updateLBCR(address(simpleLending), address(userProxy), depositAction);
     }
 
 }

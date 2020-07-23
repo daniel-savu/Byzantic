@@ -33,18 +33,24 @@ const daiAddress = '0x6B175474E89094C44Da98b954EedeAC495271d0F' // mainnet
 const daiAmount = '1'
 
 let webOfTrust: typeof WebOfTrust
+let userProxyFactory: typeof UserProxyFactory
 let accs: typeof WebOfTrust
-let simpleLending: typeof WebOfTrust
-let simpleLendingTwo: typeof WebOfTrust
-let simpleLendingAddress: any
-let simpleLendingTwoAddress: any
+
+let simpleLending: typeof SimpleLending
+let simpleLendingLBCR: typeof LBCR
+let simpleLendingProxy: typeof WebOfTrust
+
+let simpleLendingTwo: typeof SimpleLending
+let simpleLendingTwoLBCR: typeof SimpleLending
+let simpleLendingTwoProxy: typeof WebOfTrust
+
 let daiMock: typeof WebOfTrust
 
 
 contract("SimpleLending Protocol", accounts => {
 
     async function initializeSimpleLendingLBCR(webOfTrust: typeof WebOfTrust) {
-        const simpleLendingLBCRAddress = await webOfTrust.getSimpleLendingLBCR();
+        const simpleLendingLBCRAddress = await webOfTrust.getProtocolLBCR(simpleLending.address);
         let simpleLendingLayers = [1, 2, 3, 4, 5];
         let simpleLendingLayerFactors = [1000, 900, 850, 800, 750];
         let simpleLendingLayerLowerBounds = [0, 20, 40, 60, 80];
@@ -53,7 +59,7 @@ contract("SimpleLending Protocol", accounts => {
     }
 
     async function initializeSimpleLendingTwoLBCR(webOfTrust: typeof WebOfTrust) {
-        const simpleLendingLBCRAddress = await webOfTrust.getSimpleLendingTwoLBCR();
+        const simpleLendingLBCRAddress = await webOfTrust.getProtocolLBCR(simpleLendingTwo.address);
         let simpleLendingLayers = [1, 2, 3, 4, 5];
         let simpleLendingLayerFactors = [1000, 900, 850, 800, 750];
         let simpleLendingLayerLowerBounds = [0, 20, 40, 60, 80];
@@ -92,7 +98,7 @@ contract("SimpleLending Protocol", accounts => {
     }
 
     async function initializeLendingProtocol(protocolAddress: string) {
-        if(protocolAddress == simpleLendingAddress) {
+        if(protocolAddress == simpleLending.address) {
             await initializeSimpleLendingLBCR(webOfTrust);
         } else {
             await initializeSimpleLendingTwoLBCR(webOfTrust);
@@ -126,8 +132,6 @@ contract("SimpleLending Protocol", accounts => {
                 value: web3.utils.toHex(web3.utils.toWei('2', 'ether'))
             }
         );
-
-        return lendingProtocol;
     }
 
     function divideByConversionDecimals(obj: {0: number, 1: number}) {
@@ -140,12 +144,23 @@ contract("SimpleLending Protocol", accounts => {
         accs = await web3.eth.getAccounts();
         webOfTrust = await WebOfTrust.new();
         daiMock = await DaiMock.new();
+        let baseCollateralisationRateValue = 1500;
+        let userProxyFactoryAddress = await webOfTrust.getUserProxyFactoryAddress();
+        userProxyFactory = await UserProxyFactory.at(userProxyFactoryAddress);
+        simpleLending = await SimpleLending.new(webOfTrust.address, baseCollateralisationRateValue);
 
-        simpleLendingAddress = await webOfTrust.getSimpleLendingAddress();
-        simpleLending = await initializeLendingProtocol(simpleLendingAddress);
+        simpleLendingProxy = await SimpleLendingProxy.new(webOfTrust.address, userProxyFactoryAddress, simpleLending.address);
+        await webOfTrust.addProtocolIntegration(simpleLending.address, simpleLendingProxy.address);
+        await initializeLendingProtocol(simpleLending.address);
 
-        simpleLendingTwoAddress = await webOfTrust.getSimpleLendingTwoAddress();
-        simpleLendingTwo = await initializeLendingProtocol(simpleLendingTwoAddress);
+        simpleLendingTwo = await SimpleLending.new(webOfTrust.address, baseCollateralisationRateValue);
+        simpleLendingTwoProxy = await SimpleLendingProxy.new(webOfTrust.address, userProxyFactoryAddress, simpleLendingTwo.address);
+
+        await webOfTrust.addProtocolIntegration(simpleLendingTwo.address, simpleLendingTwoProxy.address);
+        await initializeLendingProtocol(simpleLendingTwo.address);
+
+        await userProxyFactory.addAgent();
+
 
         // let daiMocks = await daiMock.balanceOf(simpleLending.address)
         // console.log(`daiMock balance in SL: ${daiMocks}`);
@@ -161,12 +176,6 @@ contract("SimpleLending Protocol", accounts => {
     });
 
     xit("Should deposit to SimpleLending", async function () {
-        const userProxyFactoryAddress = await webOfTrust.getUserProxyFactoryAddress();
-        const userProxyFactory = await UserProxyFactory.at(userProxyFactoryAddress);
-        await userProxyFactory.addAgent();
-        const simpleLendingProxyAddress = await webOfTrust.getSimpleLendingProxy();
-        const simpleLendingProxy = await SimpleLendingProxy.at(simpleLendingProxyAddress);
-
         const userProxyAddress = await userProxyFactory.getUserProxyAddress(accs[0]);
         const up = await userProxy.at(userProxyAddress);
         let tr = await up.depositFunds(
@@ -209,12 +218,6 @@ contract("SimpleLending Protocol", accounts => {
     });
 
     xit("Should deposit to, borrow from and repay to SimpleLending", async function () {
-        const userProxyFactoryAddress = await webOfTrust.getUserProxyFactoryAddress();
-        const userProxyFactory = await UserProxyFactory.at(userProxyFactoryAddress);
-        await userProxyFactory.addAgent();
-        const simpleLendingProxyAddress = await webOfTrust.getSimpleLendingProxy();
-        const simpleLendingProxy = await SimpleLendingProxy.at(simpleLendingProxyAddress);
-
         const userProxyAddress = await userProxyFactory.getUserProxyAddress(accs[0]);
         const up = await userProxy.at(userProxyAddress);
         let tr = await up.depositFunds(
@@ -283,16 +286,6 @@ contract("SimpleLending Protocol", accounts => {
     });
 
     it("Should deposit to SimpleLending and SimpleLendingTwo", async function () {
-        const userProxyFactoryAddress = await webOfTrust.getUserProxyFactoryAddress();
-        const userProxyFactory = await UserProxyFactory.at(userProxyFactoryAddress);
-        await userProxyFactory.addAgent();
-
-        const simpleLendingProxyAddress = await webOfTrust.getSimpleLendingProxy();
-        const simpleLendingProxy = await SimpleLendingProxy.at(simpleLendingProxyAddress);
-
-        const simpleLendingTwoProxyAddress = await webOfTrust.getSimpleLendingTwoProxy();
-        const simpleLendingTwoProxy = await SimpleLendingProxy.at(simpleLendingTwoProxyAddress);
-
         const userProxyAddress = await userProxyFactory.getUserProxyAddress(accs[0]);
         const up = await userProxy.at(userProxyAddress);
         let tr = await up.depositFunds(

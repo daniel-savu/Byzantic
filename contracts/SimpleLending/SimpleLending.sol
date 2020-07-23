@@ -4,17 +4,17 @@ pragma solidity ^0.5.0;
 import "@openzeppelin/contracts/ownership/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@nomiclabs/buidler/console.sol";
+import "../IByzantic.sol";
 import "../WebOfTrust.sol";
 
 
-
-contract SimpleLending is Ownable {
+contract SimpleLending is IByzantic, Ownable {
     mapping (address => mapping(address => uint)) userDeposits;
     mapping (address => mapping(address => uint)) userLoans;
     mapping(address => uint) reserveLiquidity;
+    WebOfTrust webOfTrust;
     address[] reserves;
     uint baseCollateralisationRate;
-    WebOfTrust webOfTrust;
     address ethAddress = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
     uint256 collateralizationDecimals = 3; // decimals to calculate collateral factor
     uint conversionDecimals = 25;
@@ -29,11 +29,11 @@ contract SimpleLending is Ownable {
         console.log("in SimpleLending fallback");
     }
 
-    function setBaseCollateralisationRate(uint baseCollateralisationRateValue) public onlyOwner {
+    function setBaseCollateralisationRate(uint baseCollateralisationRateValue) external onlyOwner {
         baseCollateralisationRate = baseCollateralisationRateValue;
     }
 
-    function getBaseCollateralisationRate() public returns (uint) {
+    function getBaseCollateralisationRate() external view returns (uint) {
         return baseCollateralisationRate;
     }
 
@@ -198,5 +198,3 @@ contract SimpleLending is Ownable {
     }
 
 }
-// 2000000000000000000
-// 5856515373352855

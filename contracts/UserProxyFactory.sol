@@ -12,34 +12,34 @@ contract UserProxyFactory is Ownable {
     mapping (address => UserProxy) userAddressToUserProxy;
     mapping (address => address) userProxyToUserAddress;
 
-    LBCR simpleLendingLBCR;
-    LBCR simpleLendingTwoLBCR;
+    LBCR[] lbcrs;
     WebOfTrust webOfTrust;
     mapping (address => bool) isAgentInitialized;
 
-    constructor(
-        address simpleLendingLBCRAddress,
-        address simpleLendingTwoLBCRAddress,
-        address payable webOfTrustAddress
-    ) public {
-        simpleLendingLBCR = LBCR(simpleLendingLBCRAddress);
-        simpleLendingTwoLBCR = LBCR(simpleLendingTwoLBCRAddress);
+    constructor(address payable webOfTrustAddress) public {
         webOfTrust = WebOfTrust(webOfTrustAddress);
     }
 
     function() external payable {}
 
     function addAgent() public {
+        console.log("addAgent");
         if (!isAgentInitialized[msg.sender]) {
             UserProxy userProxy = new UserProxy(msg.sender, address(webOfTrust));
             userAddressToUserProxy[msg.sender] = userProxy;
             userProxyToUserAddress[address(userProxy)] = msg.sender;
-            simpleLendingLBCR.registerAgent(address(userProxy));
-            simpleLendingTwoLBCR.registerAgent(address(userProxy));
-            // add other protocol initializations here
-            // such as initializeCompoundProxy when done
+
+            for(uint i = 0; i < lbcrs.length; i++) {
+                lbcrs[i].registerAgent(address(userProxy));
+            }
+
             isAgentInitialized[msg.sender] = true;
         }
+    }
+
+    function addLBCR(address lbcrAddress) public onlyOwner {
+        LBCR lbcr = LBCR(lbcrAddress);
+        lbcrs.push(lbcr);
     }
 
     function isAddressAByzanticProxy(address userProxyAddress) public view returns (bool) {
