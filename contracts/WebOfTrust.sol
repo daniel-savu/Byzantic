@@ -18,9 +18,11 @@ contract WebOfTrust {
     LBCR[] lbcrs;
     mapping (address => address) protocolToLBCR;
     mapping (address => address) protocolToProxy;
+    uint userFactorDecimals;
 
     constructor() public {
         userProxyFactory = new UserProxyFactory(address(this));
+        userFactorDecimals = 3;
     }
 
     function() external payable {
@@ -60,15 +62,13 @@ contract WebOfTrust {
      * of compatibility between them to compute how much collateral a
      * user should pay.
      */
-    function getAggregateAgentFactorForProtocol(address agent, address protocol) public returns (uint256) {
+    function getAggregateAgentFactorForProtocol(address agent, address protocol) public view returns (uint256) {
         // a factor of 1500 is equal to 1.5 times the collateral
         uint aggregateAgentFactor = aggregateLBCRsForProtocol(agent, protocol);
-        console.log("aggregateAgentFactorForProtocol:");
-        console.log(aggregateAgentFactor);
         return aggregateAgentFactor;
     }
 
-    function aggregateLBCRsForProtocol(address agent, address protocol) public returns (uint) {
+    function aggregateLBCRsForProtocol(address agent, address protocol) public view returns (uint) {
         uint agentFactorSum = 0;
         uint agentFactorDenominator = 0;
         address LBCRAddress = protocolToLBCR[protocol];
@@ -76,7 +76,7 @@ contract WebOfTrust {
         for(uint i = 0; i < lbcrs.length; i ++) {
             LBCR lbcr = lbcrs[i];
             if(lbcr.getInteractionCount(agent) > 0) {
-                agentFactorSum += (lbcr.getAgentFactor(agent) * IByzantic(protocol).getBaseCollateralisationRate() * ILBCR(LBCRAddress).getCompatibilityScoreWith(address(lbcr)));
+                agentFactorSum += (lbcr.getAgentFactor(agent) * ILBCR(LBCRAddress).getCompatibilityScoreWith(address(lbcr)));
                 agentFactorDenominator += ILBCR(LBCRAddress).getCompatibilityScoreWith(address(lbcr));
             }
         }
@@ -90,6 +90,10 @@ contract WebOfTrust {
         for(uint i = 0; i < lbcrs.length; i++) {
             lbcrs[i].curate();
         }
+    }
+
+    function getUserFactorDecimals() public view returns (uint){
+        return userFactorDecimals;
     }
 
 }

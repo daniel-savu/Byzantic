@@ -70,37 +70,28 @@ contract SimpleLending is IByzantic, Ownable {
     }
 
     function liquidate(address borrower, address collateralReserve, address loanReserve, uint256 loanAmount) public payable {
-        // need to retrieve the collateralization ratio of 'account'
-        // from the WebOfTrust contract
-        // and check whether user is undercollateralized
-        (uint deposits, ) = getAccountDeposits(borrower);
-        (uint borrows, ) = getAccountBorrows(borrower);
-        uint accountCollateralizationRatio = baseCollateralisationRate * webOfTrust.getAggregateAgentFactorForProtocol(borrower, address(this));
-        uint availableCollateral = deposits - borrows * accountCollateralizationRatio;
-        // deposits and borrows are expressed as numbers multiplied by 10 ** conversionDecimals
-        availableCollateral = divideByConversionDecimals(availableCollateral);
-
-        require(availableCollateral < 0, "The account is already properly collateralized");
-        require(userLoans[borrower][loanReserve] >= loanAmount, "amount is larger than actual loan");
+        require(
+            getMaxAmountToLiquidateInReserve(borrower, loanReserve) > 0,
+            "The account is already properly collateralized or the liquidation amount is larger than borrower loan"
+        );
         if(loanReserve == ethAddress) {
-            require(msg.value == loanAmount, "amount is different from msg.value");
+            require(msg.value == loanAmount, "Amount is different from msg.value");
         } else {
             IERC20(loanReserve).transferFrom(msg.sender, address(this), loanAmount);
         }
-        userLoans[borrower][loanReserve] -= loanAmount;
         (uint returnedCollateralAmount, ) = convert(loanReserve, collateralReserve, loanAmount);
+        returnedCollateralAmount = applyLiquidationDiscount(returnedCollateralAmount);
         returnedCollateralAmount = divideByConversionDecimals(returnedCollateralAmount);
 
+        userLoans[borrower][loanReserve] -= loanAmount;
         userDeposits[borrower][collateralReserve] -= returnedCollateralAmount;
-        makePayment(collateralReserve, loanAmount, msg.sender);
+        makePayment(collateralReserve, returnedCollateralAmount, msg.sender);
         reserveLiquidity[loanReserve] += loanAmount;
         reserveLiquidity[collateralReserve] -= returnedCollateralAmount;
     }
 
     function redeem(address reserve, uint256 amount) public {
-        (uint collateralInUse, ) = getCollateralInUse(msg.sender);
-        (uint deposits, ) = getAccountDeposits(msg.sender);
-        require(deposits >= collateralInUse, "agent would become undercollateralized after redeem");
+        require(!isUnderCollateralised(msg.sender), "agent would become undercollateralized after redeem");
         uint userLiquidity = userDeposits[msg.sender][reserve] - userLoans[msg.sender][reserve];
         require(userLiquidity > 0, "You don't have enough liquidity in this reserve");
         makePayment(reserve, amount, msg.sender);
@@ -118,14 +109,7 @@ contract SimpleLending is IByzantic, Ownable {
 
     function hasEnoughCollateral(address reserve, uint256 amount) public returns (bool) {
         (uint borrowableAmountInETH, ) = getBorrowableAmountInETH(msg.sender);
-        borrowableAmountInETH = divideByConversionDecimals(borrowableAmountInETH);
-        uint loanWorthInETH;
-        if(reserve == ethAddress) {
-            loanWorthInETH = amount;
-        } else {
-            (loanWorthInETH, ) = convert(ethAddress, reserve, amount);
-            loanWorthInETH = divideByConversionDecimals(loanWorthInETH);
-        }
+        (uint loanWorthInETH, ) = convert(reserve, ethAddress, amount);
         return borrowableAmountInETH >= loanWorthInETH;
     }
 
@@ -134,7 +118,7 @@ contract SimpleLending is IByzantic, Ownable {
         _;
     }
 
-    function getAccountDeposits(address account) public view returns (uint, uint) {
+    function getUserDepositsInETH(address account) public view returns (uint, uint) {
         uint deposits = 0;
         for(uint i = 0; i < reserves.length; i++) {
             (uint conversion, ) = convert(reserves[i], ethAddress, userDeposits[account][reserves[i]]);
@@ -143,7 +127,11 @@ contract SimpleLending is IByzantic, Ownable {
         return (deposits, conversionDecimals);
     }
 
-    function getAccountBorrows(address account) public view returns (uint, uint) {
+    function getUserDepositToReserve(address account, address reserve) public view returns (uint) {
+        return userDeposits[account][reserve];
+    }
+
+    function getUserLoansInETH(address account) public view returns (uint, uint) {
         uint borrows = 0;
         for(uint i = 0; i < reserves.length; i++) {
             (uint conversion, ) = convert(reserves[i], ethAddress, userLoans[account][reserves[i]]);
@@ -152,49 +140,88 @@ contract SimpleLending is IByzantic, Ownable {
         return (borrows, conversionDecimals);
     }
 
+    function getUserLoansFromReserve(address account, address reserve) public view returns (uint) {
+        return userLoans[account][reserve];
+    }
+
     function getBorrowableAmountInETH(address account) public returns (uint, uint) {
-        console.log("in getBorrowableAmountInETH");
-        (uint deposits, ) = getAccountDeposits(account);
-        (uint borrows, ) = getAccountBorrows(account);
+        (uint deposits, ) = getUserDepositsInETH(account);
+        (uint borrows, ) = getUserLoansInETH(account);
         uint accountCollateralizationRatio = baseCollateralisationRate * webOfTrust.getAggregateAgentFactorForProtocol(account, address(this));
-        uint borrowableAmountInETH = (deposits / accountCollateralizationRatio) - borrows;
-        console.log("borrowableAmountInETH *(10^25):");
-        console.log(borrowableAmountInETH);
+        uint collateral = (deposits / accountCollateralizationRatio) * (10 ** (2 * webOfTrust.getUserFactorDecimals()));
+        require(collateral >= borrows, "agent is undercollateralized");
+        uint borrowableAmountInETH = collateral - borrows;
+        console.log("borrowableAmountInETH *(10**25):");
+        console.log(borrowableAmountInETH / (10**(conversionDecimals)));
         return (borrowableAmountInETH, conversionDecimals);
     }
 
-    function getCollateralInUse(address account) public returns (uint, uint) {
-        (uint deposits, ) = getAccountDeposits(account);
-        (uint borrows, ) = getAccountBorrows(account);
+    function isUnderCollateralised(address account) public view returns (bool) {
+        (uint collateralInUse, ) = getCollateralInUse(account);
+        (uint deposits, ) = getUserDepositsInETH(account);
+        return deposits < collateralInUse;
+    }
+
+    function getMaxAmountToLiquidateInReserve(address account, address reserve) public view returns (uint) {
+        require(isUnderCollateralised(account), "Account is not undercollateralised");
+        (uint collateralInUse, ) = getCollateralInUse(account);
+        (uint deposits, ) = getUserDepositsInETH(account);
+
+        uint maxAmountToLiquidateInEth = (collateralInUse - deposits) / (10 ** conversionDecimals);
+
+        (uint maxAmountToLiquidateInReserve, ) = convert(ethAddress, reserve, maxAmountToLiquidateInEth);
+        maxAmountToLiquidateInReserve = maxAmountToLiquidateInReserve / (10 ** conversionDecimals);
+        maxAmountToLiquidateInReserve = min(maxAmountToLiquidateInReserve, userLoans[account][reserve]);
+
+        return maxAmountToLiquidateInReserve;
+    }
+
+    function getCollateralInUse(address account) public view returns (uint, uint) {
+        (uint borrows, ) = getUserLoansInETH(account);
         uint accountCollateralizationRatio = baseCollateralisationRate * webOfTrust.getAggregateAgentFactorForProtocol(account, address(this));
-        uint collateralInUse = deposits - (borrows * accountCollateralizationRatio);
+        uint collateralInUse = (borrows * accountCollateralizationRatio) / (10 ** (2 * webOfTrust.getUserFactorDecimals()));
         return (collateralInUse, conversionDecimals);
     }
 
     function conversionRate(address fromReserve, address toReserve) public view returns (uint, uint) {
-        if (reserveLiquidity[fromReserve] == 0 || reserveLiquidity[toReserve] == 0) {
+        uint from = reserveLiquidity[fromReserve];
+        uint to = reserveLiquidity[toReserve];
+        // if(fromReserve == ethAddress) {
+        //     from = from / (10 ** 18);
+        // }
+
+        if (from == 0 || to == 0) {
             // if there's no liquidity, the price is "infinity"
             return  (2**100, 0);
         }
-        uint from = reserveLiquidity[fromReserve];
-        uint to = reserveLiquidity[toReserve];
-        if(toReserve == ethAddress) {
-            to = to / (10 ** 18);
-        }
-        uint conversion = from * (10 ** conversionDecimals) / to;
-        if(fromReserve == ethAddress) {
-            conversion = conversion / (10 ** 18);
-        }
+        
+        uint conversion = to * (10 ** conversionDecimals) / from;
+
+        // if(toReserve == ethAddress) {
+        //     conversion = conversion / (10 ** 18);
+        // }
+
         return (conversion, conversionDecimals);
     }
 
     function convert(address fromReserve, address toReserve, uint amount) public view returns (uint, uint) {
+        // if(fromReserve == toReserve) {
+        //     return (amount, 0);
+        // }
         (uint conversionRate, uint decimals) = conversionRate(fromReserve, toReserve);
         return (amount * conversionRate, decimals);
     }
 
     function divideByConversionDecimals(uint x) public returns (uint) {
         return x / (10 ** conversionDecimals);
+    }
+
+    function applyLiquidationDiscount(uint sum) internal returns (uint) {
+        return sum * 10 / 9;
+    }
+
+    function min(uint a, uint b) private pure returns (uint) {
+        return a < b ? a : b;
     }
 
 }

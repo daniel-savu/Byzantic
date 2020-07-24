@@ -23,7 +23,6 @@ contract UserProxyFactory is Ownable {
     function() external payable {}
 
     function addAgent() public {
-        console.log("addAgent");
         if (!isAgentInitialized[msg.sender]) {
             UserProxy userProxy = new UserProxy(msg.sender, address(webOfTrust));
             userAddressToUserProxy[msg.sender] = userProxy;
