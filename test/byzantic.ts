@@ -361,8 +361,8 @@ contract("SimpleLending Protocol", accounts => {
         let maxAmountToLiquidate = await simpleLending.getMaxAmountToLiquidateInReserve(up.address, daiMock.address);
         console.log(`maxAmountToLiquidate: ${maxAmountToLiquidate}`);
 
-        // the real max amount to liquidate is 46 rather than 85 because there is very little liquidity
-        let daiAmountToLiquidate = 46
+        // the real max amount to liquidate is 51 rather than 98 because there is very little liquidity
+        let daiAmountToLiquidate = 51
         await daiMock.mint(accs[1], daiAmountToLiquidate);
 
         await daiMock.approve(

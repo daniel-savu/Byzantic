@@ -26,11 +26,17 @@ contract LBCR is Ownable, ILBCR {
     uint256 _round; // current round in the protocol
     
     mapping (address => bool) _agents; // track all agents
+    address[] agentList;
 
     uint256 _blockperiod; // block period until curation
     uint256 _start; // start of period
     uint256 _end; // end of period
     mapping(address => uint) compatibilityScores;
+    mapping(address => uint) timeDiscountedFactors;
+
+    uint recentFactorTimeDiscount;
+    uint olderFactorTimeDiscount;
+
 
 
     constructor() public {
@@ -41,6 +47,9 @@ contract LBCR is Ownable, ILBCR {
         _blockperiod = 1; // wait for 1 block to curate
         _start = block.number;
         _end = block.number + _blockperiod;
+
+        recentFactorTimeDiscount = 400;
+        olderFactorTimeDiscount = 600;
     }
 
     function addAuthorisedContract(address authorisedContract) public onlyAuthorised {
@@ -102,7 +111,7 @@ contract LBCR is Ownable, ILBCR {
 
         require(assignment > 0, "agent not assigned to layer");
 
-        return _factors[assignment];
+        return timeDiscountedFactors[agent];
     }
 
     function getFactor(uint layer) public view returns (uint256) {
@@ -191,6 +200,9 @@ contract LBCR is Ownable, ILBCR {
         _assignments[_round][agent] = _layers[0];
         // update the score of the agent
         _scores[_round][agent] += _rewards[0];
+
+        timeDiscountedFactors[agent] = _factors[_assignments[_round][agent]];
+        agentList.push(agent);
         
         emit RegisterAgent(agent);
         
@@ -244,8 +256,17 @@ contract LBCR is Ownable, ILBCR {
         // switch to the next round
         _round++;
 
+        updateTimeDiscountedFactors();
+
         emit Curate(_round, _start, _end);
         return true;
+    }
+
+    function updateTimeDiscountedFactors() private {
+        for(uint i = 0; i < agentList.length; i++) {
+            uint assignment = getAssignment(agentList[i]);
+            timeDiscountedFactors[agentList[i]] = (_factors[assignment] * recentFactorTimeDiscount + timeDiscountedFactors[agentList[i]] * olderFactorTimeDiscount) / (10 ** _decimals);
+        }
     }
 
     event Curate(uint256 round, uint256 start, uint256 end);
