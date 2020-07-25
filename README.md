@@ -18,8 +18,12 @@
 * [About the Project](#about-the-project)
   * [Built With](#built-with)
 * [Getting Started](#getting-started)
-  * [Prerequisites](#prerequisites)
+  * [Integrating](#integrating)
+  * [Usage](#usage)
 * [Contributing](#contributing)
+  * [Prerequisites](#prerequisites)
+  * [Usage Examples](#usage-examples)
+  * [Documentation](#documentation)
 * [Roadmap](#roadmap)
 * [License](#license)
 
@@ -49,7 +53,21 @@ This section should list any major frameworks that you built your project using.
 <!-- GETTING STARTED -->
 ## Getting Started
 
-For specific code examples, check the tests in `test/byzantic.ts`, which can be ran by following the [Contributing](#Contributing) section.
+### Integrating
+
+* Deploy a protocol proxy contract. This contract is used to properly track and update agents' reputation score based on their transactions. See `contracts/SimpleLendingProxy.sol`, which is a proxy for the example protocol `contracts/SimpleLending/SimpleLending.sol`.
+* Once the protocol proxy is deployed, call the WebOfTrust contract using the method: `addProtocolIntegration(address protocolAddress, address protocolProxyAddress)`. An example can be found in the global `before()` function in `test/byzantic.ts`, where the dummy SimpleLending protocol is deployed, along with SimpleLendingTwo, a clone protocol.
+* WebOfTrust will automatically deploy a Layered Behaviour-Curated Registry (LBCR) contract for your protocol integration. Retrieve it using the function `getProtocolLBCR(address protocolAddress)` and then initialize the LBCR  using parameters you deem appropriate. 
+* LBCR parameters define the number of layers, the collateral discount offered by each layer, the score needed to be in a certain layer, and the compatibility scores with all the other protocols in Byzantic. The compatibility scores are the weightings used to lower their collateral in your protocol by using reputation in other protocols. The weighting of your own protocol is 100. For example, you can allow users to use their reputation from two other protocols, by setting the compatibility scores of those protocols to 2 and 3 respectively. The aggregated reputation will use the LBCR layer factor in your protocol with a weighting of `100 / (100 + 2 + 3)`, the LBCR layer factor in the second protocol with a weighting of `2 / (100 + 2 + 3)` and the LBCR layer factor in the third protocol with a weighting of `3 / (100 + 2 + 3)`. 
+* See the function `initializeLBCR(LBCRAddress: string, layers: number[], layerFactors: number[], layerLowerBounds: number[], layerUpperBounds: number[])` and `initializeSimpleLendingLBCR(webOfTrust: typeof WebOfTrust)` in `test/byzantic.ts` for an example LBCR initialization.
+
+### Usage
+
+For protocols that integrate with Byzantic, usage is defined by the `IWebOfTrust` interface. Most likely, the most common functions your protocol will call are `getAggregateAgentFactorForProtocol(address agent, address protocol)` and `getAgentFactorDecimals()`. You can find example usages of these functions in `getCollateralInUseInETH(address account)` and `getBorrowableAmountInETH(address account)` in `contracts/SimpleLending/SimpleLending.sol`.
+
+For users of a protocol who want to register with Byzantic, usage is defined by the `IUserProxyFactory` and `IUserProxy`interfaces. First, use the `addAgent` to register in the `UserProxyFactory`, which will deploy a `UserProxy` contract for you and will register you in every LBCR. Then, call `getUserProxyAddress(address userAddress)` in `UserProxyFactory` to get the address of your `UserProxy`. To deposit and withdraw funds and your user proxy, use the `depositFunds(address _reserve, uint256 _amount)` and `withdrawFunds(address _reserve, uint256 _amount)` functions.
+
+For further code examples, check the tests in `test/byzantic.ts`, which can be run by following the instructions in the [Contributing](#Contributing) section.
 
 <!-- Contributing -->
 ## Contributing
@@ -63,7 +81,7 @@ To install dependencies, run:
 npm install --save-dev
 ```
 
-### Usage Examples
+### Running tests
 
 The test showcases how Byzantic can be used to aggregate reputation from two identical "simple lending protocols" (SimpleLending and SimpleLendingTwo). For testing purposes, a basic ERC-20 token was used to mock Dai. Exchange price between ETH and DaiMock is based on the liquidity available in the lending protocols.
 

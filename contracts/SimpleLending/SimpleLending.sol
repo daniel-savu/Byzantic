@@ -150,7 +150,7 @@ contract SimpleLending is Ownable {
         (uint deposits, ) = getUserDepositsInETH(account);
         (uint borrows, ) = getUserLoansInETH(account);
         uint accountCollateralizationRatio = baseCollateralisationRate * IWebOfTrust(webOfTrustAddress).getAggregateAgentFactorForProtocol(account, address(this));
-        uint collateral = (deposits / accountCollateralizationRatio) * (10 ** (baseCollateralisationRateDecimals + IWebOfTrust(webOfTrustAddress).getUserFactorDecimals()));
+        uint collateral = (deposits / accountCollateralizationRatio) * (10 ** (baseCollateralisationRateDecimals + IWebOfTrust(webOfTrustAddress).getAgentFactorDecimals()));
         require(!isUnderCollateralised(account), "agent is undercollateralized");
         uint borrowableAmountInETH = collateral - borrows;
         console.log("borrowableAmountInETH *(10**25):");
@@ -181,7 +181,7 @@ contract SimpleLending is Ownable {
     function getCollateralInUseInETH(address account) public view returns (uint, uint) {
         (uint borrows, ) = getUserLoansInETH(account);
         uint accountCollateralizationRatio = baseCollateralisationRate * IWebOfTrust(webOfTrustAddress).getAggregateAgentFactorForProtocol(account, address(this));
-        uint collateralInUse = (borrows * accountCollateralizationRatio) / (10 ** (baseCollateralisationRateDecimals + IWebOfTrust(webOfTrustAddress).getUserFactorDecimals()));
+        uint collateralInUse = (borrows * accountCollateralizationRatio) / (10 ** (baseCollateralisationRateDecimals + IWebOfTrust(webOfTrustAddress).getAgentFactorDecimals()));
         return (collateralInUse, conversionDecimals);
     }
 

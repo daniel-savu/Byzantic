@@ -15,6 +15,7 @@ contract UserProxyFactory is Ownable {
     LBCR[] lbcrs;
     WebOfTrust webOfTrust;
     mapping (address => bool) isAgentInitialized;
+    address[] agents;
 
     constructor(address payable webOfTrustAddress) public {
         webOfTrust = WebOfTrust(webOfTrustAddress);
@@ -33,6 +34,7 @@ contract UserProxyFactory is Ownable {
             }
 
             isAgentInitialized[msg.sender] = true;
+            agents.push(msg.sender);
         }
     }
 
@@ -40,6 +42,9 @@ contract UserProxyFactory is Ownable {
         LBCR lbcr = LBCR(lbcrAddress);
         require(!lbcrAlreadyAdded(lbcr), "lbcr already added in user proxy");
         lbcrs.push(lbcr);
+        for(uint i = 0; i < agents.length; i++) {
+            lbcr.registerAgent(agents[i]);
+        }
     }
 
     function lbcrAlreadyAdded(LBCR lbcr) private view returns(bool) {

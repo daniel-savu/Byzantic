@@ -53,7 +53,8 @@ contract("SimpleLending Protocol", accounts => {
     async function initializeSimpleLendingLBCR(webOfTrust: typeof WebOfTrust) {
         const simpleLendingLBCRAddress = await webOfTrust.getProtocolLBCR(simpleLending.address);
         let simpleLendingLayers = [1, 2, 3, 4, 5];
-        let simpleLendingLayerFactors = [1000, 900, 850, 800, 750];
+        // we are using 3 decimals. Thus, 800 means 0.8 collateral
+        let simpleLendingLayerFactors = [1000, 900, 850, 800, 750]; 
         let simpleLendingLayerLowerBounds = [0, 20, 40, 60, 80];
         let simpleLendingLayerUpperBounds = [25, 45, 65, 85, 10000];
         await initializeLBCR(simpleLendingLBCRAddress, simpleLendingLayers, simpleLendingLayerFactors, simpleLendingLayerLowerBounds, simpleLendingLayerUpperBounds);

@@ -65,7 +65,7 @@ contract UserProxy is Ownable {
         }
     }
 
-    function withdrawFunds(address _reserve, uint256 _amount) public onlyAgentOwner {
+    function withdrawFunds(address _reserve, uint256 _amount) external onlyAgentOwner {
         require(hasEnoughFunds(_reserve, _amount), "You don't have enough funds");
         if(_reserve != aETHAddress) {
             IERC20(_reserve).transfer(msg.sender, _amount);
@@ -74,7 +74,7 @@ contract UserProxy is Ownable {
         }
     }
 
-    function depositFunds(address _reserve, uint256 _amount) public payable onlyAgentOwner {
+    function depositFunds(address _reserve, uint256 _amount) external payable onlyAgentOwner {
         if(_reserve == aETHAddress) {
             require(msg.value == _amount, "_amount does not match the sent ETH");
         } else {
@@ -82,7 +82,7 @@ contract UserProxy is Ownable {
         }
     }
 
-    function getTotalBalance(address _reserve) public view returns(uint256) {
+    function getBalance(address _reserve) external view returns(uint256) {
         if(_reserve != aETHAddress) {
             return IERC20(_reserve).balanceOf(address(this));
         } else {

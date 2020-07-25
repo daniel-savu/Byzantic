@@ -18,11 +18,11 @@ contract WebOfTrust {
     mapping (address => address) protocolToLBCR;
     mapping (address => address) protocolToProxy;
     mapping (address => bool) protocolProxy;
-    uint userFactorDecimals;
+    uint agentFactorDecimals;
 
     constructor() public {
         userProxyFactory = new UserProxyFactory(address(this));
-        userFactorDecimals = 3;
+        agentFactorDecimals = 3;
     }
 
     function() external payable {
@@ -96,8 +96,8 @@ contract WebOfTrust {
         }
     }
 
-    function getUserFactorDecimals() external view returns (uint) {
-        return userFactorDecimals;
+    function getAgentFactorDecimals() external view returns (uint) {
+        return agentFactorDecimals;
     }
 
     function isProtocolProxy(address addr) external returns (bool) {
