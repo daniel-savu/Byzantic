@@ -19,8 +19,7 @@
   * [Built With](#built-with)
 * [Getting Started](#getting-started)
   * [Prerequisites](#prerequisites)
-* [Usage](#usage)
-* [Documentation](#documentation)
+* [Contributing](#contributing)
 * [Roadmap](#roadmap)
 * [License](#license)
 
@@ -50,8 +49,12 @@ This section should list any major frameworks that you built your project using.
 <!-- GETTING STARTED -->
 ## Getting Started
 
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
+For specific code examples, check the tests in `test/byzantic.ts`, which can be ran by following the [Contributing](#Contributing) section.
+
+<!-- Contributing -->
+## Contributing
+
+First, clone this repository to your machine and then install the prerequisites.
 
 ### Prerequisites
 
@@ -60,9 +63,7 @@ To install dependencies, run:
 npm install --save-dev
 ```
 
-
-<!-- USAGE EXAMPLES -->
-## Usage
+### Usage Examples
 
 The test showcases how Byzantic can be used to aggregate reputation from two identical "simple lending protocols" (SimpleLending and SimpleLendingTwo). For testing purposes, a basic ERC-20 token was used to mock Dai. Exchange price between ETH and DaiMock is based on the liquidity available in the lending protocols.
 
@@ -73,10 +74,8 @@ Run:
 npx buidler test
 ```
 
-To learn how to integrate with Byzantic, follow the tests in `test/byzantic.ts`. Moreover, check out the [Documentation](#Documentation).
 
-
-## Documentation
+### Documentation
 
 You can find the static HTML documentation page [here](https://htmlpreview.github.io/?https://github.com/savudani8/Byzantic/blob/master/docs/website/build/site/contracts/1/index.html), generated automatically using [solidity-docgen](https://github.com/OpenZeppelin/solidity-docgen) and [Antora](https://antora.org/).
 
