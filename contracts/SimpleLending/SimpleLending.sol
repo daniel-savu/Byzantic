@@ -4,24 +4,26 @@ pragma solidity ^0.5.0;
 import "@openzeppelin/contracts/ownership/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@nomiclabs/buidler/console.sol";
-import "../IByzantic.sol";
-import "../WebOfTrust.sol";
+import "../IWebOfTrust.sol";
 
 
-contract SimpleLending is IByzantic, Ownable {
+contract SimpleLending is Ownable {
     mapping (address => mapping(address => uint)) userDeposits;
     mapping (address => mapping(address => uint)) userLoans;
     mapping(address => uint) reserveLiquidity;
-    WebOfTrust webOfTrust;
+    address webOfTrustAddress;
     address[] reserves;
     uint baseCollateralisationRate;
+    uint baseCollateralisationRateDecimals;
+
     address ethAddress = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
     uint256 collateralizationDecimals = 3; // decimals to calculate collateral factor
     uint conversionDecimals = 25;
 
-    constructor(address payable webOfTrustAddress, uint baseCollateralisationRateValue) public {
+    constructor(address payable webOfTrustAddressValue, uint baseCollateralisationRateValue, uint baseCollateralisationRateDecimalsValue) public {
         baseCollateralisationRate = baseCollateralisationRateValue;
-        webOfTrust = WebOfTrust(webOfTrustAddress);
+        baseCollateralisationRateDecimals = baseCollateralisationRateDecimalsValue;
+        webOfTrustAddress = webOfTrustAddressValue;
         reserves.push(ethAddress);
     }
 
@@ -147,9 +149,9 @@ contract SimpleLending is IByzantic, Ownable {
     function getBorrowableAmountInETH(address account) public returns (uint, uint) {
         (uint deposits, ) = getUserDepositsInETH(account);
         (uint borrows, ) = getUserLoansInETH(account);
-        uint accountCollateralizationRatio = baseCollateralisationRate * webOfTrust.getAggregateAgentFactorForProtocol(account, address(this));
-        uint collateral = (deposits / accountCollateralizationRatio) * (10 ** (2 * webOfTrust.getUserFactorDecimals()));
-        require(collateral >= borrows, "agent is undercollateralized");
+        uint accountCollateralizationRatio = baseCollateralisationRate * IWebOfTrust(webOfTrustAddress).getAggregateAgentFactorForProtocol(account, address(this));
+        uint collateral = (deposits / accountCollateralizationRatio) * (10 ** (baseCollateralisationRateDecimals + IWebOfTrust(webOfTrustAddress).getUserFactorDecimals()));
+        require(!isUnderCollateralised(account), "agent is undercollateralized");
         uint borrowableAmountInETH = collateral - borrows;
         console.log("borrowableAmountInETH *(10**25):");
         console.log(borrowableAmountInETH / (10**(conversionDecimals)));
@@ -157,14 +159,14 @@ contract SimpleLending is IByzantic, Ownable {
     }
 
     function isUnderCollateralised(address account) public view returns (bool) {
-        (uint collateralInUse, ) = getCollateralInUse(account);
+        (uint collateralInUse, ) = getCollateralInUseInETH(account);
         (uint deposits, ) = getUserDepositsInETH(account);
         return deposits < collateralInUse;
     }
 
     function getMaxAmountToLiquidateInReserve(address account, address reserve) public view returns (uint) {
         require(isUnderCollateralised(account), "Account is not undercollateralised");
-        (uint collateralInUse, ) = getCollateralInUse(account);
+        (uint collateralInUse, ) = getCollateralInUseInETH(account);
         (uint deposits, ) = getUserDepositsInETH(account);
 
         uint maxAmountToLiquidateInEth = (collateralInUse - deposits) / (10 ** conversionDecimals);
@@ -176,12 +178,13 @@ contract SimpleLending is IByzantic, Ownable {
         return maxAmountToLiquidateInReserve;
     }
 
-    function getCollateralInUse(address account) public view returns (uint, uint) {
+    function getCollateralInUseInETH(address account) public view returns (uint, uint) {
         (uint borrows, ) = getUserLoansInETH(account);
-        uint accountCollateralizationRatio = baseCollateralisationRate * webOfTrust.getAggregateAgentFactorForProtocol(account, address(this));
-        uint collateralInUse = (borrows * accountCollateralizationRatio) / (10 ** (2 * webOfTrust.getUserFactorDecimals()));
+        uint accountCollateralizationRatio = baseCollateralisationRate * IWebOfTrust(webOfTrustAddress).getAggregateAgentFactorForProtocol(account, address(this));
+        uint collateralInUse = (borrows * accountCollateralizationRatio) / (10 ** (baseCollateralisationRateDecimals + IWebOfTrust(webOfTrustAddress).getUserFactorDecimals()));
         return (collateralInUse, conversionDecimals);
     }
+
 
     function conversionRate(address fromReserve, address toReserve) public view returns (uint, uint) {
         uint from = reserveLiquidity[fromReserve];

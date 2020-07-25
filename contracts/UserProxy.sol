@@ -2,7 +2,7 @@ pragma solidity ^0.5.0;
 
 import "@openzeppelin/contracts/ownership/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "./WebOfTrust.sol";
+import "./IWebOfTrust.sol";
 import "./LBCR.sol";
 import "@nomiclabs/buidler/console.sol";
 
@@ -17,11 +17,11 @@ contract UserProxy is Ownable {
     address constant LendingPoolAddressesProviderAddress = 0x24a42fD28C976A61Df5D00D0599C34c4f90748c8;
     mapping(address => int256) agentFundsInPool;
     LBCR[] lbcrs;
-    WebOfTrust webOfTrustContract;
+    address webOfTrustAddress;
 
 
-    constructor(address agent, address payable webOfTrustAddress) public {
-        webOfTrustContract = WebOfTrust(webOfTrustAddress);
+    constructor(address agent, address payable webOfTrustAddressValue) public {
+        webOfTrustAddress = webOfTrustAddressValue;
         addAuthorisedContract(msg.sender);
         agentOwner = agent;
     }
@@ -32,39 +32,28 @@ contract UserProxy is Ownable {
         authorisedContracts.push(authorisedContract);
     }
 
-    function lbcrAlreadyAdded(LBCR lbcr) private view returns(bool) {
-        for (uint8 i = 0; i < lbcrs.length; i++) {
-            if(address(lbcrs[i]) == address(lbcr)) {
-                return true;
+    modifier onlyAuthorised() {
+        bool isAuthorised = false;
+        if(isOwner()) {
+            isAuthorised = true;
+        }
+        for (uint i = 0; i < authorisedContracts.length; i++) {
+            if(authorisedContracts[i] == msg.sender) {
+                isAuthorised = true;
+                break;
             }
         }
-        return false;
-    }
-
-    function addLBCR(address lbcrAddress) public onlyOwner {
-        LBCR lbcr = LBCR(lbcrAddress);
-        // perhaps this check is overkill
-        require(!lbcrAlreadyAdded(lbcr), "lbcr already added in user proxy");
-        lbcrs.push(lbcr);
-    }
-
-    modifier onlyAuthorised() {
-        // bool isAuthorised = false;
-        // if(isOwner()) {
-        //     isAuthorised = true;
-        // }
-        // for (uint i = 0; i < authorisedContracts.length; i++) {
-        //     if(authorisedContracts[i] == msg.sender) {
-        //         isAuthorised = true;
-        //         break;
-        //     }
-        // }
-        // require(isAuthorised == true, "Caller is not authorised to perform this action");
+        require(isAuthorised == true, "Caller is not authorised to perform this action");
         _;
     }
 
     modifier onlyAgentOwner() {
         require(msg.sender == agentOwner, "Caller isn't agentOwner");
+        _;
+    }
+
+    modifier onlyProtocolProxies() {
+        require(IWebOfTrust(webOfTrustAddress).isProtocolProxy(msg.sender), "Caller is not protocol proxy");
         _;
     }
 
@@ -101,7 +90,7 @@ contract UserProxy is Ownable {
         }
     }
 
-    function proxyCall(address target, bytes memory abiEncoding) public payable returns (bool) {
+    function proxyCall(address target, bytes memory abiEncoding) public onlyProtocolProxies returns (bool) {
         // the following variables are set to 0 because they are not applicable to this call
         address currencyReserve = address(0);
         uint256 currencyAmount = 0;
@@ -114,7 +103,7 @@ contract UserProxy is Ownable {
         bytes memory abiEncoding,
         address reserve,
         uint256 amount
-    ) public onlyAuthorised payable returns (bool) {
+    ) public onlyProtocolProxies returns (bool) {
         require(target != address(0), "Target address cannot be 0");
         if(reserve != address(0)) {
             require(hasEnoughFunds(reserve, amount), "You don't have enough funds");

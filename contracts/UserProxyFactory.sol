@@ -22,7 +22,7 @@ contract UserProxyFactory is Ownable {
 
     function() external payable {}
 
-    function addAgent() public {
+    function addAgent() external {
         if (!isAgentInitialized[msg.sender]) {
             UserProxy userProxy = new UserProxy(msg.sender, address(webOfTrust));
             userAddressToUserProxy[msg.sender] = userProxy;
@@ -38,14 +38,25 @@ contract UserProxyFactory is Ownable {
 
     function addLBCR(address lbcrAddress) public onlyOwner {
         LBCR lbcr = LBCR(lbcrAddress);
+        require(!lbcrAlreadyAdded(lbcr), "lbcr already added in user proxy");
         lbcrs.push(lbcr);
     }
 
-    function isAddressAByzanticProxy(address userProxyAddress) public view returns (bool) {
+    function lbcrAlreadyAdded(LBCR lbcr) private view returns(bool) {
+        for (uint8 i = 0; i < lbcrs.length; i++) {
+            if(address(lbcrs[i]) == address(lbcr)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    function isUserProxy(address userProxyAddress) external view returns (bool) {
         return userProxyToUserAddress[userProxyAddress] != address(0);
     }
 
-    function getUserProxyAddress(address userAddress) public view returns (address payable) {
+    function getUserProxyAddress(address userAddress) external view returns (address payable) {
         return address(userAddressToUserProxy[userAddress]);
     }
 

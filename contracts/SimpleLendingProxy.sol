@@ -74,7 +74,7 @@ contract SimpleLendingProxy is Ownable {
         UserProxy userProxy = UserProxy(userProxyFactory.getUserProxyAddress(msg.sender));
         bool success = userProxy.proxyCall(address(simpleLending), abiEncoding);
         require(success, "borrow failed");
-        webOfTrust.updateLBCR(address(simpleLending), address(userProxy), depositAction);
+        webOfTrust.updateLBCR(address(simpleLending), address(userProxy), borrowAction);
     }
 
     function repay(address reserve, uint256 amount, address onbehalf) public {
@@ -87,7 +87,7 @@ contract SimpleLendingProxy is Ownable {
         UserProxy userProxy = UserProxy(userProxyFactory.getUserProxyAddress(msg.sender));
         bool success = userProxy.proxyCall(address(simpleLending), abiEncoding, reserve, amount);
         require(success, "repayment failed");
-        webOfTrust.updateLBCR(address(simpleLending), address(userProxy), depositAction);
+        webOfTrust.updateLBCR(address(simpleLending), address(userProxy), repayAction);
     }
 
     function liquidate(address borrower, address collateralReserve, address loanReserve, uint256 loanAmount) public {
@@ -101,7 +101,7 @@ contract SimpleLendingProxy is Ownable {
         UserProxy userProxy = UserProxy(userProxyFactory.getUserProxyAddress(msg.sender));
         bool success = userProxy.proxyCall(address(simpleLending), abiEncoding, loanReserve, loanAmount);
         require(success, "liquidation failed");
-        webOfTrust.updateLBCR(address(simpleLending), address(userProxy), depositAction);
+        webOfTrust.updateLBCR(address(simpleLending), address(userProxy), liquidateAction);
     }
 
     function redeem(address reserve, uint256 amount) public {
@@ -113,7 +113,7 @@ contract SimpleLendingProxy is Ownable {
         UserProxy userProxy = UserProxy(userProxyFactory.getUserProxyAddress(msg.sender));
         bool success = userProxy.proxyCall(address(simpleLending), abiEncoding);
         require(success, "redeem failed");
-        webOfTrust.updateLBCR(address(simpleLending), address(userProxy), depositAction);
+        webOfTrust.updateLBCR(address(simpleLending), address(userProxy), redeemAction);
     }
 
 }

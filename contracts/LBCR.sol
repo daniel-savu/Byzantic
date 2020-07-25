@@ -37,8 +37,6 @@ contract LBCR is Ownable, ILBCR {
     uint recentFactorTimeDiscount;
     uint olderFactorTimeDiscount;
 
-
-
     constructor() public {
         // addAuthorisedContract(msg.sender);
         _decimals = 3; // e.g. a factor of 1500 is equal to 1.5 times the collateral
@@ -57,17 +55,17 @@ contract LBCR is Ownable, ILBCR {
     }
 
     modifier onlyAuthorised() {
-        // bool isAuthorised = false;
-        // if(isOwner()) {
-        //     isAuthorised = true;
-        // }
-        // for (uint i = 0; i < authorisedContracts.length; i++) {
-        //     if(authorisedContracts[i] == msg.sender) {
-        //         isAuthorised = true;
-        //         break;
-        //     }
-        // }
-        // require(isAuthorised == true, "Caller is not authorised to perform this action");
+        bool isAuthorised = false;
+        if(isOwner()) {
+            isAuthorised = true;
+        }
+        for (uint i = 0; i < authorisedContracts.length; i++) {
+            if(authorisedContracts[i] == msg.sender) {
+                isAuthorised = true;
+                break;
+            }
+        }
+        require(isAuthorised == true, "Caller is not authorised to perform this action");
         _;
     }
 

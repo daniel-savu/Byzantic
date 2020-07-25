@@ -150,10 +150,11 @@ contract("SimpleLending Protocol", accounts => {
         webOfTrust = await WebOfTrust.new();
         daiMock = await DaiMock.new();
         let baseCollateralisationRateValue = 1500;
+        let baseCollateralisationRateDecimals = 3;
         let userProxyFactoryAddress = await webOfTrust.getUserProxyFactoryAddress();
         userProxyFactory = await UserProxyFactory.at(userProxyFactoryAddress);
-        simpleLending = await SimpleLending.new(webOfTrust.address, baseCollateralisationRateValue);
-        simpleLendingTwo = await SimpleLending.new(webOfTrust.address, baseCollateralisationRateValue);
+        simpleLending = await SimpleLending.new(webOfTrust.address, baseCollateralisationRateValue, baseCollateralisationRateDecimals);
+        simpleLendingTwo = await SimpleLending.new(webOfTrust.address, baseCollateralisationRateValue, baseCollateralisationRateDecimals);
 
         simpleLendingProxy = await SimpleLendingProxy.new(webOfTrust.address, userProxyFactoryAddress, simpleLending.address);
         await webOfTrust.addProtocolIntegration(simpleLending.address, simpleLendingProxy.address);

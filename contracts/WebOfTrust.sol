@@ -8,7 +8,6 @@ import "./SimpleLending/SimpleLending.sol";
 import "./SimpleLendingProxy.sol";
 import "./UserProxyFactory.sol";
 import "./ILBCR.sol";
-import "./IByzantic.sol";
 // import "node_modules/@studydefi/money-legos/compound/contracts/ICEther.sol";
 
 
@@ -18,6 +17,7 @@ contract WebOfTrust {
     LBCR[] lbcrs;
     mapping (address => address) protocolToLBCR;
     mapping (address => address) protocolToProxy;
+    mapping (address => bool) protocolProxy;
     uint userFactorDecimals;
 
     constructor() public {
@@ -34,9 +34,11 @@ contract WebOfTrust {
         LBCR lbcr = new LBCR();
         protocolToLBCR[protocolAddress] = address(lbcr);
         lbcr.addAuthorisedContract(address(userProxyFactory));
+        lbcr.addAuthorisedContract(msg.sender);
         lbcrs.push(lbcr);
         userProxyFactory.addLBCR(address(lbcr));
         protocolToProxy[protocolAddress] = protocolProxyAddress;
+        protocolProxy[protocolProxyAddress] = true;
     }
 
     function getUserProxyFactoryAddress() public view returns (address) {
@@ -62,8 +64,8 @@ contract WebOfTrust {
      * of compatibility between them to compute how much collateral a
      * user should pay.
      */
-    function getAggregateAgentFactorForProtocol(address agent, address protocol) public view returns (uint256) {
-        // a factor of 1500 is equal to 1.5 times the collateral
+    function getAggregateAgentFactorForProtocol(address agent, address protocol) external view returns (uint256) {
+        // a factor of 900 is equal to 0.9 times the collateral
         uint aggregateAgentFactor = aggregateLBCRsForProtocol(agent, protocol);
         return aggregateAgentFactor;
     }
@@ -83,6 +85,8 @@ contract WebOfTrust {
         if(agentFactorDenominator > 0) {
             return agentFactorSum / agentFactorDenominator;
         }
+
+        // if agent has not been registered in Byzantic, they need to pay the full collateral
         return 1000;
     }
 
@@ -92,8 +96,12 @@ contract WebOfTrust {
         }
     }
 
-    function getUserFactorDecimals() public view returns (uint){
+    function getUserFactorDecimals() external view returns (uint) {
         return userFactorDecimals;
+    }
+
+    function isProtocolProxy(address addr) external returns (bool) {
+        return protocolProxy[addr];
     }
 
 }
