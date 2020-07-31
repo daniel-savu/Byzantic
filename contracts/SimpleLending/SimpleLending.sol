@@ -20,7 +20,11 @@ contract SimpleLending is Ownable {
     uint256 collateralizationDecimals = 3; // decimals to calculate collateral factor
     uint conversionDecimals = 25;
 
-    constructor(address payable webOfTrustAddressValue, uint baseCollateralisationRateValue, uint baseCollateralisationRateDecimalsValue) public {
+    constructor(
+        address payable webOfTrustAddressValue,
+        uint baseCollateralisationRateValue,
+        uint baseCollateralisationRateDecimalsValue
+    ) public {
         baseCollateralisationRate = baseCollateralisationRateValue;
         baseCollateralisationRateDecimals = baseCollateralisationRateDecimalsValue;
         webOfTrustAddress = webOfTrustAddressValue;
@@ -189,9 +193,6 @@ contract SimpleLending is Ownable {
     function conversionRate(address fromReserve, address toReserve) public view returns (uint, uint) {
         uint from = reserveLiquidity[fromReserve];
         uint to = reserveLiquidity[toReserve];
-        // if(fromReserve == ethAddress) {
-        //     from = from / (10 ** 18);
-        // }
 
         if (from == 0 || to == 0) {
             // if there's no liquidity, the price is "infinity"
@@ -199,18 +200,10 @@ contract SimpleLending is Ownable {
         }
         
         uint conversion = to * (10 ** conversionDecimals) / from;
-
-        // if(toReserve == ethAddress) {
-        //     conversion = conversion / (10 ** 18);
-        // }
-
         return (conversion, conversionDecimals);
     }
 
     function convert(address fromReserve, address toReserve, uint amount) public view returns (uint, uint) {
-        // if(fromReserve == toReserve) {
-        //     return (amount, 0);
-        // }
         (uint conversionRate, uint decimals) = conversionRate(fromReserve, toReserve);
         return (amount * conversionRate, decimals);
     }
