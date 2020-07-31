@@ -71,7 +71,7 @@ contract SimpleLending is Ownable {
         } else {
             IERC20(reserve).transferFrom(msg.sender, address(this), amount);
         }
-        userLoans[msg.sender][reserve] -= amount;
+        userLoans[onBehalf][reserve] -= amount;
         reserveLiquidity[reserve] += amount;
     }
 

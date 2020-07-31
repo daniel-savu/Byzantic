@@ -223,7 +223,7 @@ contract("SimpleLending Protocol", accounts => {
         console.log(`(conversion rate from daiMock to eth: ${conversionRate})`);
     });
 
-    xit("Should deposit to, borrow from and repay to SimpleLending", async function () {
+    it("Should deposit to, borrow from and repay to SimpleLending", async function () {
         const userProxyAddress = await userProxyFactory.getUserProxyAddress(accs[0]);
         const up = await userProxy.at(userProxyAddress);
         let tr = await up.depositFunds(
@@ -268,6 +268,9 @@ contract("SimpleLending Protocol", accounts => {
         );
         console.log("Borrowed 1 DaiMock");
 
+        let userSimpleLendingBorrows = await simpleLending.getUserLoansInETH(up.address);
+        console.log(`User borrows in SimpleLending (in ETH):   ${divideByConversionDecimals(userSimpleLendingBorrows)}`)
+
         tr = await simpleLendingProxy.repay(
             daiMock.address,
             "1",
@@ -281,7 +284,7 @@ contract("SimpleLending Protocol", accounts => {
         conversionRate = await simpleLending.convert(daiMock.address, ethAddress, "1");
         console.log(`(conversion rate from DaiMock to ETH: ${divideByConversionDecimals(conversionRate)})`);
 
-        let userSimpleLendingBorrows = await simpleLending.getUserLoansInETH(up.address);
+        userSimpleLendingBorrows = await simpleLending.getUserLoansInETH(up.address);
         console.log(`User borrows in SimpleLending (in ETH):   ${divideByConversionDecimals(userSimpleLendingBorrows)}`)
 
         tr = await simpleLendingProxy.redeem(
@@ -291,7 +294,7 @@ contract("SimpleLending Protocol", accounts => {
         console.log("Redeemed 1 ETH");
     });
     
-    it("Should deposit to, borrow from and be liquidated by SimpleLending", async function () {
+    xit("Should deposit to, borrow from and be liquidated by SimpleLending", async function () {
         const userProxyAddress = await userProxyFactory.getUserProxyAddress(accs[0]);
         const up = await userProxy.at(userProxyAddress);
         let tr = await up.depositFunds(
