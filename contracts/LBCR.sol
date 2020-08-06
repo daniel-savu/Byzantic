@@ -1,6 +1,5 @@
 pragma solidity ^0.5.0;
 
-// import "./InitializableAdminUpgradeabilityProxy.sol";
 import "@openzeppelin/contracts/ownership/Ownable.sol";
 import "@nomiclabs/buidler/console.sol";
 import "./ILBCR.sol";
@@ -11,16 +10,21 @@ contract LBCR is Ownable, ILBCR {
     uint256 _decimals; // decimals to calculate collateral factor
 
     // Implementation of L = (lower, upper, factor)
-    uint[] _layers; // array of layers, e.g. {1,2,3,4}
-    mapping (uint => uint256) _lower; // lower bound of layer
-    mapping (uint => uint256) _upper; // upper bound of layer
-    mapping (uint => uint256) _factors; // factor of layer
+    mapping (uint256 => uint[]) _layers; // array of layers, e.g. {1,2,3,4}
+    mapping (uint256 => mapping (uint256 => uint256)) _lower; // versioned lower bound of layer
+    mapping (uint256 => mapping (uint256 => uint256)) _upper; // versioned upper bound of layer
+    mapping (uint256 => mapping (uint256 => uint256)) _factors; // versioned factor of layer
+    mapping (uint256 => mapping (uint256 => uint256)) _rewards; // versioned reward (score) for performing an action
 
-    // Implementation of the relevant agreement parameters A = (phi, payment, score, deposits)
-    mapping (uint256 => uint256) _rewards; // reward (score) for performing an action
+    mapping(address => uint256) compatibilityScores;
+    mapping(address => uint256) compatibilityScoreVersions;
+    bool maintainCompatibilityScoreOnUpdate = true;
+    uint256 _latestVersion;
+    uint256 _currentVersion;
+
 
     // Implementation of the registry
-    mapping (uint256 => mapping (address => uint)) _assignments; // layer assignment by round and agent
+    mapping (uint256 => mapping (address => uint256)) _assignments; // layer assignment by round and agent
     mapping (uint256 => mapping (address => uint256)) _scores; // score by round and agent
     mapping (address => uint256) _interactionCount;
     uint256 _round; // current round in the protocol
@@ -31,14 +35,17 @@ contract LBCR is Ownable, ILBCR {
     uint256 _blockperiod; // block period until curation
     uint256 _start; // start of period
     uint256 _end; // end of period
-    mapping(address => uint) compatibilityScores;
-    mapping(address => uint) timeDiscountedFactors;
+    mapping(address => uint256) timeDiscountedFactors;
 
-    uint recentFactorTimeDiscount;
-    uint olderFactorTimeDiscount;
+    uint256 recentFactorTimeDiscount;
+    uint256 olderFactorTimeDiscount;
+
+
 
     constructor() public {
-        // addAuthorisedContract(msg.sender);
+        addAuthorisedContract(msg.sender);
+        // console.log(msg.sender);
+        // console.log(owner());
         _decimals = 3; // e.g. a factor of 1500 is equal to 1.5 times the collateral
         _round = 0; // init rounds
         
@@ -48,6 +55,9 @@ contract LBCR is Ownable, ILBCR {
 
         recentFactorTimeDiscount = 400;
         olderFactorTimeDiscount = 600;
+
+        _latestVersion = 1;
+        _currentVersion = 0;
     }
 
     function addAuthorisedContract(address authorisedContract) public onlyAuthorised {
@@ -73,11 +83,32 @@ contract LBCR is Ownable, ILBCR {
         if(protocol == address(this)) {
             return 100;
         }
-        return compatibilityScores[protocol];
+        if(_currentVersion == compatibilityScoreVersions[protocol] || maintainCompatibilityScoreOnUpdate) {
+            return compatibilityScores[protocol];
+        }
+        
+        return 0;
     }
 
-    function setCompatibilityScoreWith(address protocol, uint256 score) external {
+    function setCompatibilityScoreWith(address protocol, uint256 score) external onlyAuthorised {
         compatibilityScores[protocol] = score;
+        compatibilityScoreVersions[protocol] = _latestVersion;
+    }
+
+    function setMaintainCompatibilityScoreOnUpdate(bool maintainCompatibilityScoreOnUpdateValue) external onlyAuthorised {
+        maintainCompatibilityScoreOnUpdate = maintainCompatibilityScoreOnUpdateValue;
+    }
+
+    function getMaintainCompatibilityScoreOnUpdate() external view returns (bool) {
+        return maintainCompatibilityScoreOnUpdate;
+    }
+    
+    function incrementLatestVersion() external onlyAuthorised {
+        _latestVersion += 1;
+    }
+
+    function upgradeVersion() external onlyAuthorised {
+        _currentVersion = _latestVersion;
     }
     
     // ##############
@@ -85,20 +116,20 @@ contract LBCR is Ownable, ILBCR {
     // ##############
 
     function getLayers() public view returns(uint[] memory) {
-        return _layers;
+        return _layers[_currentVersion];
     }
 
-    function setLayers(uint8[] memory layers) public {
+    function setLayers(uint8[] memory layers) public onlyAuthorised {
          // set layers
-        _layers = layers;
+        _layers[_latestVersion] = layers;
     }
 
-    function resetLayers() public {
-        delete _layers;
+    function resetLayers() external onlyAuthorised {
+        delete _layers[_currentVersion];
     }
 
-    function addLayer(uint layer) public {
-        _layers.push(layer);
+    function addLayer(uint layer) external onlyAuthorised {
+        _layers[_latestVersion].push(layer);
     }
 
     // ##############
@@ -113,13 +144,12 @@ contract LBCR is Ownable, ILBCR {
     }
 
     function getFactor(uint layer) public view returns (uint256) {
-        return _factors[layer];
+        return _factors[_currentVersion][layer];
     }
 
     function setFactor(uint layer, uint256 factor) public onlyAuthorised returns (bool) {
-        // require(factor >= (10 ** _decimals), "factor needs to be above or equal to 1.0");
-        // require(layer > 0, "layer 0 is reserved");
-        _factors[layer] = factor;
+        require(_latestVersion != _currentVersion, "LatestVersion must be incremented before updating");
+        _factors[_latestVersion][layer] = factor;
         return true;
     }
 
@@ -128,11 +158,12 @@ contract LBCR is Ownable, ILBCR {
     // ###############
 
     function getReward(uint256 action) public view returns (uint256) {
-        return _rewards[action];
+        return _rewards[_currentVersion][action];
     }
 
     function setReward(uint256 action, uint256 reward) public onlyAuthorised returns (bool) {
-        _rewards[action] = reward;
+        require(_latestVersion != _currentVersion, "LatestVersion must be incremented before updating");
+        _rewards[_latestVersion][action] = reward;
         return true;
     }
 
@@ -141,12 +172,12 @@ contract LBCR is Ownable, ILBCR {
     // ###############
 
     function getBounds(uint layer) public view returns (uint256, uint256) {
-        return (_lower[layer], _upper[layer]);
+        return (_lower[_currentVersion][layer], _upper[_currentVersion][layer]);
     }
 
     function setBounds(uint layer, uint256 lower, uint256 upper) public onlyAuthorised returns (bool) {
-        _lower[layer] = lower;
-        _upper[layer] = upper;
+        _lower[_currentVersion][layer] = lower;
+        _upper[_currentVersion][layer] = upper;
 
         emit NewBound(lower, upper);
 
@@ -165,7 +196,7 @@ contract LBCR is Ownable, ILBCR {
             // check if agent is assigned to a layer in the current round
             if (_assignments[_round][agent] == 0) {
                 // check if the agent was assigned to a layer in previous rounds
-                for (uint i = 1; i < _layers.length && i < _round; i++) {
+                for (uint i = 1; i < _layers[_currentVersion].length && i < _round; i++) {
                     if (_assignments[_round - i][agent] > i) {
                         return _assignments[_round - i][agent] - i;
                     }
@@ -191,15 +222,15 @@ contract LBCR is Ownable, ILBCR {
         return _interactionCount[agent];
     }
 
-    function registerAgent(address agent) public returns (bool) {
+    function registerAgent(address agent) external onlyAuthorised returns (bool) {
         // register agent
         _agents[agent] = true;
         // asign agent to lowest layer
-        _assignments[_round][agent] = _layers[0];
+        _assignments[_round][agent] = _layers[_currentVersion][0];
         // update the score of the agent
-        _scores[_round][agent] += _rewards[0];
+        _scores[_round][agent] += _rewards[_currentVersion][0];
 
-        timeDiscountedFactors[agent] = _factors[_assignments[_round][agent]];
+        timeDiscountedFactors[agent] = _factors[_currentVersion][_assignments[_round][agent]];
         agentList.push(agent);
         
         emit RegisterAgent(agent);
@@ -213,8 +244,8 @@ contract LBCR is Ownable, ILBCR {
     // ### TCR CONTROLS ###
     // ####################
 
-    function update(address agent, uint256 action) public returns (bool) {
-        _scores[_round][agent] += _rewards[action];
+    function update(address agent, uint256 action) external onlyAuthorised returns (bool) {
+        _scores[_round][agent] += _rewards[_currentVersion][action];
 
         // asignment in the current round
         uint assignment = getAssignment(agent);
@@ -224,11 +255,11 @@ contract LBCR is Ownable, ILBCR {
         _interactionCount[agent] += 1;
 
         // promote the agent to the next layer
-        if (_scores[_round][agent] >= _upper[assignment] && assignment != _layers.length) {
+        if (_scores[_round][agent] >= _upper[_currentVersion][assignment] && assignment != _layers[_currentVersion].length) {
             // asignment in the next round
             _assignments[_round + 1][agent] = assignment + 1;
         // demote the agent to the previous layer
-        } else if (_scores[_round][agent] <= _lower[assignment] && assignment > 1) {
+        } else if (_scores[_round][agent] <= _lower[_currentVersion][assignment] && assignment > 1) {
             // asignment in the next round
             _assignments[_round + 1][agent] = assignment - 1;
         // agent layer remans the same
@@ -236,10 +267,14 @@ contract LBCR is Ownable, ILBCR {
             _assignments[_round + 1][agent] = assignment;
         }
         
-        emit Update(agent, _rewards[action], _scores[_round][agent]);
+        emit Update(agent, _rewards[_currentVersion][action], _scores[_round][agent]);
 
         return true;
     }
+
+    // function computeReward(uint256 action, uint256 amountInETH) private returns (uint256) {
+
+    // }
 
     event Update(address agent, uint256 reward, uint256 score);
 
@@ -263,7 +298,7 @@ contract LBCR is Ownable, ILBCR {
     function updateTimeDiscountedFactors() private {
         for(uint i = 0; i < agentList.length; i++) {
             uint assignment = getAssignment(agentList[i]);
-            timeDiscountedFactors[agentList[i]] = (_factors[assignment] * recentFactorTimeDiscount + timeDiscountedFactors[agentList[i]] * olderFactorTimeDiscount) / (10 ** _decimals);
+            timeDiscountedFactors[agentList[i]] = (_factors[_currentVersion][assignment] * recentFactorTimeDiscount + timeDiscountedFactors[agentList[i]] * olderFactorTimeDiscount) / (10 ** _decimals);
         }
     }
 

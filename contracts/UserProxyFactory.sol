@@ -3,7 +3,6 @@ pragma solidity ^0.5.0;
 import "./LBCR.sol";
 import "./WebOfTrust.sol";
 import "./UserProxy.sol";
-import "./SimpleLendingProxy.sol";
 import "@nomiclabs/buidler/console.sol";
 import "@openzeppelin/contracts/ownership/Ownable.sol";
 

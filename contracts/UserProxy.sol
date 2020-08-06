@@ -82,7 +82,7 @@ contract UserProxy is Ownable {
         }
     }
 
-    function getBalance(address _reserve) external view returns(uint256) {
+    function getReserveBalance(address _reserve) external view returns(uint256) {
         if(_reserve != aETHAddress) {
             return IERC20(_reserve).balanceOf(address(this));
         } else {

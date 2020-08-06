@@ -6,6 +6,9 @@ artifacts
 
 build
 
+coverage
+coverage.json
+
 .DS_Store
 log.txt
 .vscode

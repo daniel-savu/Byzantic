@@ -1,15 +1,11 @@
 pragma solidity ^0.5.0;
 
 import "@openzeppelin/contracts/ownership/Ownable.sol";
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "./LBCR.sol";
 import "@nomiclabs/buidler/console.sol";
 import "./WebOfTrust.sol";
 import "./UserProxy.sol";
 import "./UserProxyFactory.sol";
-import "./SimpleLending/SimpleLending.sol";
 
-// import "./InitializableAdminUpgradeabilityProxy.sol";
 
 contract SimpleLendingProxy is Ownable {
     address constant LendingPoolAddressesProviderAddress = 0x24a42fD28C976A61Df5D00D0599C34c4f90748c8;
@@ -24,16 +20,16 @@ contract SimpleLendingProxy is Ownable {
     uint256 redeemAction;
     WebOfTrust webOfTrust;
     UserProxyFactory userProxyFactory;
-    SimpleLending simpleLending;
+    address payable simpleLendingAddress;
 
     constructor(
         address payable webOfTrustAddress,
         address payable UserProxyFactoryAddress,
-        address payable simpleLendingAddress
+        address payable simpleLendingAddressValue
     ) public {
         webOfTrust = WebOfTrust(webOfTrustAddress);
         userProxyFactory = UserProxyFactory(UserProxyFactoryAddress);
-        simpleLending = SimpleLending(simpleLendingAddress);
+        simpleLendingAddress = simpleLendingAddressValue;
         depositAction = 1;
         borrowAction = 2;
         repayAction = 3;
@@ -44,8 +40,8 @@ contract SimpleLendingProxy is Ownable {
 
     function() external payable {}
 
-    function setSimpleLendingAddress(address payable simpleLendingAddress) public onlyOwner {
-        simpleLending = SimpleLending(simpleLendingAddress);
+    function setSimpleLendingAddress(address payable simpleLendingAddressValue) public onlyOwner {
+        simpleLendingAddress = simpleLendingAddressValue;
     }
 
 
@@ -60,9 +56,9 @@ contract SimpleLendingProxy is Ownable {
             amount
         );
         UserProxy userProxy = UserProxy(userProxyFactory.getUserProxyAddress(msg.sender));
-        bool success = userProxy.proxyCall(address(simpleLending), abiEncoding, reserve, amount);
+        bool success = userProxy.proxyCall(simpleLendingAddress, abiEncoding, reserve, amount);
         require(success, "deposit failed");
-        webOfTrust.updateLBCR(address(simpleLending), address(userProxy), depositAction);
+        webOfTrust.updateLBCR(simpleLendingAddress, address(userProxy), depositAction);
     }
 
     function borrow(address reserve, uint256 amount) public {
@@ -72,9 +68,9 @@ contract SimpleLendingProxy is Ownable {
             amount
         );
         UserProxy userProxy = UserProxy(userProxyFactory.getUserProxyAddress(msg.sender));
-        bool success = userProxy.proxyCall(address(simpleLending), abiEncoding);
+        bool success = userProxy.proxyCall(simpleLendingAddress, abiEncoding);
         require(success, "borrow failed");
-        webOfTrust.updateLBCR(address(simpleLending), address(userProxy), borrowAction);
+        webOfTrust.updateLBCR(simpleLendingAddress, address(userProxy), borrowAction);
     }
 
     function repay(address reserve, uint256 amount, address onbehalf) public {
@@ -85,9 +81,9 @@ contract SimpleLendingProxy is Ownable {
             onbehalf
         );
         UserProxy userProxy = UserProxy(userProxyFactory.getUserProxyAddress(msg.sender));
-        bool success = userProxy.proxyCall(address(simpleLending), abiEncoding, reserve, amount);
+        bool success = userProxy.proxyCall(simpleLendingAddress, abiEncoding, reserve, amount);
         require(success, "repayment failed");
-        webOfTrust.updateLBCR(address(simpleLending), address(userProxy), repayAction);
+        webOfTrust.updateLBCR(simpleLendingAddress, address(userProxy), repayAction);
     }
 
     function liquidate(address borrower, address collateralReserve, address loanReserve, uint256 loanAmount) public {
@@ -99,9 +95,10 @@ contract SimpleLendingProxy is Ownable {
             loanAmount
         );
         UserProxy userProxy = UserProxy(userProxyFactory.getUserProxyAddress(msg.sender));
-        bool success = userProxy.proxyCall(address(simpleLending), abiEncoding, loanReserve, loanAmount);
+        bool success = userProxy.proxyCall(simpleLendingAddress, abiEncoding, loanReserve, loanAmount);
         require(success, "liquidation failed");
-        webOfTrust.updateLBCR(address(simpleLending), address(userProxy), liquidateAction);
+        webOfTrust.updateLBCR(simpleLendingAddress, address(userProxy), liquidateAction);
+        // there is no call to updateLBCR for the liquidated, as the score for being liquidated is 0
     }
 
     function redeem(address reserve, uint256 amount) public {
@@ -111,9 +108,9 @@ contract SimpleLendingProxy is Ownable {
             amount
         );
         UserProxy userProxy = UserProxy(userProxyFactory.getUserProxyAddress(msg.sender));
-        bool success = userProxy.proxyCall(address(simpleLending), abiEncoding);
+        bool success = userProxy.proxyCall(simpleLendingAddress, abiEncoding);
         require(success, "redeem failed");
-        webOfTrust.updateLBCR(address(simpleLending), address(userProxy), redeemAction);
+        webOfTrust.updateLBCR(simpleLendingAddress, address(userProxy), redeemAction);
     }
 
 }

@@ -4,11 +4,8 @@ pragma solidity ^0.5.0;
 import "@nomiclabs/buidler/console.sol";
 import "./LBCR.sol";
 import "./UserProxy.sol";
-import "./SimpleLending/SimpleLending.sol";
-import "./SimpleLendingProxy.sol";
 import "./UserProxyFactory.sol";
 import "./ILBCR.sol";
-// import "node_modules/@studydefi/money-legos/compound/contracts/ICEther.sol";
 
 
 contract WebOfTrust {
@@ -102,6 +99,10 @@ contract WebOfTrust {
 
     function isProtocolProxy(address addr) external returns (bool) {
         return protocolProxy[addr];
+    }
+
+    function getProtocolProxy(address addr) external returns (address) {
+        return protocolToProxy[addr];
     }
 
 }

@@ -194,9 +194,9 @@ contract SimpleLending is Ownable {
         uint from = reserveLiquidity[fromReserve];
         uint to = reserveLiquidity[toReserve];
 
-        if (from == 0 || to == 0) {
+        if (from == 0) {
             // if there's no liquidity, the price is "infinity"
-            return  (2**100, 0);
+            return  (2**200, 0);
         }
         
         uint conversion = to * (10 ** conversionDecimals) / from;
@@ -204,8 +204,8 @@ contract SimpleLending is Ownable {
     }
 
     function convert(address fromReserve, address toReserve, uint amount) public view returns (uint, uint) {
-        (uint conversionRate, uint decimals) = conversionRate(fromReserve, toReserve);
-        return (amount * conversionRate, decimals);
+        (uint conversionRateValue, uint decimals) = conversionRate(fromReserve, toReserve);
+        return (amount * conversionRateValue, decimals);
     }
 
     function divideByConversionDecimals(uint x) public returns (uint) {

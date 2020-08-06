@@ -60,6 +60,7 @@ contract("SimpleLending Protocol", accounts => {
         await initializeLBCR(simpleLendingLBCRAddress, simpleLendingLayers, simpleLendingLayerFactors, simpleLendingLayerLowerBounds, simpleLendingLayerUpperBounds);
         let lbcr = await LBCR.at(simpleLendingLBCRAddress);
         lbcr.setCompatibilityScoreWith(simpleLendingTwo.address, 50);
+        lbcr.upgradeVersion();
     }
 
     async function initializeSimpleLendingTwoLBCR(webOfTrust: typeof WebOfTrust) {
@@ -71,6 +72,7 @@ contract("SimpleLending Protocol", accounts => {
         await initializeLBCR(simpleLendingLBCRAddress, simpleLendingLayers, simpleLendingLayerFactors, simpleLendingLayerLowerBounds, simpleLendingLayerUpperBounds);
         let lbcr = await LBCR.at(simpleLendingLBCRAddress);
         lbcr.setCompatibilityScoreWith(simpleLending.address, 50);
+        lbcr.upgradeVersion();
     }
 
     async function initializeLBCR(LBCRAddress: string, layers: number[], layerFactors: number[], layerLowerBounds: number[], layerUpperBounds: number[]) {
@@ -181,6 +183,53 @@ contract("SimpleLending Protocol", accounts => {
         // console.log(`Account balance in SimpleLending: ${userSimpleLendingBalance}`)
     });
 
+    xit("Should deposit to SimpleLending using interfaces", async function () {
+        // assume address is hardcoded
+        let webOfTrustAddress = webOfTrust.address;
+        // assume abi is hardcoded too
+        let webOfTrustAbi = webOfTrust.abi;
+
+        let webOfTrustContract = new web3.eth.Contract(webOfTrustAbi, webOfTrustAddress);
+
+        // assume userProxyFactory address is hardcoded
+        let userProxyFactoryAddress = await webOfTrustContract.getUserProxyFactoryAddress();
+
+        // assume userProxyFactory abi is hardcoded
+        let userProxyFactoryAbi = userProxyFactory.abi;
+
+        let baseCollateralisationRateValue = 1500;
+        let baseCollateralisationRateDecimals = 3;
+
+        simpleLending = await SimpleLending.new(webOfTrust.address, baseCollateralisationRateValue, baseCollateralisationRateDecimals);
+        simpleLendingProxy = await SimpleLendingProxy.new(webOfTrust.address, userProxyFactoryAddress, simpleLending.address);
+        await webOfTrust.addProtocolIntegration(simpleLending.address, simpleLendingProxy.address);
+        await initializeLendingProtocol(simpleLending.address);
+
+        await userProxyFactory.addAgent();
+
+        const userProxyAddress = await userProxyFactory.getUserProxyAddress(accs[0]);
+
+        // assume userProxy abi is available
+        const userProxyAbi = userProxy.abi;
+
+        let userProxyContract = new web3.eth.Contract(userProxyAbi, userProxyAddress);
+
+        let tr = await userProxyContract.depositFunds(
+            ethAddress,
+            web3.utils.toWei('2', 'ether'),
+            {
+                value: web3.utils.toHex(web3.utils.toWei('2', 'ether'))
+            }
+        );
+
+        tr = await simpleLendingProxy.deposit(
+            ethAddress,
+            web3.utils.toWei('1', 'ether')
+        );
+
+
+    });
+
     xit("Should deposit to SimpleLending", async function () {
         const userProxyAddress = await userProxyFactory.getUserProxyAddress(accs[0]);
         const up = await userProxy.at(userProxyAddress);
@@ -189,8 +238,6 @@ contract("SimpleLending Protocol", accounts => {
             web3.utils.toWei('2', 'ether'),
             {
                 from: accs[0],
-                gasLimit: web3.utils.toHex(1500000),
-                gasPrice: web3.utils.toHex(20000000000),
                 value: web3.utils.toHex(web3.utils.toWei('2', 'ether'))
             }
         );
@@ -223,7 +270,7 @@ contract("SimpleLending Protocol", accounts => {
         console.log(`(conversion rate from daiMock to eth: ${conversionRate})`);
     });
 
-    it("Should deposit to, borrow from and repay to SimpleLending", async function () {
+    xit("Should deposit to, borrow from and repay to SimpleLending", async function () {
         const userProxyAddress = await userProxyFactory.getUserProxyAddress(accs[0]);
         const up = await userProxy.at(userProxyAddress);
         let tr = await up.depositFunds(
@@ -231,8 +278,6 @@ contract("SimpleLending Protocol", accounts => {
             web3.utils.toWei('2', 'ether'),
             {
                 from: accs[0],
-                gasLimit: web3.utils.toHex(1500000),
-                gasPrice: web3.utils.toHex(20000000000),
                 value: web3.utils.toHex(web3.utils.toWei('2', 'ether'))
             }
         );
@@ -292,9 +337,18 @@ contract("SimpleLending Protocol", accounts => {
             web3.utils.toWei('1', 'ether')
         );
         console.log("Redeemed 1 ETH");
+
+        await up.withdrawFunds(ethAddress, web3.utils.toWei('1', 'ether'));
+        console.log("Withdrew 1 ETH from Byzantic");
+
+        let ethBalanceLeftInUserProxy = await up.getReserveBalance(
+            ethAddress
+        );
+
+        console.log(`ethBalanceLeftInUserProxy: ${ethBalanceLeftInUserProxy}`);
     });
     
-    xit("Should deposit to, borrow from and be liquidated by SimpleLending", async function () {
+    it("Should deposit to, borrow from and be liquidated by SimpleLending", async function () {
         const userProxyAddress = await userProxyFactory.getUserProxyAddress(accs[0]);
         const up = await userProxy.at(userProxyAddress);
         let tr = await up.depositFunds(
@@ -302,8 +356,6 @@ contract("SimpleLending Protocol", accounts => {
             web3.utils.toWei('2', 'ether'),
             {
                 from: accs[0],
-                gasLimit: web3.utils.toHex(1500000),
-                gasPrice: web3.utils.toHex(20000000000),
                 value: web3.utils.toHex(web3.utils.toWei('2', 'ether'))
             }
         );
@@ -358,8 +410,7 @@ contract("SimpleLending Protocol", accounts => {
             }
         );
 
-        console.log(`Redeemed ${redeemedDaiMock} DaiMock 
-        from different account`);
+        console.log(`Redeemed ${redeemedDaiMock} DaiMock from different account`);
         let underCollateralised = await simpleLending.isUnderCollateralised(up.address);
         console.log(`agent undercollateralised: ${underCollateralised}`);
 
@@ -387,9 +438,127 @@ contract("SimpleLending Protocol", accounts => {
                 from: accs[1],
             }
         );
+    });
 
-        maxAmountToLiquidate = await simpleLending.getMaxAmountToLiquidateInReserve(up.address, daiMock.address);
+
+    it("Should deposit to, borrow from and be liquidated by SimpleLending through Byzantic", async function () {
+        await userProxyFactory.addAgent({
+            from: accs[1],
+        });
+        const liquidatorUserProxyAddress = await userProxyFactory.getUserProxyAddress(accs[1]);
+        const liquidatorUserProxy = await userProxy.at(liquidatorUserProxyAddress);
+
+        await liquidatorUserProxy.depositFunds(
+            ethAddress,
+            web3.utils.toWei('5', 'ether'),
+            {
+                from: accs[1],
+                value: web3.utils.toHex(web3.utils.toWei('5', 'ether'))
+            }
+        );
+
+
+        const userProxyAddress = await userProxyFactory.getUserProxyAddress(accs[0]);
+        const up = await userProxy.at(userProxyAddress);
+        let tr = await up.depositFunds(
+            ethAddress,
+            web3.utils.toWei('2', 'ether'),
+            {
+                from: accs[0],
+                value: web3.utils.toHex(web3.utils.toWei('2', 'ether'))
+            }
+        );
+
+        console.log("The base collateralization ratio in SimpleLending is 150%");
+        // await webOfTrust.getAggregateAgentFactor(up.address); //prints to console in buidler
+        
+        tr = await simpleLendingProxy.deposit(
+            ethAddress,
+            web3.utils.toWei('1', 'ether')
+        );
+        console.log("Deposited 1 Ether in SimpleLending")
+
+        tr = await simpleLendingProxy.deposit(
+            ethAddress,
+            web3.utils.toWei('1', 'ether')
+        );
+        console.log("Deposited 1 Ether in SimpleLending")
+        await simpleLending.getBorrowableAmountInETH(up.address); //prints to console in buidler
+
+        // const agentScore = await simpleLendingLBCR.getScore(up.address);
+        // console.log(`the score of the agent in Byzantic (before round end): ${agentScore}`);
+        console.log("Ending round. User wil be promoted to a higher layer.");
+        await webOfTrust.curateLBCRs();
+        await simpleLending.getBorrowableAmountInETH(up.address); //prints to console in buidler
+
+        let conversionRate = await simpleLending.conversionRate(daiMock.address, ethAddress);
+        console.log(`(conversion rate from DaiMock to ETH: ${divideByConversionDecimals(conversionRate)})`);
+
+
+        conversionRate = await simpleLending.conversionRate(ethAddress, daiMock.address);
+        console.log(`(conversion rate from ETH to DaiMock: ${divideByConversionDecimals(conversionRate) * (10**18)})`);
+
+        let userSimpleLendingBorrows = await simpleLending.getUserLoansInETH(up.address);
+        console.log(`User borrows in SimpleLending (in ETH):   ${divideByConversionDecimals(userSimpleLendingBorrows)}`)
+
+        tr = await simpleLendingProxy.borrow(
+            daiMock.address,
+            "10"
+        );
+        console.log("Borrowed 10 DaiMock");
+        await simpleLending.getBorrowableAmountInETH(up.address); //prints to console in buidler
+
+
+        let redeemedDaiMock = 300;
+
+        tr = await simpleLendingProxy.deposit(
+            ethAddress,
+            web3.utils.toWei('5', 'ether'),
+            {
+                from: accs[1],
+            }
+        );
+
+
+        console.log(`Deposited 5 ETH from different account to devaluate it`);
+        let underCollateralised = await simpleLending.isUnderCollateralised(up.address);
+        console.log(`agent undercollateralised: ${underCollateralised}`);
+
+        let maxAmountToLiquidate = await simpleLending.getMaxAmountToLiquidateInReserve(up.address, daiMock.address);
         console.log(`maxAmountToLiquidate: ${maxAmountToLiquidate}`);
+
+        // the real max amount to liquidate is 51 rather than 98 because there is very little liquidity
+        let daiAmountToLiquidate = 51
+        await daiMock.mint(accs[1], daiAmountToLiquidate);
+
+        await daiMock.approve(
+            liquidatorUserProxy.address,
+            daiAmountToLiquidate,
+            {
+                from: accs[1],
+            }
+        );
+
+        await liquidatorUserProxy.depositFunds(
+            daiMock.address,
+            daiAmountToLiquidate,
+            {
+                from: accs[1]
+            }
+        );
+
+        await simpleLendingProxy.liquidate(
+            up.address,
+            ethAddress,
+            daiMock.address,
+            daiAmountToLiquidate,
+            {
+                from: accs[1],
+            }
+        );
+        
+        console.log(`Liquidated : ${daiAmountToLiquidate} DaiMock of debt`);
+
     });
 
     
@@ -401,8 +570,6 @@ contract("SimpleLending Protocol", accounts => {
             web3.utils.toWei('3', 'ether'),
             {
                 from: accs[0],
-                gasLimit: web3.utils.toHex(1500000),
-                gasPrice: web3.utils.toHex(20000000000),
                 value: web3.utils.toHex(web3.utils.toWei('3', 'ether'))
             }
         );

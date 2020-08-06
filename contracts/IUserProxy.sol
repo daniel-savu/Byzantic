@@ -6,6 +6,6 @@ interface IUserProxy {
 
     function depositFunds(address _reserve, uint256 _amount) external payable;
 
-    function getBalance(address _reserve) external view returns(uint256);
+    function getReserveBalance(address _reserve) external view returns(uint256);
 
 }
