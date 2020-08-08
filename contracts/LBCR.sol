@@ -18,7 +18,7 @@ contract LBCR is Ownable, ILBCR {
 
     mapping(address => uint256) compatibilityScores;
     mapping(address => uint256) compatibilityScoreVersions;
-    bool maintainCompatibilityScoreOnUpdate = true;
+    mapping(address => bool) maintainCompatibilityScoreOnUpdate;
     uint256 _latestVersion;
     uint256 _currentVersion;
 
@@ -49,7 +49,7 @@ contract LBCR is Ownable, ILBCR {
         _decimals = 3; // e.g. a factor of 1500 is equal to 1.5 times the collateral
         _round = 0; // init rounds
         
-        _blockperiod = 1; // wait for 1 block to curate
+        _blockperiod = 10; // wait for 10 blocks to curate
         _start = block.number;
         _end = block.number + _blockperiod;
 
@@ -83,7 +83,7 @@ contract LBCR is Ownable, ILBCR {
         if(protocol == address(this)) {
             return 100;
         }
-        if(_currentVersion == compatibilityScoreVersions[protocol] || maintainCompatibilityScoreOnUpdate) {
+        if(_currentVersion == compatibilityScoreVersions[protocol] || maintainCompatibilityScoreOnUpdate[protocol]) {
             return compatibilityScores[protocol];
         }
         
@@ -91,16 +91,18 @@ contract LBCR is Ownable, ILBCR {
     }
 
     function setCompatibilityScoreWith(address protocol, uint256 score) external onlyAuthorised {
+        require(score >= 0 && score <= 100, "score must be a number between 0 and 100");
         compatibilityScores[protocol] = score;
         compatibilityScoreVersions[protocol] = _latestVersion;
+        maintainCompatibilityScoreOnUpdate[protocol] = true;
     }
 
-    function setMaintainCompatibilityScoreOnUpdate(bool maintainCompatibilityScoreOnUpdateValue) external onlyAuthorised {
-        maintainCompatibilityScoreOnUpdate = maintainCompatibilityScoreOnUpdateValue;
+    function setMaintainCompatibilityScoreOnUpdate(bool maintainCompatibilityScoreOnUpdateValue, address protocol) external onlyAuthorised {
+        maintainCompatibilityScoreOnUpdate[protocol] = maintainCompatibilityScoreOnUpdateValue;
     }
 
-    function getMaintainCompatibilityScoreOnUpdate() external view returns (bool) {
-        return maintainCompatibilityScoreOnUpdate;
+    function getMaintainCompatibilityScoreOnUpdate(address protocol) external view returns (bool) {
+        return maintainCompatibilityScoreOnUpdate[protocol];
     }
     
     function incrementLatestVersion() external onlyAuthorised {

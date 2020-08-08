@@ -18,7 +18,7 @@ contract SimpleLending is Ownable {
 
     address ethAddress = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
     uint256 collateralizationDecimals = 3; // decimals to calculate collateral factor
-    uint conversionDecimals = 25;
+    uint conversionDecimals = 18;
 
     constructor(
         address payable webOfTrustAddressValue,
