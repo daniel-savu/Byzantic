@@ -6,7 +6,7 @@ import "./WebOfTrust.sol";
 import "./UserProxy.sol";
 import "./UserProxyFactory.sol";
 
-
+/// @notice Example contract to act as a Protocol Proxy template
 contract SimpleLendingProxy is Ownable {
     address constant LendingPoolAddressesProviderAddress = 0x24a42fD28C976A61Df5D00D0599C34c4f90748c8;
     address constant aETHAddress = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
@@ -40,6 +40,11 @@ contract SimpleLendingProxy is Ownable {
 
     function() external payable {}
 
+    modifier onlyRegisteredAgents() {
+        require(webOfTrust.isAgentRegistered(msg.sender), "Caller is registered");
+        _;
+    }
+
     function setSimpleLendingAddress(address payable simpleLendingAddressValue) public onlyOwner {
         simpleLendingAddress = simpleLendingAddressValue;
     }
@@ -49,7 +54,11 @@ contract SimpleLendingProxy is Ownable {
 
     // LendingPool contract
 
-    function deposit(address reserve, uint256 amount) public {
+    /// @notice Function that packs the call to the `deposit` function in `SimpleLending` as an abi enconding and then calls 
+    /// the `msg.sender`'s `UserProxy` to call `SimpleLending` with the abi encoding
+    /// @param reserve Addres of asset to deposit in `SimpleLending`
+    /// @param amount Quantity of `reserve` to deposit in `SimpleLending`
+    function deposit(address reserve, uint256 amount) public onlyRegisteredAgents {
         bytes memory abiEncoding = abi.encodeWithSignature(
             "deposit(address,uint256)",
             reserve,
@@ -61,7 +70,11 @@ contract SimpleLendingProxy is Ownable {
         webOfTrust.updateLBCR(simpleLendingAddress, address(userProxy), depositAction);
     }
 
-    function borrow(address reserve, uint256 amount) public {
+    /// @notice Function that packs the call to the `borrow` function in `SimpleLending` as an abi enconding and then calls 
+    /// the `msg.sender`'s `UserProxy` to call `SimpleLending` with the abi encoding
+    /// @param reserve Addres of asset to borrow from `SimpleLending`
+    /// @param amount Quantity of `reserve` to borrow from `SimpleLending`
+    function borrow(address reserve, uint256 amount) public onlyRegisteredAgents {
         bytes memory abiEncoding = abi.encodeWithSignature(
             "borrow(address,uint256)",
             reserve,
@@ -73,7 +86,12 @@ contract SimpleLendingProxy is Ownable {
         webOfTrust.updateLBCR(simpleLendingAddress, address(userProxy), borrowAction);
     }
 
-    function repay(address reserve, uint256 amount, address onbehalf) public {
+    /// @notice Function that packs the call to the `repay` function (repaying a loan) in `SimpleLending` as an abi enconding and then calls 
+    /// the `msg.sender`'s `UserProxy` to call `SimpleLending` with the abi encoding
+    /// @param reserve Addres of asset to repay to `SimpleLending`
+    /// @param amount Quantity of `reserve` to repay to `SimpleLending`
+    /// @param onbehalf User to repay the bloan on behalf of
+    function repay(address reserve, uint256 amount, address onbehalf) public onlyRegisteredAgents {
         bytes memory abiEncoding = abi.encodeWithSignature(
             "repay(address,uint256,address)",
             reserve,
@@ -86,7 +104,13 @@ contract SimpleLendingProxy is Ownable {
         webOfTrust.updateLBCR(simpleLendingAddress, address(userProxy), repayAction);
     }
 
-    function liquidate(address borrower, address collateralReserve, address loanReserve, uint256 loanAmount) public {
+    /// @notice Function that packs the call to the `liquidate` function in `SimpleLending` as an abi enconding and then calls 
+    /// the `msg.sender`'s `UserProxy` to call `SimpleLending` with the abi encoding
+    /// @param borrower Addres of user to liquidate
+    /// @param collateralReserve Collateral reserve belonging to `borrower` to be paid back in as a result of the liquidation
+    /// @param loanReserve Addres of loan asset to liquidate in `SimpleLending`
+    /// @param loanAmount Quantity of `reserve` to liquidate from `SimpleLending`
+    function liquidate(address borrower, address collateralReserve, address loanReserve, uint256 loanAmount) public onlyRegisteredAgents {
         bytes memory abiEncoding = abi.encodeWithSignature(
             "liquidate(address,address,address,uint256)",
             borrower,
@@ -101,7 +125,11 @@ contract SimpleLendingProxy is Ownable {
         // there is no call to updateLBCR for the liquidated, as the score for being liquidated is 0
     }
 
-    function redeem(address reserve, uint256 amount) public {
+    /// @notice Function that packs the call to the `redeem` function in `SimpleLending` as an abi enconding and then calls 
+    /// the `msg.sender`'s `UserProxy` to call `SimpleLending` with the abi encoding
+    /// @param reserve Addres of asset to redeem deposited funds from `SimpleLending`
+    /// @param amount Quantity of `reserve` to redeem deposited funds from `SimpleLending`
+    function redeem(address reserve, uint256 amount) public onlyRegisteredAgents {
         bytes memory abiEncoding = abi.encodeWithSignature(
             "redeem(address,uint256)",
             reserve,

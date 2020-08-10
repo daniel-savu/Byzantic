@@ -34,9 +34,34 @@
 {{/ownModifiers}}
 {{#ownFunctions}}
 [[{{anchor}}]]
-=== {{name}}({{args}}){{#if outputs}} → {{outputs}}{{/if}}
+=== {{name}}({{args}}){{#if outputs}} → {{outputs}}{{/if}} ({{visibility}})
 
-{{natspec.devdoc}}
+{{#if natspec.userdoc}}
+**Users**: {{natspec.userdoc}}
+{{/if}}
+
+{{#if natspec.devdoc}}
+**Developers**: {{natspec.devdoc}}
+{{/if}}
+
+{{#if natspec.params}}
+**Parameters**:
+
+{{#each natspec.params}}
+``{{this.param}}``: {{this.description}}
+{{/each}}
+
+{{/if}}
+
+
+{{#if natspec.returns}}
+**Return Values**:
+
+{{#each natspec.returns}}
+``{{this.param}}``: {{this.description}}
+{{/each}}
+{{/if}}
+
 
 {{/ownFunctions}}
 {{#ownEvents}}

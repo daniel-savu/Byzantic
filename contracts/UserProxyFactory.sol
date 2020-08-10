@@ -22,21 +22,24 @@ contract UserProxyFactory is Ownable {
 
     function() external payable {}
 
-    function addAgent() external {
-        if (!isAgentInitialized[msg.sender]) {
-            UserProxy userProxy = new UserProxy(msg.sender, address(webOfTrust));
-            userAddressToUserProxy[msg.sender] = userProxy;
-            userProxyToUserAddress[address(userProxy)] = msg.sender;
+    /// @notice Register user into all LBCRs in Byzantic and deploy a personalised UserProxy contract
+    /// @param agent The address of the user whose to register to Byzantic
+    function registerAgent(address agent) public onlyOwner {
+        if (!isAgentInitialized[agent]) {
+            UserProxy userProxy = new UserProxy(agent, address(webOfTrust));
+            userAddressToUserProxy[agent] = userProxy;
+            userProxyToUserAddress[address(userProxy)] = agent;
 
             for(uint i = 0; i < lbcrs.length; i++) {
                 lbcrs[i].registerAgent(address(userProxy));
             }
 
-            isAgentInitialized[msg.sender] = true;
-            agents.push(msg.sender);
+            isAgentInitialized[agent] = true;
+            agents.push(agent);
         }
     }
 
+    /// @notice Function called by the WebOfTrust contract to registers all Byzantic users to a new LBCR
     function addLBCR(address lbcrAddress) public onlyOwner {
         LBCR lbcr = LBCR(lbcrAddress);
         require(!lbcrAlreadyAdded(lbcr), "lbcr already added in user proxy");
@@ -55,13 +58,16 @@ contract UserProxyFactory is Ownable {
         return false;
     }
 
-
     function isUserProxy(address userProxyAddress) external view returns (bool) {
         return userProxyToUserAddress[userProxyAddress] != address(0);
     }
 
     function getUserProxyAddress(address userAddress) external view returns (address payable) {
         return address(userAddressToUserProxy[userAddress]);
+    }
+
+    function isAgentRegistered(address agent) public view returns (bool) {
+        return isAgentInitialized[agent];
     }
 
 }

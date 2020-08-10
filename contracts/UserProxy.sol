@@ -57,6 +57,7 @@ contract UserProxy is Ownable {
         _;
     }
 
+    /// @notice Check if an agent has at least `amount` of asset `reserve`
     function hasEnoughFunds(address reserve, uint amount) internal returns (bool) {
         if(reserve != aETHAddress) {
             return IERC20(reserve).balanceOf(address(this)) >= amount;
@@ -64,7 +65,7 @@ contract UserProxy is Ownable {
             return address(this).balance >= amount;
         }
     }
-
+    /// @notice Withdraw funds from a UserProxy in Byzantic to the owner's personal account
     function withdrawFunds(address _reserve, uint256 _amount) external onlyAgentOwner {
         require(hasEnoughFunds(_reserve, _amount), "You don't have enough funds");
         if(_reserve != aETHAddress) {
@@ -74,6 +75,7 @@ contract UserProxy is Ownable {
         }
     }
 
+    /// @notice Deposit funds from your account to your UserProxy in Byzantic
     function depositFunds(address _reserve, uint256 _amount) external payable onlyAgentOwner {
         if(_reserve == aETHAddress) {
             require(msg.value == _amount, "_amount does not match the sent ETH");
@@ -90,6 +92,11 @@ contract UserProxy is Ownable {
         }
     }
 
+    /// @notice Function making calls to target protocols on behalf of users, for transactions that do not involve sending assets.
+    /// @dev The `reserve` and `amount` are set to zero and the other `proxyCall` function is called. The name "proxyCall" stands 
+    /// for the fact that the UserProxy intermediates between a user and the target protocol.
+    /// @param target Address of contract in target protocol to call
+    /// @param abiEncoding Encoding produced by the Target Protocol Proxy, which packs the call to the correct function and contract.
     function proxyCall(address target, bytes memory abiEncoding) public onlyProtocolProxies returns (bool) {
         // the following variables are set to 0 because they are not applicable to this call
         address currencyReserve = address(0);
@@ -98,6 +105,13 @@ contract UserProxy is Ownable {
         return proxyCallResult;
     }
 
+    /// @notice Function making calls to target protocols on behalf of users, for both asset-sending transactions and non-asset-sending ones.
+    /// @dev The name "proxyCall" stands for the fact that the UserProxy intermediates between a user and the target protocol.
+    /// @param target Address of contract in target protocol to call
+    /// @param abiEncoding Encoding produced by the Target Protocol Proxy, which packs the call to the correct function and contract.
+    /// @param reserve Address of the asset being submitted. ETH transfers are perfoed using 
+    /// `0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE` as the reserve. Other addresses are considered ERC-20 tokens by default 
+    /// @param amount Quantity of asset `reserve` to send along with the call
     function proxyCall(
         address target,
         bytes memory abiEncoding,

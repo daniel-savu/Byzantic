@@ -79,6 +79,9 @@ contract LBCR is Ownable, ILBCR {
         _;
     }
 
+    /// @notice Returns a number between 0 and 100 representing the compatibility score between the current LBCR and the 
+    /// LBCRs of `protocol`. If no score was set for `protocol`, returns 0
+    /// @param protocol Retrieve the compatibility between this protocol and `protocol`
     function getCompatibilityScoreWith(address protocol) external view returns (uint256) {
         if(protocol == address(this)) {
             return 100;
@@ -90,6 +93,12 @@ contract LBCR is Ownable, ILBCR {
         return 0;
     }
 
+    /// @notice Set a number between 0 and 100 representing the compatibility score between the current LBCR and the 
+    /// LBCRs of `protocol`. When a new compatibility score is set, the `maintainCompatibilityScoreOnUpdate[protocol]` 
+    /// is automatically set to `true` (such that when `protocol` update their LBCR version, the compatibility score 
+    /// set now is maintained)
+    /// @param protocol Address of `protocol`'s LBCR to set compatibility score with
+    /// @param score Compatibility score
     function setCompatibilityScoreWith(address protocol, uint256 score) external onlyAuthorised {
         require(score >= 0 && score <= 100, "score must be a number between 0 and 100");
         compatibilityScores[protocol] = score;
@@ -97,6 +106,10 @@ contract LBCR is Ownable, ILBCR {
         maintainCompatibilityScoreOnUpdate[protocol] = true;
     }
 
+    /// @notice Update the `maintainCompatibilityScoreOnUpdate` map with respect to `protocol`. A `true` value means that
+    /// if `protocol` update their LBCR version, the current protocol trusts that the update will not be disruptive and
+    /// the compatiblity score should remain the same. A `false` value means that new updates to the LBCR of `protocol`
+    /// are untrusted and the compatibility score will default to zero
     function setMaintainCompatibilityScoreOnUpdate(bool maintainCompatibilityScoreOnUpdateValue, address protocol) external onlyAuthorised {
         maintainCompatibilityScoreOnUpdate[protocol] = maintainCompatibilityScoreOnUpdateValue;
     }
@@ -105,11 +118,15 @@ contract LBCR is Ownable, ILBCR {
         return maintainCompatibilityScoreOnUpdate[protocol];
     }
     
+    /// @notice Increment `_latestVersion` to start setting parameters of a new LBCR version
     function incrementLatestVersion() external onlyAuthorised {
         _latestVersion += 1;
     }
 
+    /// @notice Upgrade the LBCR to a new version by setting `_currentVersion` (the variable used to index the version 
+    /// parameter maps) to `_latestVersion`
     function upgradeVersion() external onlyAuthorised {
+        curateIfRoundEnded();
         _currentVersion = _latestVersion;
     }
     
@@ -121,15 +138,18 @@ contract LBCR is Ownable, ILBCR {
         return _layers[_currentVersion];
     }
 
+    /// @notice Set layer indexes
     function setLayers(uint8[] memory layers) public onlyAuthorised {
          // set layers
         _layers[_latestVersion] = layers;
     }
 
+    /// @notice Reset layer indexes
     function resetLayers() external onlyAuthorised {
         delete _layers[_currentVersion];
     }
 
+    /// @notice Add a new index to the array of layer indexes
     function addLayer(uint layer) external onlyAuthorised {
         _layers[_latestVersion].push(layer);
     }
@@ -137,6 +157,9 @@ contract LBCR is Ownable, ILBCR {
     // ##############
     // ### FACTOR ###
     // ##############
+
+    /// @notice Get time discounted agent factor (a value between 0 and 1), 
+    /// representing the discounted collateral `agent` should pay
     function getAgentFactor(address agent) public view returns (uint256) {
         uint assignment = getAssignment(agent);
 
@@ -145,24 +168,28 @@ contract LBCR is Ownable, ILBCR {
         return timeDiscountedFactors[agent];
     }
 
+    /// @notice Get the `layer` factor that the agent is currently in. Usage of this function is discouraged,
+    /// as `getAgentFactor` provides better game theoretic incentives to behave well
     function getFactor(uint layer) public view returns (uint256) {
         return _factors[_currentVersion][layer];
     }
 
-    function setFactor(uint layer, uint256 factor) public onlyAuthorised returns (bool) {
+    /// @notice Set the collateralisation `factor` of a `layer` index. The `factor` is a value between 0 and 1
+    function setFactor(uint layer, uint256 factor) public onlyAuthorised {
         require(_latestVersion != _currentVersion, "LatestVersion must be incremented before updating");
         _factors[_latestVersion][layer] = factor;
-        return true;
     }
 
     // ###############
     // ### REWARD ###
     // ###############
 
+    /// @return reward The score an agent receives after performing a certain action. Assumes actions have fixed rewards.
     function getReward(uint256 action) public view returns (uint256) {
         return _rewards[_currentVersion][action];
     }
 
+    /// @notice Set the `reward` for a certain `action`
     function setReward(uint256 action, uint256 reward) public onlyAuthorised returns (bool) {
         require(_latestVersion != _currentVersion, "LatestVersion must be incremented before updating");
         _rewards[_latestVersion][action] = reward;
@@ -173,10 +200,14 @@ contract LBCR is Ownable, ILBCR {
     // ### BOUNDS ###
     // ###############
 
+    /// @notice Get the pair (`lowerScoreBound`, `upperScoreBound`) representing the criteria for demoting or
+    /// promoting an agent in the LBCR
     function getBounds(uint layer) public view returns (uint256, uint256) {
         return (_lower[_currentVersion][layer], _upper[_currentVersion][layer]);
     }
 
+    /// @notice Given a `layer` index, set the pair (`lowerScoreBound`, `upperScoreBound`) representing the 
+    /// criteria for demoting or promoting an agent in the LBCR
     function setBounds(uint layer, uint256 lower, uint256 upper) public onlyAuthorised returns (bool) {
         _lower[_currentVersion][layer] = lower;
         _upper[_currentVersion][layer] = upper;
@@ -192,6 +223,7 @@ contract LBCR is Ownable, ILBCR {
     // ### AGENT REGISTRY ###
     // ######################
 
+    /// @notice Get layer index representing the assignment of `agent` in the current LBCR round
     function getAssignment(address agent) public view returns(uint assignment) {
         // check if agent is registered
         if (_agents[agent]) {
@@ -212,6 +244,7 @@ contract LBCR is Ownable, ILBCR {
         }
     }
 
+    /// @notice Get the score of `agent` in the current LBCR round
     function getScore(address agent) public view returns (uint256) {
         uint assignment = getAssignment(agent);
 
@@ -220,11 +253,14 @@ contract LBCR is Ownable, ILBCR {
         return _scores[_round][agent];
     }
 
+    /// @notice Get the number of actions performed by `agent` since joining the LBCR
     function getInteractionCount(address agent) public view returns (uint256) {
         return _interactionCount[agent];
     }
 
+    /// @notice Sign `agent` up to the LBCR. They are initially assigned to the first layer 
     function registerAgent(address agent) external onlyAuthorised returns (bool) {
+        curateIfRoundEnded();
         // register agent
         _agents[agent] = true;
         // asign agent to lowest layer
@@ -246,7 +282,9 @@ contract LBCR is Ownable, ILBCR {
     // ### TCR CONTROLS ###
     // ####################
 
-    function update(address agent, uint256 action) external onlyAuthorised returns (bool) {
+    /// @notice Update the score of `agent` given they have performed the action encoded as `action`
+    function update(address agent, uint256 action) external onlyAuthorised {
+        curateIfRoundEnded();
         _scores[_round][agent] += _rewards[_currentVersion][action];
 
         // asignment in the current round
@@ -270,8 +308,6 @@ contract LBCR is Ownable, ILBCR {
         }
         
         emit Update(agent, _rewards[_currentVersion][action], _scores[_round][agent]);
-
-        return true;
     }
 
     // function computeReward(uint256 action, uint256 amountInETH) private returns (uint256) {
@@ -280,7 +316,17 @@ contract LBCR is Ownable, ILBCR {
 
     event Update(address agent, uint256 reward, uint256 score);
 
-    function curate() public onlyAuthorised returns (bool) {
+    /// @notice If `_blockperiod` blocks have elapsed since the current round started, the round will end
+    /// and agents will be curated into new layer positions
+    function curateIfRoundEnded() public {
+        // anyone can call this function, to ensure curation happens at the right time
+        if(_start != 0 && block.number >= _end) {
+            curate();
+        }
+    }
+
+    /// @notice Actual curating function. Updates agent assignments to layers by calling `updateTimeDiscountedFactors`
+    function curate() private returns (bool) {
         require(_start != 0, "period not started");
         require(block.number >= _end, "period not ended");
 
@@ -297,6 +343,8 @@ contract LBCR is Ownable, ILBCR {
         return true;
     }
 
+    /// @notice For every user in the LBCR, given the current layer assignment, compute their time-discounted factor 
+    /// (i.e. their game theory backed factor), which represents the discounted collateral amount the agent should pay
     function updateTimeDiscountedFactors() private {
         for(uint i = 0; i < agentList.length; i++) {
             uint assignment = getAssignment(agentList[i]);

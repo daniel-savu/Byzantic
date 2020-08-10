@@ -132,97 +132,173 @@ This page is incomplete. We&#8217;re working to improve it. Stay tuned!
 <p><a href="#WebOfTrust-fallback--">fallback()</a></p>
 </li>
 <li>
+<p><a href="#WebOfTrust-registerAgent--">registerAgent()</a></p>
+</li>
+<li>
+<p><a href="#WebOfTrust-isAgentRegistered-address-">isAgentRegistered(address)</a></p>
+</li>
+<li>
+<p><a href="#WebOfTrust-addProtocolIntegration-address-address-">addProtocolIntegration(address,address)</a></p>
+</li>
+<li>
 <p><a href="#WebOfTrust-getUserProxyFactoryAddress--">getUserProxyFactoryAddress()</a></p>
 </li>
 <li>
-<p><a href="#WebOfTrust-getSimpleLendingLBCR--">getSimpleLendingLBCR()</a></p>
+<p><a href="#WebOfTrust-getProtocolLBCR-address-">getProtocolLBCR(address)</a></p>
 </li>
 <li>
-<p><a href="#WebOfTrust-getSimpleLendingTwoLBCR--">getSimpleLendingTwoLBCR()</a></p>
-</li>
-<li>
-<p><a href="#WebOfTrust-getSimpleLendingAddress--">getSimpleLendingAddress()</a></p>
-</li>
-<li>
-<p><a href="#WebOfTrust-getSimpleLendingTwoAddress--">getSimpleLendingTwoAddress()</a></p>
+<p><a href="#WebOfTrust-updateLBCR-address-address-uint256-">updateLBCR(address,address,uint256)</a></p>
 </li>
 <li>
 <p><a href="#WebOfTrust-getAggregateAgentFactorForProtocol-address-address-">getAggregateAgentFactorForProtocol(address,address)</a></p>
 </li>
 <li>
-<p><a href="#WebOfTrust-aggregateLBCRsForProtocol-address-address-">aggregateLBCRsForProtocol(address,address)</a></p>
-</li>
-<li>
-<p><a href="#WebOfTrust-moveFundsToUserProxy-address-address-uint256-">moveFundsToUserProxy(address,address,uint256)</a></p>
-</li>
-<li>
-<p><a href="#WebOfTrust-setSimpleLendingProxy-address-payable-">setSimpleLendingProxy(address payable)</a></p>
-</li>
-<li>
-<p><a href="#WebOfTrust-getSimpleLendingProxy--">getSimpleLendingProxy()</a></p>
-</li>
-<li>
-<p><a href="#WebOfTrust-getSimpleLendingTwoProxy--">getSimpleLendingTwoProxy()</a></p>
-</li>
-<li>
 <p><a href="#WebOfTrust-curateLBCRs--">curateLBCRs()</a></p>
+</li>
+<li>
+<p><a href="#WebOfTrust-getAgentFactorDecimals--">getAgentFactorDecimals()</a></p>
+</li>
+<li>
+<p><a href="#WebOfTrust-isProtocolProxy-address-">isProtocolProxy(address)</a></p>
+</li>
+<li>
+<p><a href="#WebOfTrust-getProtocolProxy-address-">getProtocolProxy(address)</a></p>
 </li>
 </ul>
 </div>
 <div class="sect2">
-<h3 id="WebOfTrust-fallback--"><a class="anchor" href="#WebOfTrust-fallback--"></a>fallback()</h3>
+<h3 id="WebOfTrust-fallback--"><a class="anchor" href="#WebOfTrust-fallback--"></a>fallback() (external)</h3>
 
 </div>
 <div class="sect2">
-<h3 id="WebOfTrust-getUserProxyFactoryAddress--"><a class="anchor" href="#WebOfTrust-getUserProxyFactoryAddress--"></a>getUserProxyFactoryAddress() → address</h3>
-
-</div>
-<div class="sect2">
-<h3 id="WebOfTrust-getSimpleLendingLBCR--"><a class="anchor" href="#WebOfTrust-getSimpleLendingLBCR--"></a>getSimpleLendingLBCR() → address</h3>
-
-</div>
-<div class="sect2">
-<h3 id="WebOfTrust-getSimpleLendingTwoLBCR--"><a class="anchor" href="#WebOfTrust-getSimpleLendingTwoLBCR--"></a>getSimpleLendingTwoLBCR() → address</h3>
-
-</div>
-<div class="sect2">
-<h3 id="WebOfTrust-getSimpleLendingAddress--"><a class="anchor" href="#WebOfTrust-getSimpleLendingAddress--"></a>getSimpleLendingAddress() → address</h3>
-
-</div>
-<div class="sect2">
-<h3 id="WebOfTrust-getSimpleLendingTwoAddress--"><a class="anchor" href="#WebOfTrust-getSimpleLendingTwoAddress--"></a>getSimpleLendingTwoAddress() → address</h3>
-
-</div>
-<div class="sect2">
-<h3 id="WebOfTrust-getAggregateAgentFactorForProtocol-address-address-"><a class="anchor" href="#WebOfTrust-getAggregateAgentFactorForProtocol-address-address-"></a>getAggregateAgentFactorForProtocol(address agent, address protocol) → uint256</h3>
+<h3 id="WebOfTrust-registerAgent--"><a class="anchor" href="#WebOfTrust-registerAgent--"></a>registerAgent() (external)</h3>
 <div class="paragraph">
-<p>Uses information from all LBCRs and the subjective measures
+<p><strong>Users</strong>: Sign up with Byzantic as a user</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="WebOfTrust-isAgentRegistered-address-"><a class="anchor" href="#WebOfTrust-isAgentRegistered-address-"></a>isAgentRegistered(address agent) → bool (public)</h3>
+<div class="paragraph">
+<p><strong>Users</strong>: Check if agent has signed up with Byzantic</p>
+</div>
+<div class="paragraph">
+<p><strong>Parameters</strong>:</p>
+</div>
+<div class="paragraph">
+<p><code>agent</code>: The address of <code>msg.sender</code> when calling <code>registerAgent()</code></p>
+</div>
+<div class="paragraph">
+<p><strong>Return Values</strong>:</p>
+</div>
+<div class="paragraph">
+<p><code>isAgentRegistered</code>: boolean value representing the membership of the agent in Byzantic</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="WebOfTrust-addProtocolIntegration-address-address-"><a class="anchor" href="#WebOfTrust-addProtocolIntegration-address-address-"></a>addProtocolIntegration(address protocolAddress, address protocolProxyAddress) (external)</h3>
+<div class="paragraph">
+<p><strong>Users</strong>: Integrate your protocol with Byzantic</p>
+</div>
+<div class="paragraph">
+<p><strong>Developers</strong>: You need to deploy a Proxy contract for your protocol to integrate with Byzantic.
+After calling <code>addProtocolIntegration</code>, you need to call <code>getProtocolLBCR</code> and configure your LBCR.</p>
+</div>
+<div class="paragraph">
+<p><strong>Parameters</strong>:</p>
+</div>
+<div class="paragraph">
+<p><code>protocolAddress</code>: The address of the contract in your protocol you want to integrate with Byzantic.</p>
+</div>
+<div class="paragraph">
+<p><code>protocolProxyAddress</code>: The address of the proxy to your contract. Written in the same style as the <code>SimpleLendingProxy</code> example contract.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="WebOfTrust-getUserProxyFactoryAddress--"><a class="anchor" href="#WebOfTrust-getUserProxyFactoryAddress--"></a>getUserProxyFactoryAddress() → address (public)</h3>
+<div class="paragraph">
+<p><strong>Return Values</strong>:</p>
+</div>
+<div class="paragraph">
+<p><code>The</code>: address of the UserProxyFactory contract</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="WebOfTrust-getProtocolLBCR-address-"><a class="anchor" href="#WebOfTrust-getProtocolLBCR-address-"></a>getProtocolLBCR(address protocolAddress) → address (public)</h3>
+<div class="paragraph">
+<p><strong>Return Values</strong>:</p>
+</div>
+<div class="paragraph">
+<p><code>The</code>: address of the LBCR contract of a given protocol</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="WebOfTrust-updateLBCR-address-address-uint256-"><a class="anchor" href="#WebOfTrust-updateLBCR-address-address-uint256-"></a>updateLBCR(address protocolAddress, address agent, uint256 action) (public)</h3>
+<div class="paragraph">
+<p><strong>Users</strong>: Record a user action into the LBCR, to update their score</p>
+</div>
+<div class="paragraph">
+<p><strong>Developers</strong>: The <code>require</code> statement replaces a modifier that prevents unauthorised calls</p>
+</div>
+<div class="paragraph">
+<p><strong>Parameters</strong>:</p>
+</div>
+<div class="paragraph">
+<p><code>protocolAddress</code>: The address of the contract in your protocol you want to integrate with Byzantic.</p>
+</div>
+<div class="paragraph">
+<p><code>agent</code>: The address of the user whose reputation is being updated in the LBCR</p>
+</div>
+<div class="paragraph">
+<p><code>action</code>: The action that the user has performed and is being rewarded / punished for.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="WebOfTrust-getAggregateAgentFactorForProtocol-address-address-"><a class="anchor" href="#WebOfTrust-getAggregateAgentFactorForProtocol-address-address-"></a>getAggregateAgentFactorForProtocol(address agent, address protocol) → uint256 (external)</h3>
+<div class="paragraph">
+<p><strong>Users</strong>: Uses information from all LBCRs and the subjective measures
 of compatibility between them to compute how much collateral a
 user should pay.</p>
 </div>
+<div class="paragraph">
+<p><strong>Parameters</strong>:</p>
+</div>
+<div class="paragraph">
+<p><code>agent</code>: The address of the user whose reputation is being computed</p>
+</div>
+<div class="paragraph">
+<p><code>protocol</code>: Address of the protocol with respect to which the reputation is being computed.</p>
+</div>
+<div class="paragraph">
+<p><strong>Return Values</strong>:</p>
+</div>
+<div class="paragraph">
+<p><code>User</code>: reputation, expressed as the percentage of collateral they need to pay.
+A return value of 900 means the agent only needs
+to pay 90% of the normally required collateral (so the result needs to be divided by 10^3).
+If the agent has not signed up with Byzantic, they need to pay the full collateral (100%)</p>
+</div>
 </div>
 <div class="sect2">
-<h3 id="WebOfTrust-aggregateLBCRsForProtocol-address-address-"><a class="anchor" href="#WebOfTrust-aggregateLBCRsForProtocol-address-address-"></a>aggregateLBCRsForProtocol(address agent, address protocol) → uint256</h3>
+<h3 id="WebOfTrust-curateLBCRs--"><a class="anchor" href="#WebOfTrust-curateLBCRs--"></a>curateLBCRs() (public)</h3>
+<div class="paragraph">
+<p><strong>Users</strong>: For each of the LBCRs in Byzantic, if the round has elapsed, users will be curated into layers according to their score</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="WebOfTrust-getAgentFactorDecimals--"><a class="anchor" href="#WebOfTrust-getAgentFactorDecimals--"></a>getAgentFactorDecimals() → uint256 (external)</h3>
+<div class="paragraph">
+<p><strong>Return Values</strong>:</p>
+</div>
+<div class="paragraph">
+<p><code>Number</code>: of decimals used to express the aggregate agent factor returned by <code>getAggregateAgentFactorForProtocol()</code></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="WebOfTrust-isProtocolProxy-address-"><a class="anchor" href="#WebOfTrust-isProtocolProxy-address-"></a>isProtocolProxy(address addr) → bool (external)</h3>
 
 </div>
 <div class="sect2">
-<h3 id="WebOfTrust-moveFundsToUserProxy-address-address-uint256-"><a class="anchor" href="#WebOfTrust-moveFundsToUserProxy-address-address-uint256-"></a>moveFundsToUserProxy(address agentOwner, address _reserve, uint256 _amount)</h3>
-
-</div>
-<div class="sect2">
-<h3 id="WebOfTrust-setSimpleLendingProxy-address-payable-"><a class="anchor" href="#WebOfTrust-setSimpleLendingProxy-address-payable-"></a>setSimpleLendingProxy(address payable simpleLendingProxyAddress)</h3>
-
-</div>
-<div class="sect2">
-<h3 id="WebOfTrust-getSimpleLendingProxy--"><a class="anchor" href="#WebOfTrust-getSimpleLendingProxy--"></a>getSimpleLendingProxy() → address</h3>
-
-</div>
-<div class="sect2">
-<h3 id="WebOfTrust-getSimpleLendingTwoProxy--"><a class="anchor" href="#WebOfTrust-getSimpleLendingTwoProxy--"></a>getSimpleLendingTwoProxy() → address</h3>
-
-</div>
-<div class="sect2">
-<h3 id="WebOfTrust-curateLBCRs--"><a class="anchor" href="#WebOfTrust-curateLBCRs--"></a>curateLBCRs()</h3>
+<h3 id="WebOfTrust-getProtocolProxy-address-"><a class="anchor" href="#WebOfTrust-getProtocolProxy-address-"></a>getProtocolProxy(address addr) → address (external)</h3>
 
 </div>
 </div>
@@ -239,6 +315,9 @@ user should pay.</p>
 <p><a href="#UserProxy-onlyAgentOwner--">onlyAgentOwner()</a></p>
 </li>
 <li>
+<p><a href="#UserProxy-onlyProtocolProxies--">onlyProtocolProxies()</a></p>
+</li>
+<li>
 <p><a href="#Ownable-onlyOwner--">onlyOwner()</a></p>
 </li>
 <li>
@@ -251,9 +330,6 @@ user should pay.</p>
 <p><a href="#UserProxy-addAuthorisedContract-address-">addAuthorisedContract(address)</a></p>
 </li>
 <li>
-<p><a href="#UserProxy-addLBCR-address-">addLBCR(address)</a></p>
-</li>
-<li>
 <p><a href="#UserProxy-hasEnoughFunds-address-uint256-">hasEnoughFunds(address,uint256)</a></p>
 </li>
 <li>
@@ -263,7 +339,7 @@ user should pay.</p>
 <p><a href="#UserProxy-depositFunds-address-uint256-">depositFunds(address,uint256)</a></p>
 </li>
 <li>
-<p><a href="#UserProxy-getTotalBalance-address-">getTotalBalance(address)</a></p>
+<p><a href="#UserProxy-getReserveBalance-address-">getReserveBalance(address)</a></p>
 </li>
 <li>
 <p><a href="#UserProxy-proxyCall-address-bytes-">proxyCall(address,bytes)</a></p>
@@ -312,43 +388,43 @@ user should pay.</p>
 
 </div>
 <div class="sect2">
-<h3 id="UserProxy-constructor-address-address-payable-"><a class="anchor" href="#UserProxy-constructor-address-address-payable-"></a>constructor(address agent, address payable webOfTrustAddress)</h3>
+<h3 id="UserProxy-onlyProtocolProxies--"><a class="anchor" href="#UserProxy-onlyProtocolProxies--"></a>onlyProtocolProxies()</h3>
 
 </div>
 <div class="sect2">
-<h3 id="UserProxy-fallback--"><a class="anchor" href="#UserProxy-fallback--"></a>fallback()</h3>
+<h3 id="UserProxy-constructor-address-address-payable-"><a class="anchor" href="#UserProxy-constructor-address-address-payable-"></a>constructor(address agent, address payable webOfTrustAddressValue) (public)</h3>
 
 </div>
 <div class="sect2">
-<h3 id="UserProxy-addAuthorisedContract-address-"><a class="anchor" href="#UserProxy-addAuthorisedContract-address-"></a>addAuthorisedContract(address authorisedContract)</h3>
+<h3 id="UserProxy-fallback--"><a class="anchor" href="#UserProxy-fallback--"></a>fallback() (external)</h3>
 
 </div>
 <div class="sect2">
-<h3 id="UserProxy-addLBCR-address-"><a class="anchor" href="#UserProxy-addLBCR-address-"></a>addLBCR(address lbcrAddress)</h3>
+<h3 id="UserProxy-addAuthorisedContract-address-"><a class="anchor" href="#UserProxy-addAuthorisedContract-address-"></a>addAuthorisedContract(address authorisedContract) (public)</h3>
 
 </div>
 <div class="sect2">
-<h3 id="UserProxy-hasEnoughFunds-address-uint256-"><a class="anchor" href="#UserProxy-hasEnoughFunds-address-uint256-"></a>hasEnoughFunds(address reserve, uint256 amount) → bool</h3>
+<h3 id="UserProxy-hasEnoughFunds-address-uint256-"><a class="anchor" href="#UserProxy-hasEnoughFunds-address-uint256-"></a>hasEnoughFunds(address reserve, uint256 amount) → bool (internal)</h3>
 
 </div>
 <div class="sect2">
-<h3 id="UserProxy-withdrawFunds-address-uint256-"><a class="anchor" href="#UserProxy-withdrawFunds-address-uint256-"></a>withdrawFunds(address _reserve, uint256 _amount)</h3>
+<h3 id="UserProxy-withdrawFunds-address-uint256-"><a class="anchor" href="#UserProxy-withdrawFunds-address-uint256-"></a>withdrawFunds(address _reserve, uint256 _amount) (external)</h3>
 
 </div>
 <div class="sect2">
-<h3 id="UserProxy-depositFunds-address-uint256-"><a class="anchor" href="#UserProxy-depositFunds-address-uint256-"></a>depositFunds(address _reserve, uint256 _amount)</h3>
+<h3 id="UserProxy-depositFunds-address-uint256-"><a class="anchor" href="#UserProxy-depositFunds-address-uint256-"></a>depositFunds(address _reserve, uint256 _amount) (external)</h3>
 
 </div>
 <div class="sect2">
-<h3 id="UserProxy-getTotalBalance-address-"><a class="anchor" href="#UserProxy-getTotalBalance-address-"></a>getTotalBalance(address _reserve) → uint256</h3>
+<h3 id="UserProxy-getReserveBalance-address-"><a class="anchor" href="#UserProxy-getReserveBalance-address-"></a>getReserveBalance(address _reserve) → uint256 (external)</h3>
 
 </div>
 <div class="sect2">
-<h3 id="UserProxy-proxyCall-address-bytes-"><a class="anchor" href="#UserProxy-proxyCall-address-bytes-"></a>proxyCall(address target, bytes abiEncoding) → bool</h3>
+<h3 id="UserProxy-proxyCall-address-bytes-"><a class="anchor" href="#UserProxy-proxyCall-address-bytes-"></a>proxyCall(address target, bytes abiEncoding) → bool (public)</h3>
 
 </div>
 <div class="sect2">
-<h3 id="UserProxy-proxyCall-address-bytes-address-uint256-"><a class="anchor" href="#UserProxy-proxyCall-address-bytes-address-uint256-"></a>proxyCall(address target, bytes abiEncoding, address reserve, uint256 amount) → bool</h3>
+<h3 id="UserProxy-proxyCall-address-bytes-address-uint256-"><a class="anchor" href="#UserProxy-proxyCall-address-bytes-address-uint256-"></a>proxyCall(address target, bytes abiEncoding, address reserve, uint256 amount) → bool (public)</h3>
 
 </div>
 </div>
@@ -371,7 +447,7 @@ user should pay.</p>
 <p><a href="#Ownable-onlyOwner--">onlyOwner()</a></p>
 </li>
 <li>
-<p><a href="#SimpleLending-constructor-address-payable-uint256-">constructor(address payable,uint256)</a></p>
+<p><a href="#SimpleLending-constructor-address-payable-uint256-uint256-">constructor(address payable,uint256,uint256)</a></p>
 </li>
 <li>
 <p><a href="#SimpleLending-fallback--">fallback()</a></p>
@@ -407,16 +483,28 @@ user should pay.</p>
 <p><a href="#SimpleLending-hasEnoughCollateral-address-uint256-">hasEnoughCollateral(address,uint256)</a></p>
 </li>
 <li>
-<p><a href="#SimpleLending-getAccountDeposits-address-">getAccountDeposits(address)</a></p>
+<p><a href="#SimpleLending-getUserDepositsInETH-address-">getUserDepositsInETH(address)</a></p>
 </li>
 <li>
-<p><a href="#SimpleLending-getAccountBorrows-address-">getAccountBorrows(address)</a></p>
+<p><a href="#SimpleLending-getUserDepositToReserve-address-address-">getUserDepositToReserve(address,address)</a></p>
+</li>
+<li>
+<p><a href="#SimpleLending-getUserLoansInETH-address-">getUserLoansInETH(address)</a></p>
+</li>
+<li>
+<p><a href="#SimpleLending-getUserLoansFromReserve-address-address-">getUserLoansFromReserve(address,address)</a></p>
 </li>
 <li>
 <p><a href="#SimpleLending-getBorrowableAmountInETH-address-">getBorrowableAmountInETH(address)</a></p>
 </li>
 <li>
-<p><a href="#SimpleLending-getCollateralInUse-address-">getCollateralInUse(address)</a></p>
+<p><a href="#SimpleLending-isUnderCollateralised-address-">isUnderCollateralised(address)</a></p>
+</li>
+<li>
+<p><a href="#SimpleLending-getMaxAmountToLiquidateInReserve-address-address-">getMaxAmountToLiquidateInReserve(address,address)</a></p>
+</li>
+<li>
+<p><a href="#SimpleLending-getCollateralInUseInETH-address-">getCollateralInUseInETH(address)</a></p>
 </li>
 <li>
 <p><a href="#SimpleLending-conversionRate-address-address-">conversionRate(address,address)</a></p>
@@ -426,6 +514,9 @@ user should pay.</p>
 </li>
 <li>
 <p><a href="#SimpleLending-divideByConversionDecimals-uint256-">divideByConversionDecimals(uint256)</a></p>
+</li>
+<li>
+<p><a href="#SimpleLending-applyLiquidationDiscount-uint256-">applyLiquidationDiscount(uint256)</a></p>
 </li>
 <li>
 <p><a href="#Ownable-constructor--">constructor()</a></p>
@@ -464,79 +555,99 @@ user should pay.</p>
 
 </div>
 <div class="sect2">
-<h3 id="SimpleLending-constructor-address-payable-uint256-"><a class="anchor" href="#SimpleLending-constructor-address-payable-uint256-"></a>constructor(address payable webOfTrustAddress, uint256 baseCollateralisationRateValue)</h3>
+<h3 id="SimpleLending-constructor-address-payable-uint256-uint256-"><a class="anchor" href="#SimpleLending-constructor-address-payable-uint256-uint256-"></a>constructor(address payable webOfTrustAddressValue, uint256 baseCollateralisationRateValue, uint256 baseCollateralisationRateDecimalsValue) (public)</h3>
 
 </div>
 <div class="sect2">
-<h3 id="SimpleLending-fallback--"><a class="anchor" href="#SimpleLending-fallback--"></a>fallback()</h3>
+<h3 id="SimpleLending-fallback--"><a class="anchor" href="#SimpleLending-fallback--"></a>fallback() (external)</h3>
 
 </div>
 <div class="sect2">
-<h3 id="SimpleLending-setBaseCollateralisationRate-uint256-"><a class="anchor" href="#SimpleLending-setBaseCollateralisationRate-uint256-"></a>setBaseCollateralisationRate(uint256 baseCollateralisationRateValue)</h3>
+<h3 id="SimpleLending-setBaseCollateralisationRate-uint256-"><a class="anchor" href="#SimpleLending-setBaseCollateralisationRate-uint256-"></a>setBaseCollateralisationRate(uint256 baseCollateralisationRateValue) (external)</h3>
 
 </div>
 <div class="sect2">
-<h3 id="SimpleLending-getBaseCollateralisationRate--"><a class="anchor" href="#SimpleLending-getBaseCollateralisationRate--"></a>getBaseCollateralisationRate() → uint256</h3>
+<h3 id="SimpleLending-getBaseCollateralisationRate--"><a class="anchor" href="#SimpleLending-getBaseCollateralisationRate--"></a>getBaseCollateralisationRate() → uint256 (external)</h3>
 
 </div>
 <div class="sect2">
-<h3 id="SimpleLending-addReserve-address-"><a class="anchor" href="#SimpleLending-addReserve-address-"></a>addReserve(address newReserve)</h3>
+<h3 id="SimpleLending-addReserve-address-"><a class="anchor" href="#SimpleLending-addReserve-address-"></a>addReserve(address newReserve) (public)</h3>
 
 </div>
 <div class="sect2">
-<h3 id="SimpleLending-deposit-address-uint256-"><a class="anchor" href="#SimpleLending-deposit-address-uint256-"></a>deposit(address reserve, uint256 amount)</h3>
+<h3 id="SimpleLending-deposit-address-uint256-"><a class="anchor" href="#SimpleLending-deposit-address-uint256-"></a>deposit(address reserve, uint256 amount) (public)</h3>
 
 </div>
 <div class="sect2">
-<h3 id="SimpleLending-borrow-address-uint256-"><a class="anchor" href="#SimpleLending-borrow-address-uint256-"></a>borrow(address reserve, uint256 amount)</h3>
+<h3 id="SimpleLending-borrow-address-uint256-"><a class="anchor" href="#SimpleLending-borrow-address-uint256-"></a>borrow(address reserve, uint256 amount) (public)</h3>
 
 </div>
 <div class="sect2">
-<h3 id="SimpleLending-repay-address-uint256-address-"><a class="anchor" href="#SimpleLending-repay-address-uint256-address-"></a>repay(address reserve, uint256 amount, address onBehalf)</h3>
+<h3 id="SimpleLending-repay-address-uint256-address-"><a class="anchor" href="#SimpleLending-repay-address-uint256-address-"></a>repay(address reserve, uint256 amount, address onBehalf) (public)</h3>
 
 </div>
 <div class="sect2">
-<h3 id="SimpleLending-liquidate-address-address-address-uint256-"><a class="anchor" href="#SimpleLending-liquidate-address-address-address-uint256-"></a>liquidate(address borrower, address collateralReserve, address loanReserve, uint256 loanAmount)</h3>
+<h3 id="SimpleLending-liquidate-address-address-address-uint256-"><a class="anchor" href="#SimpleLending-liquidate-address-address-address-uint256-"></a>liquidate(address borrower, address collateralReserve, address loanReserve, uint256 loanAmount) (public)</h3>
 
 </div>
 <div class="sect2">
-<h3 id="SimpleLending-redeem-address-uint256-"><a class="anchor" href="#SimpleLending-redeem-address-uint256-"></a>redeem(address reserve, uint256 amount)</h3>
+<h3 id="SimpleLending-redeem-address-uint256-"><a class="anchor" href="#SimpleLending-redeem-address-uint256-"></a>redeem(address reserve, uint256 amount) (public)</h3>
 
 </div>
 <div class="sect2">
-<h3 id="SimpleLending-makePayment-address-uint256-address-payable-"><a class="anchor" href="#SimpleLending-makePayment-address-uint256-address-payable-"></a>makePayment(address reserve, uint256 amount, address payable payee)</h3>
+<h3 id="SimpleLending-makePayment-address-uint256-address-payable-"><a class="anchor" href="#SimpleLending-makePayment-address-uint256-address-payable-"></a>makePayment(address reserve, uint256 amount, address payable payee) (internal)</h3>
 
 </div>
 <div class="sect2">
-<h3 id="SimpleLending-hasEnoughCollateral-address-uint256-"><a class="anchor" href="#SimpleLending-hasEnoughCollateral-address-uint256-"></a>hasEnoughCollateral(address reserve, uint256 amount) → bool</h3>
+<h3 id="SimpleLending-hasEnoughCollateral-address-uint256-"><a class="anchor" href="#SimpleLending-hasEnoughCollateral-address-uint256-"></a>hasEnoughCollateral(address reserve, uint256 amount) → bool (public)</h3>
 
 </div>
 <div class="sect2">
-<h3 id="SimpleLending-getAccountDeposits-address-"><a class="anchor" href="#SimpleLending-getAccountDeposits-address-"></a>getAccountDeposits(address account) → uint256, uint256</h3>
+<h3 id="SimpleLending-getUserDepositsInETH-address-"><a class="anchor" href="#SimpleLending-getUserDepositsInETH-address-"></a>getUserDepositsInETH(address account) → uint256, uint256 (public)</h3>
 
 </div>
 <div class="sect2">
-<h3 id="SimpleLending-getAccountBorrows-address-"><a class="anchor" href="#SimpleLending-getAccountBorrows-address-"></a>getAccountBorrows(address account) → uint256, uint256</h3>
+<h3 id="SimpleLending-getUserDepositToReserve-address-address-"><a class="anchor" href="#SimpleLending-getUserDepositToReserve-address-address-"></a>getUserDepositToReserve(address account, address reserve) → uint256 (public)</h3>
 
 </div>
 <div class="sect2">
-<h3 id="SimpleLending-getBorrowableAmountInETH-address-"><a class="anchor" href="#SimpleLending-getBorrowableAmountInETH-address-"></a>getBorrowableAmountInETH(address account) → uint256, uint256</h3>
+<h3 id="SimpleLending-getUserLoansInETH-address-"><a class="anchor" href="#SimpleLending-getUserLoansInETH-address-"></a>getUserLoansInETH(address account) → uint256, uint256 (public)</h3>
 
 </div>
 <div class="sect2">
-<h3 id="SimpleLending-getCollateralInUse-address-"><a class="anchor" href="#SimpleLending-getCollateralInUse-address-"></a>getCollateralInUse(address account) → uint256, uint256</h3>
+<h3 id="SimpleLending-getUserLoansFromReserve-address-address-"><a class="anchor" href="#SimpleLending-getUserLoansFromReserve-address-address-"></a>getUserLoansFromReserve(address account, address reserve) → uint256 (public)</h3>
 
 </div>
 <div class="sect2">
-<h3 id="SimpleLending-conversionRate-address-address-"><a class="anchor" href="#SimpleLending-conversionRate-address-address-"></a>conversionRate(address fromReserve, address toReserve) → uint256, uint256</h3>
+<h3 id="SimpleLending-getBorrowableAmountInETH-address-"><a class="anchor" href="#SimpleLending-getBorrowableAmountInETH-address-"></a>getBorrowableAmountInETH(address account) → uint256, uint256 (public)</h3>
 
 </div>
 <div class="sect2">
-<h3 id="SimpleLending-convert-address-address-uint256-"><a class="anchor" href="#SimpleLending-convert-address-address-uint256-"></a>convert(address fromReserve, address toReserve, uint256 amount) → uint256, uint256</h3>
+<h3 id="SimpleLending-isUnderCollateralised-address-"><a class="anchor" href="#SimpleLending-isUnderCollateralised-address-"></a>isUnderCollateralised(address account) → bool (public)</h3>
 
 </div>
 <div class="sect2">
-<h3 id="SimpleLending-divideByConversionDecimals-uint256-"><a class="anchor" href="#SimpleLending-divideByConversionDecimals-uint256-"></a>divideByConversionDecimals(uint256 x) → uint256</h3>
+<h3 id="SimpleLending-getMaxAmountToLiquidateInReserve-address-address-"><a class="anchor" href="#SimpleLending-getMaxAmountToLiquidateInReserve-address-address-"></a>getMaxAmountToLiquidateInReserve(address account, address reserve) → uint256 (public)</h3>
+
+</div>
+<div class="sect2">
+<h3 id="SimpleLending-getCollateralInUseInETH-address-"><a class="anchor" href="#SimpleLending-getCollateralInUseInETH-address-"></a>getCollateralInUseInETH(address account) → uint256, uint256 (public)</h3>
+
+</div>
+<div class="sect2">
+<h3 id="SimpleLending-conversionRate-address-address-"><a class="anchor" href="#SimpleLending-conversionRate-address-address-"></a>conversionRate(address fromReserve, address toReserve) → uint256, uint256 (public)</h3>
+
+</div>
+<div class="sect2">
+<h3 id="SimpleLending-convert-address-address-uint256-"><a class="anchor" href="#SimpleLending-convert-address-address-uint256-"></a>convert(address fromReserve, address toReserve, uint256 amount) → uint256, uint256 (public)</h3>
+
+</div>
+<div class="sect2">
+<h3 id="SimpleLending-divideByConversionDecimals-uint256-"><a class="anchor" href="#SimpleLending-divideByConversionDecimals-uint256-"></a>divideByConversionDecimals(uint256 x) → uint256 (public)</h3>
+
+</div>
+<div class="sect2">
+<h3 id="SimpleLending-applyLiquidationDiscount-uint256-"><a class="anchor" href="#SimpleLending-applyLiquidationDiscount-uint256-"></a>applyLiquidationDiscount(uint256 sum) → uint256 (internal)</h3>
 
 </div>
 </div>
@@ -553,22 +664,19 @@ user should pay.</p>
 <div class="ulist">
 <ul>
 <li>
+<p><a href="#SimpleLendingProxy-onlyRegisteredAgents--">onlyRegisteredAgents()</a></p>
+</li>
+<li>
 <p><a href="#Ownable-onlyOwner--">onlyOwner()</a></p>
 </li>
 <li>
-<p><a href="#SimpleLendingProxy-constructor-address-address-payable-address-payable-">constructor(address,address payable,address payable)</a></p>
+<p><a href="#SimpleLendingProxy-constructor-address-payable-address-payable-address-payable-">constructor(address payable,address payable,address payable)</a></p>
 </li>
 <li>
 <p><a href="#SimpleLendingProxy-fallback--">fallback()</a></p>
 </li>
 <li>
-<p><a href="#SimpleLendingProxy-curate--">curate()</a></p>
-</li>
-<li>
-<p><a href="#SimpleLendingProxy-getAgentFactor-address-">getAgentFactor(address)</a></p>
-</li>
-<li>
-<p><a href="#SimpleLendingProxy-getAgentScore-address-">getAgentScore(address)</a></p>
+<p><a href="#SimpleLendingProxy-setSimpleLendingAddress-address-payable-">setSimpleLendingAddress(address payable)</a></p>
 </li>
 <li>
 <p><a href="#SimpleLendingProxy-deposit-address-uint256-">deposit(address,uint256)</a></p>
@@ -618,43 +726,39 @@ user should pay.</p>
 </ul>
 </div>
 <div class="sect2">
-<h3 id="SimpleLendingProxy-constructor-address-address-payable-address-payable-"><a class="anchor" href="#SimpleLendingProxy-constructor-address-address-payable-address-payable-"></a>constructor(address lbcrAddress, address payable webOfTrustAddress, address payable UserProxyFactoryAddress)</h3>
+<h3 id="SimpleLendingProxy-onlyRegisteredAgents--"><a class="anchor" href="#SimpleLendingProxy-onlyRegisteredAgents--"></a>onlyRegisteredAgents()</h3>
 
 </div>
 <div class="sect2">
-<h3 id="SimpleLendingProxy-fallback--"><a class="anchor" href="#SimpleLendingProxy-fallback--"></a>fallback()</h3>
+<h3 id="SimpleLendingProxy-constructor-address-payable-address-payable-address-payable-"><a class="anchor" href="#SimpleLendingProxy-constructor-address-payable-address-payable-address-payable-"></a>constructor(address payable webOfTrustAddress, address payable UserProxyFactoryAddress, address payable simpleLendingAddressValue) (public)</h3>
 
 </div>
 <div class="sect2">
-<h3 id="SimpleLendingProxy-curate--"><a class="anchor" href="#SimpleLendingProxy-curate--"></a>curate()</h3>
+<h3 id="SimpleLendingProxy-fallback--"><a class="anchor" href="#SimpleLendingProxy-fallback--"></a>fallback() (external)</h3>
 
 </div>
 <div class="sect2">
-<h3 id="SimpleLendingProxy-getAgentFactor-address-"><a class="anchor" href="#SimpleLendingProxy-getAgentFactor-address-"></a>getAgentFactor(address agent) → uint256</h3>
+<h3 id="SimpleLendingProxy-setSimpleLendingAddress-address-payable-"><a class="anchor" href="#SimpleLendingProxy-setSimpleLendingAddress-address-payable-"></a>setSimpleLendingAddress(address payable simpleLendingAddressValue) (public)</h3>
 
 </div>
 <div class="sect2">
-<h3 id="SimpleLendingProxy-getAgentScore-address-"><a class="anchor" href="#SimpleLendingProxy-getAgentScore-address-"></a>getAgentScore(address agent) → uint256</h3>
+<h3 id="SimpleLendingProxy-deposit-address-uint256-"><a class="anchor" href="#SimpleLendingProxy-deposit-address-uint256-"></a>deposit(address reserve, uint256 amount) (public)</h3>
 
 </div>
 <div class="sect2">
-<h3 id="SimpleLendingProxy-deposit-address-uint256-"><a class="anchor" href="#SimpleLendingProxy-deposit-address-uint256-"></a>deposit(address reserve, uint256 amount)</h3>
+<h3 id="SimpleLendingProxy-borrow-address-uint256-"><a class="anchor" href="#SimpleLendingProxy-borrow-address-uint256-"></a>borrow(address reserve, uint256 amount) (public)</h3>
 
 </div>
 <div class="sect2">
-<h3 id="SimpleLendingProxy-borrow-address-uint256-"><a class="anchor" href="#SimpleLendingProxy-borrow-address-uint256-"></a>borrow(address reserve, uint256 amount)</h3>
+<h3 id="SimpleLendingProxy-repay-address-uint256-address-"><a class="anchor" href="#SimpleLendingProxy-repay-address-uint256-address-"></a>repay(address reserve, uint256 amount, address onbehalf) (public)</h3>
 
 </div>
 <div class="sect2">
-<h3 id="SimpleLendingProxy-repay-address-uint256-address-"><a class="anchor" href="#SimpleLendingProxy-repay-address-uint256-address-"></a>repay(address reserve, uint256 amount, address onbehalf)</h3>
+<h3 id="SimpleLendingProxy-liquidate-address-address-address-uint256-"><a class="anchor" href="#SimpleLendingProxy-liquidate-address-address-address-uint256-"></a>liquidate(address borrower, address collateralReserve, address loanReserve, uint256 loanAmount) (public)</h3>
 
 </div>
 <div class="sect2">
-<h3 id="SimpleLendingProxy-liquidate-address-address-address-uint256-"><a class="anchor" href="#SimpleLendingProxy-liquidate-address-address-address-uint256-"></a>liquidate(address borrower, address collateralReserve, address loanReserve, uint256 loanAmount)</h3>
-
-</div>
-<div class="sect2">
-<h3 id="SimpleLendingProxy-redeem-address-uint256-"><a class="anchor" href="#SimpleLendingProxy-redeem-address-uint256-"></a>redeem(address reserve, uint256 amount)</h3>
+<h3 id="SimpleLendingProxy-redeem-address-uint256-"><a class="anchor" href="#SimpleLendingProxy-redeem-address-uint256-"></a>redeem(address reserve, uint256 amount) (public)</h3>
 
 </div>
 </div>
@@ -679,11 +783,11 @@ user should pay.</p>
 </ul>
 </div>
 <div class="sect2">
-<h3 id="ILBCR-getCompatibilityScoreWith-address-"><a class="anchor" href="#ILBCR-getCompatibilityScoreWith-address-"></a>getCompatibilityScoreWith(address protocol) → uint256</h3>
+<h3 id="ILBCR-getCompatibilityScoreWith-address-"><a class="anchor" href="#ILBCR-getCompatibilityScoreWith-address-"></a>getCompatibilityScoreWith(address protocol) → uint256 (external)</h3>
 
 </div>
 <div class="sect2">
-<h3 id="ILBCR-setCompatibilityScoreWith-address-uint256-"><a class="anchor" href="#ILBCR-setCompatibilityScoreWith-address-uint256-"></a>setCompatibilityScoreWith(address protocol, uint256 score)</h3>
+<h3 id="ILBCR-setCompatibilityScoreWith-address-uint256-"><a class="anchor" href="#ILBCR-setCompatibilityScoreWith-address-uint256-"></a>setCompatibilityScoreWith(address protocol, uint256 score) (external)</h3>
 
 </div>
 </div>
@@ -707,6 +811,18 @@ user should pay.</p>
 </li>
 <li>
 <p><a href="#LBCR-setCompatibilityScoreWith-address-uint256-">setCompatibilityScoreWith(address,uint256)</a></p>
+</li>
+<li>
+<p><a href="#LBCR-setMaintainCompatibilityScoreOnUpdate-bool-address-">setMaintainCompatibilityScoreOnUpdate(bool,address)</a></p>
+</li>
+<li>
+<p><a href="#LBCR-getMaintainCompatibilityScoreOnUpdate-address-">getMaintainCompatibilityScoreOnUpdate(address)</a></p>
+</li>
+<li>
+<p><a href="#LBCR-incrementLatestVersion--">incrementLatestVersion()</a></p>
+</li>
+<li>
+<p><a href="#LBCR-upgradeVersion--">upgradeVersion()</a></p>
 </li>
 <li>
 <p><a href="#LBCR-getLayers--">getLayers()</a></p>
@@ -757,7 +873,13 @@ user should pay.</p>
 <p><a href="#LBCR-update-address-uint256-">update(address,uint256)</a></p>
 </li>
 <li>
-<p><a href="#LBCR-curate--">curate()</a></p>
+<p><a href="#LBCR-curateIfRoundEnded--">curateIfRoundEnded()</a></p>
+</li>
+<li>
+<p><a href="#ILBCR-getCompatibilityScoreWith-address-">getCompatibilityScoreWith(address)</a></p>
+</li>
+<li>
+<p><a href="#ILBCR-setCompatibilityScoreWith-address-uint256-">setCompatibilityScoreWith(address,uint256)</a></p>
 </li>
 <li>
 <p><a href="#Ownable-constructor--">constructor()</a></p>
@@ -808,83 +930,99 @@ user should pay.</p>
 
 </div>
 <div class="sect2">
-<h3 id="LBCR-addAuthorisedContract-address-"><a class="anchor" href="#LBCR-addAuthorisedContract-address-"></a>addAuthorisedContract(address authorisedContract)</h3>
+<h3 id="LBCR-addAuthorisedContract-address-"><a class="anchor" href="#LBCR-addAuthorisedContract-address-"></a>addAuthorisedContract(address authorisedContract) (public)</h3>
 
 </div>
 <div class="sect2">
-<h3 id="LBCR-getCompatibilityScoreWith-address-"><a class="anchor" href="#LBCR-getCompatibilityScoreWith-address-"></a>getCompatibilityScoreWith(address protocol) → uint256</h3>
+<h3 id="LBCR-getCompatibilityScoreWith-address-"><a class="anchor" href="#LBCR-getCompatibilityScoreWith-address-"></a>getCompatibilityScoreWith(address protocol) → uint256 (external)</h3>
 
 </div>
 <div class="sect2">
-<h3 id="LBCR-setCompatibilityScoreWith-address-uint256-"><a class="anchor" href="#LBCR-setCompatibilityScoreWith-address-uint256-"></a>setCompatibilityScoreWith(address protocol, uint256 score)</h3>
+<h3 id="LBCR-setCompatibilityScoreWith-address-uint256-"><a class="anchor" href="#LBCR-setCompatibilityScoreWith-address-uint256-"></a>setCompatibilityScoreWith(address protocol, uint256 score) (external)</h3>
 
 </div>
 <div class="sect2">
-<h3 id="LBCR-getLayers--"><a class="anchor" href="#LBCR-getLayers--"></a>getLayers() → uint256[]</h3>
+<h3 id="LBCR-setMaintainCompatibilityScoreOnUpdate-bool-address-"><a class="anchor" href="#LBCR-setMaintainCompatibilityScoreOnUpdate-bool-address-"></a>setMaintainCompatibilityScoreOnUpdate(bool maintainCompatibilityScoreOnUpdateValue, address protocol) (external)</h3>
 
 </div>
 <div class="sect2">
-<h3 id="LBCR-setLayers-uint8---"><a class="anchor" href="#LBCR-setLayers-uint8---"></a>setLayers(uint8[] layers)</h3>
+<h3 id="LBCR-getMaintainCompatibilityScoreOnUpdate-address-"><a class="anchor" href="#LBCR-getMaintainCompatibilityScoreOnUpdate-address-"></a>getMaintainCompatibilityScoreOnUpdate(address protocol) → bool (external)</h3>
 
 </div>
 <div class="sect2">
-<h3 id="LBCR-resetLayers--"><a class="anchor" href="#LBCR-resetLayers--"></a>resetLayers()</h3>
+<h3 id="LBCR-incrementLatestVersion--"><a class="anchor" href="#LBCR-incrementLatestVersion--"></a>incrementLatestVersion() (external)</h3>
 
 </div>
 <div class="sect2">
-<h3 id="LBCR-addLayer-uint256-"><a class="anchor" href="#LBCR-addLayer-uint256-"></a>addLayer(uint256 layer)</h3>
+<h3 id="LBCR-upgradeVersion--"><a class="anchor" href="#LBCR-upgradeVersion--"></a>upgradeVersion() (external)</h3>
 
 </div>
 <div class="sect2">
-<h3 id="LBCR-getAgentFactor-address-"><a class="anchor" href="#LBCR-getAgentFactor-address-"></a>getAgentFactor(address agent) → uint256</h3>
+<h3 id="LBCR-getLayers--"><a class="anchor" href="#LBCR-getLayers--"></a>getLayers() → uint256[] (public)</h3>
 
 </div>
 <div class="sect2">
-<h3 id="LBCR-getFactor-uint256-"><a class="anchor" href="#LBCR-getFactor-uint256-"></a>getFactor(uint256 layer) → uint256</h3>
+<h3 id="LBCR-setLayers-uint8---"><a class="anchor" href="#LBCR-setLayers-uint8---"></a>setLayers(uint8[] layers) (public)</h3>
 
 </div>
 <div class="sect2">
-<h3 id="LBCR-setFactor-uint256-uint256-"><a class="anchor" href="#LBCR-setFactor-uint256-uint256-"></a>setFactor(uint256 layer, uint256 factor) → bool</h3>
+<h3 id="LBCR-resetLayers--"><a class="anchor" href="#LBCR-resetLayers--"></a>resetLayers() (external)</h3>
 
 </div>
 <div class="sect2">
-<h3 id="LBCR-getReward-uint256-"><a class="anchor" href="#LBCR-getReward-uint256-"></a>getReward(uint256 action) → uint256</h3>
+<h3 id="LBCR-addLayer-uint256-"><a class="anchor" href="#LBCR-addLayer-uint256-"></a>addLayer(uint256 layer) (external)</h3>
 
 </div>
 <div class="sect2">
-<h3 id="LBCR-setReward-uint256-uint256-"><a class="anchor" href="#LBCR-setReward-uint256-uint256-"></a>setReward(uint256 action, uint256 reward) → bool</h3>
+<h3 id="LBCR-getAgentFactor-address-"><a class="anchor" href="#LBCR-getAgentFactor-address-"></a>getAgentFactor(address agent) → uint256 (public)</h3>
 
 </div>
 <div class="sect2">
-<h3 id="LBCR-getBounds-uint256-"><a class="anchor" href="#LBCR-getBounds-uint256-"></a>getBounds(uint256 layer) → uint256, uint256</h3>
+<h3 id="LBCR-getFactor-uint256-"><a class="anchor" href="#LBCR-getFactor-uint256-"></a>getFactor(uint256 layer) → uint256 (public)</h3>
 
 </div>
 <div class="sect2">
-<h3 id="LBCR-setBounds-uint256-uint256-uint256-"><a class="anchor" href="#LBCR-setBounds-uint256-uint256-uint256-"></a>setBounds(uint256 layer, uint256 lower, uint256 upper) → bool</h3>
+<h3 id="LBCR-setFactor-uint256-uint256-"><a class="anchor" href="#LBCR-setFactor-uint256-uint256-"></a>setFactor(uint256 layer, uint256 factor) → bool (public)</h3>
 
 </div>
 <div class="sect2">
-<h3 id="LBCR-getAssignment-address-"><a class="anchor" href="#LBCR-getAssignment-address-"></a>getAssignment(address agent) → uint256 assignment</h3>
+<h3 id="LBCR-getReward-uint256-"><a class="anchor" href="#LBCR-getReward-uint256-"></a>getReward(uint256 action) → uint256 (public)</h3>
 
 </div>
 <div class="sect2">
-<h3 id="LBCR-getScore-address-"><a class="anchor" href="#LBCR-getScore-address-"></a>getScore(address agent) → uint256</h3>
+<h3 id="LBCR-setReward-uint256-uint256-"><a class="anchor" href="#LBCR-setReward-uint256-uint256-"></a>setReward(uint256 action, uint256 reward) → bool (public)</h3>
 
 </div>
 <div class="sect2">
-<h3 id="LBCR-getInteractionCount-address-"><a class="anchor" href="#LBCR-getInteractionCount-address-"></a>getInteractionCount(address agent) → uint256</h3>
+<h3 id="LBCR-getBounds-uint256-"><a class="anchor" href="#LBCR-getBounds-uint256-"></a>getBounds(uint256 layer) → uint256, uint256 (public)</h3>
 
 </div>
 <div class="sect2">
-<h3 id="LBCR-registerAgent-address-"><a class="anchor" href="#LBCR-registerAgent-address-"></a>registerAgent(address agent) → bool</h3>
+<h3 id="LBCR-setBounds-uint256-uint256-uint256-"><a class="anchor" href="#LBCR-setBounds-uint256-uint256-uint256-"></a>setBounds(uint256 layer, uint256 lower, uint256 upper) → bool (public)</h3>
 
 </div>
 <div class="sect2">
-<h3 id="LBCR-update-address-uint256-"><a class="anchor" href="#LBCR-update-address-uint256-"></a>update(address agent, uint256 action) → bool</h3>
+<h3 id="LBCR-getAssignment-address-"><a class="anchor" href="#LBCR-getAssignment-address-"></a>getAssignment(address agent) → uint256 assignment (public)</h3>
 
 </div>
 <div class="sect2">
-<h3 id="LBCR-curate--"><a class="anchor" href="#LBCR-curate--"></a>curate() → bool</h3>
+<h3 id="LBCR-getScore-address-"><a class="anchor" href="#LBCR-getScore-address-"></a>getScore(address agent) → uint256 (public)</h3>
+
+</div>
+<div class="sect2">
+<h3 id="LBCR-getInteractionCount-address-"><a class="anchor" href="#LBCR-getInteractionCount-address-"></a>getInteractionCount(address agent) → uint256 (public)</h3>
+
+</div>
+<div class="sect2">
+<h3 id="LBCR-registerAgent-address-"><a class="anchor" href="#LBCR-registerAgent-address-"></a>registerAgent(address agent) → bool (external)</h3>
+
+</div>
+<div class="sect2">
+<h3 id="LBCR-update-address-uint256-"><a class="anchor" href="#LBCR-update-address-uint256-"></a>update(address agent, uint256 action) (external)</h3>
+
+</div>
+<div class="sect2">
+<h3 id="LBCR-curateIfRoundEnded--"><a class="anchor" href="#LBCR-curateIfRoundEnded--"></a>curateIfRoundEnded() (public)</h3>
 
 </div>
 <div class="sect2">

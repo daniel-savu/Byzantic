@@ -2,7 +2,7 @@ pragma solidity ^0.5.0;
 
 interface IUserProxyFactory {
 
-    function addAgent() external;
+    function registerAgent() external;
 
     function getUserProxyAddress(address userAddress) external view returns (address payable);
 
