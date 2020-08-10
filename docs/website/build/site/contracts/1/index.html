@@ -219,7 +219,7 @@ After calling <code>addProtocolIntegration</code>, you need to call <code>getPro
 <p><strong>Return Values</strong>:</p>
 </div>
 <div class="paragraph">
-<p><code>The</code>: address of the UserProxyFactory contract</p>
+<p><code>userProxyFactoryAddress</code>: The address of the UserProxyFactory contract</p>
 </div>
 </div>
 <div class="sect2">
@@ -228,7 +228,7 @@ After calling <code>addProtocolIntegration</code>, you need to call <code>getPro
 <p><strong>Return Values</strong>:</p>
 </div>
 <div class="paragraph">
-<p><code>The</code>: address of the LBCR contract of a given protocol</p>
+<p><code>LBCR</code>: The address of the LBCR contract of a given protocol</p>
 </div>
 </div>
 <div class="sect2">
@@ -272,7 +272,7 @@ user should pay.</p>
 <p><strong>Return Values</strong>:</p>
 </div>
 <div class="paragraph">
-<p><code>User</code>: reputation, expressed as the percentage of collateral they need to pay.
+<p><code>DiscountedCollateral</code>: - User reputation, expressed as the percentage of collateral they need to pay.
 A return value of 900 means the agent only needs
 to pay 90% of the normally required collateral (so the result needs to be divided by 10^3).
 If the agent has not signed up with Byzantic, they need to pay the full collateral (100%)</p>
@@ -290,7 +290,7 @@ If the agent has not signed up with Byzantic, they need to pay the full collater
 <p><strong>Return Values</strong>:</p>
 </div>
 <div class="paragraph">
-<p><code>Number</code>: of decimals used to express the aggregate agent factor returned by <code>getAggregateAgentFactorForProtocol()</code></p>
+<p><code>agentFactorDecimals</code>: Number of decimals used to express the aggregate agent factor returned by <code>getAggregateAgentFactorForProtocol()</code></p>
 </div>
 </div>
 <div class="sect2">
@@ -405,15 +405,21 @@ If the agent has not signed up with Byzantic, they need to pay the full collater
 </div>
 <div class="sect2">
 <h3 id="UserProxy-hasEnoughFunds-address-uint256-"><a class="anchor" href="#UserProxy-hasEnoughFunds-address-uint256-"></a>hasEnoughFunds(address reserve, uint256 amount) → bool (internal)</h3>
-
+<div class="paragraph">
+<p><strong>Users</strong>: Check if an agent has at least <code>amount</code> of asset <code>reserve</code></p>
+</div>
 </div>
 <div class="sect2">
 <h3 id="UserProxy-withdrawFunds-address-uint256-"><a class="anchor" href="#UserProxy-withdrawFunds-address-uint256-"></a>withdrawFunds(address _reserve, uint256 _amount) (external)</h3>
-
+<div class="paragraph">
+<p><strong>Users</strong>: Withdraw funds from a UserProxy in Byzantic to the owner&#8217;s personal account</p>
+</div>
 </div>
 <div class="sect2">
 <h3 id="UserProxy-depositFunds-address-uint256-"><a class="anchor" href="#UserProxy-depositFunds-address-uint256-"></a>depositFunds(address _reserve, uint256 _amount) (external)</h3>
-
+<div class="paragraph">
+<p><strong>Users</strong>: Deposit funds from your account to your UserProxy in Byzantic</p>
+</div>
 </div>
 <div class="sect2">
 <h3 id="UserProxy-getReserveBalance-address-"><a class="anchor" href="#UserProxy-getReserveBalance-address-"></a>getReserveBalance(address _reserve) → uint256 (external)</h3>
@@ -421,11 +427,47 @@ If the agent has not signed up with Byzantic, they need to pay the full collater
 </div>
 <div class="sect2">
 <h3 id="UserProxy-proxyCall-address-bytes-"><a class="anchor" href="#UserProxy-proxyCall-address-bytes-"></a>proxyCall(address target, bytes abiEncoding) → bool (public)</h3>
-
+<div class="paragraph">
+<p><strong>Users</strong>: Function making calls to target protocols on behalf of users, for transactions that do not involve sending assets.</p>
+</div>
+<div class="paragraph">
+<p><strong>Developers</strong>: The <code>reserve</code> and <code>amount</code> are set to zero and the other <code>proxyCall</code> function is called. The name "proxyCall" stands
+for the fact that the UserProxy intermediates between a user and the target protocol.</p>
+</div>
+<div class="paragraph">
+<p><strong>Parameters</strong>:</p>
+</div>
+<div class="paragraph">
+<p><code>target</code>: Address of contract in target protocol to call</p>
+</div>
+<div class="paragraph">
+<p><code>abiEncoding</code>: Encoding produced by the Target Protocol Proxy, which packs the call to the correct function and contract.</p>
+</div>
 </div>
 <div class="sect2">
 <h3 id="UserProxy-proxyCall-address-bytes-address-uint256-"><a class="anchor" href="#UserProxy-proxyCall-address-bytes-address-uint256-"></a>proxyCall(address target, bytes abiEncoding, address reserve, uint256 amount) → bool (public)</h3>
-
+<div class="paragraph">
+<p><strong>Users</strong>: Function making calls to target protocols on behalf of users, for both asset-sending transactions and non-asset-sending ones.</p>
+</div>
+<div class="paragraph">
+<p><strong>Developers</strong>: The name "proxyCall" stands for the fact that the UserProxy intermediates between a user and the target protocol.</p>
+</div>
+<div class="paragraph">
+<p><strong>Parameters</strong>:</p>
+</div>
+<div class="paragraph">
+<p><code>target</code>: Address of contract in target protocol to call</p>
+</div>
+<div class="paragraph">
+<p><code>abiEncoding</code>: Encoding produced by the Target Protocol Proxy, which packs the call to the correct function and contract.</p>
+</div>
+<div class="paragraph">
+<p><code>reserve</code>: Address of the asset being submitted. ETH transfers are perfoed using
+<code>0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE</code> as the reserve. Other addresses are considered ERC-20 tokens by default</p>
+</div>
+<div class="paragraph">
+<p><code>amount</code>: Quantity of asset <code>reserve</code> to send along with the call</p>
+</div>
 </div>
 </div>
 </div>
@@ -743,23 +785,92 @@ If the agent has not signed up with Byzantic, they need to pay the full collater
 </div>
 <div class="sect2">
 <h3 id="SimpleLendingProxy-deposit-address-uint256-"><a class="anchor" href="#SimpleLendingProxy-deposit-address-uint256-"></a>deposit(address reserve, uint256 amount) (public)</h3>
-
+<div class="paragraph">
+<p><strong>Users</strong>: Function that packs the call to the <code>deposit</code> function in <code>SimpleLending</code> as an abi enconding and then calls
+the <code>msg.sender&#8217;s `UserProxy</code> to call <code>SimpleLending</code> with the abi encoding</p>
+</div>
+<div class="paragraph">
+<p><strong>Parameters</strong>:</p>
+</div>
+<div class="paragraph">
+<p><code>reserve</code>: Addres of asset to deposit in <code>SimpleLending</code></p>
+</div>
+<div class="paragraph">
+<p><code>amount</code>: Quantity of <code>reserve</code> to deposit in <code>SimpleLending</code></p>
+</div>
 </div>
 <div class="sect2">
 <h3 id="SimpleLendingProxy-borrow-address-uint256-"><a class="anchor" href="#SimpleLendingProxy-borrow-address-uint256-"></a>borrow(address reserve, uint256 amount) (public)</h3>
-
+<div class="paragraph">
+<p><strong>Users</strong>: Function that packs the call to the <code>borrow</code> function in <code>SimpleLending</code> as an abi enconding and then calls
+the <code>msg.sender&#8217;s `UserProxy</code> to call <code>SimpleLending</code> with the abi encoding</p>
+</div>
+<div class="paragraph">
+<p><strong>Parameters</strong>:</p>
+</div>
+<div class="paragraph">
+<p><code>reserve</code>: Addres of asset to borrow from <code>SimpleLending</code></p>
+</div>
+<div class="paragraph">
+<p><code>amount</code>: Quantity of <code>reserve</code> to borrow from <code>SimpleLending</code></p>
+</div>
 </div>
 <div class="sect2">
 <h3 id="SimpleLendingProxy-repay-address-uint256-address-"><a class="anchor" href="#SimpleLendingProxy-repay-address-uint256-address-"></a>repay(address reserve, uint256 amount, address onbehalf) (public)</h3>
-
+<div class="paragraph">
+<p><strong>Users</strong>: Function that packs the call to the <code>repay</code> function (repaying a loan) in <code>SimpleLending</code> as an abi enconding and then calls
+the <code>msg.sender&#8217;s `UserProxy</code> to call <code>SimpleLending</code> with the abi encoding</p>
+</div>
+<div class="paragraph">
+<p><strong>Parameters</strong>:</p>
+</div>
+<div class="paragraph">
+<p><code>reserve</code>: Addres of asset to repay to <code>SimpleLending</code></p>
+</div>
+<div class="paragraph">
+<p><code>amount</code>: Quantity of <code>reserve</code> to repay to <code>SimpleLending</code></p>
+</div>
+<div class="paragraph">
+<p><code>onbehalf</code>: User to repay the bloan on behalf of</p>
+</div>
 </div>
 <div class="sect2">
 <h3 id="SimpleLendingProxy-liquidate-address-address-address-uint256-"><a class="anchor" href="#SimpleLendingProxy-liquidate-address-address-address-uint256-"></a>liquidate(address borrower, address collateralReserve, address loanReserve, uint256 loanAmount) (public)</h3>
-
+<div class="paragraph">
+<p><strong>Users</strong>: Function that packs the call to the <code>liquidate</code> function in <code>SimpleLending</code> as an abi enconding and then calls
+the <code>msg.sender&#8217;s `UserProxy</code> to call <code>SimpleLending</code> with the abi encoding</p>
+</div>
+<div class="paragraph">
+<p><strong>Parameters</strong>:</p>
+</div>
+<div class="paragraph">
+<p><code>borrower</code>: Addres of user to liquidate</p>
+</div>
+<div class="paragraph">
+<p><code>collateralReserve</code>: Collateral reserve belonging to <code>borrower</code> to be paid back in as a result of the liquidation</p>
+</div>
+<div class="paragraph">
+<p><code>loanReserve</code>: Addres of loan asset to liquidate in <code>SimpleLending</code></p>
+</div>
+<div class="paragraph">
+<p><code>loanAmount</code>: Quantity of <code>reserve</code> to liquidate from <code>SimpleLending</code></p>
+</div>
 </div>
 <div class="sect2">
 <h3 id="SimpleLendingProxy-redeem-address-uint256-"><a class="anchor" href="#SimpleLendingProxy-redeem-address-uint256-"></a>redeem(address reserve, uint256 amount) (public)</h3>
-
+<div class="paragraph">
+<p><strong>Users</strong>: Function that packs the call to the <code>redeem</code> function in <code>SimpleLending</code> as an abi enconding and then calls
+the <code>msg.sender&#8217;s `UserProxy</code> to call <code>SimpleLending</code> with the abi encoding</p>
+</div>
+<div class="paragraph">
+<p><strong>Parameters</strong>:</p>
+</div>
+<div class="paragraph">
+<p><code>reserve</code>: Addres of asset to redeem deposited funds from <code>SimpleLending</code></p>
+</div>
+<div class="paragraph">
+<p><code>amount</code>: Quantity of <code>reserve</code> to redeem deposited funds from <code>SimpleLending</code></p>
+</div>
 </div>
 </div>
 </div>
@@ -935,15 +1046,43 @@ If the agent has not signed up with Byzantic, they need to pay the full collater
 </div>
 <div class="sect2">
 <h3 id="LBCR-getCompatibilityScoreWith-address-"><a class="anchor" href="#LBCR-getCompatibilityScoreWith-address-"></a>getCompatibilityScoreWith(address protocol) → uint256 (external)</h3>
-
+<div class="paragraph">
+<p><strong>Users</strong>: Returns a number between 0 and 100 representing the compatibility score between the current LBCR and the
+LBCRs of <code>protocol</code>. If no score was set for <code>protocol</code>, returns 0</p>
+</div>
+<div class="paragraph">
+<p><strong>Parameters</strong>:</p>
+</div>
+<div class="paragraph">
+<p><code>protocol</code>: Retrieve the compatibility between this protocol and <code>protocol</code></p>
+</div>
 </div>
 <div class="sect2">
 <h3 id="LBCR-setCompatibilityScoreWith-address-uint256-"><a class="anchor" href="#LBCR-setCompatibilityScoreWith-address-uint256-"></a>setCompatibilityScoreWith(address protocol, uint256 score) (external)</h3>
-
+<div class="paragraph">
+<p><strong>Users</strong>: Set a number between 0 and 100 representing the compatibility score between the current LBCR and the
+LBCRs of <code>protocol</code>. When a new compatibility score is set, the <code>maintainCompatibilityScoreOnUpdate[protocol]</code>
+is automatically set to <code>true</code> (such that when <code>protocol</code> update their LBCR version, the compatibility score
+set now is maintained)</p>
+</div>
+<div class="paragraph">
+<p><strong>Parameters</strong>:</p>
+</div>
+<div class="paragraph">
+<p><code>protocol</code>: Address of `protocol&#8217;s LBCR to set compatibility score with</p>
+</div>
+<div class="paragraph">
+<p><code>score</code>: Compatibility score</p>
+</div>
 </div>
 <div class="sect2">
 <h3 id="LBCR-setMaintainCompatibilityScoreOnUpdate-bool-address-"><a class="anchor" href="#LBCR-setMaintainCompatibilityScoreOnUpdate-bool-address-"></a>setMaintainCompatibilityScoreOnUpdate(bool maintainCompatibilityScoreOnUpdateValue, address protocol) (external)</h3>
-
+<div class="paragraph">
+<p><strong>Users</strong>: Update the <code>maintainCompatibilityScoreOnUpdate</code> map with respect to <code>protocol</code>. A <code>true</code> value means that
+if <code>protocol</code> update their LBCR version, the current protocol trusts that the update will not be disruptive and
+the compatiblity score should remain the same. A <code>false</code> value means that new updates to the LBCR of <code>protocol</code>
+are untrusted and the compatibility score will default to zero</p>
+</div>
 </div>
 <div class="sect2">
 <h3 id="LBCR-getMaintainCompatibilityScoreOnUpdate-address-"><a class="anchor" href="#LBCR-getMaintainCompatibilityScoreOnUpdate-address-"></a>getMaintainCompatibilityScoreOnUpdate(address protocol) → bool (external)</h3>
@@ -951,11 +1090,16 @@ If the agent has not signed up with Byzantic, they need to pay the full collater
 </div>
 <div class="sect2">
 <h3 id="LBCR-incrementLatestVersion--"><a class="anchor" href="#LBCR-incrementLatestVersion--"></a>incrementLatestVersion() (external)</h3>
-
+<div class="paragraph">
+<p><strong>Users</strong>: Increment <code>_latestVersion</code> to start setting parameters of a new LBCR version</p>
+</div>
 </div>
 <div class="sect2">
 <h3 id="LBCR-upgradeVersion--"><a class="anchor" href="#LBCR-upgradeVersion--"></a>upgradeVersion() (external)</h3>
-
+<div class="paragraph">
+<p><strong>Users</strong>: Upgrade the LBCR to a new version by setting <code>_currentVersion</code> (the variable used to index the version
+parameter maps) to <code>_latestVersion</code></p>
+</div>
 </div>
 <div class="sect2">
 <h3 id="LBCR-getLayers--"><a class="anchor" href="#LBCR-getLayers--"></a>getLayers() → uint256[] (public)</h3>
@@ -963,67 +1107,107 @@ If the agent has not signed up with Byzantic, they need to pay the full collater
 </div>
 <div class="sect2">
 <h3 id="LBCR-setLayers-uint8---"><a class="anchor" href="#LBCR-setLayers-uint8---"></a>setLayers(uint8[] layers) (public)</h3>
-
+<div class="paragraph">
+<p><strong>Users</strong>: Set layer indexes</p>
+</div>
 </div>
 <div class="sect2">
 <h3 id="LBCR-resetLayers--"><a class="anchor" href="#LBCR-resetLayers--"></a>resetLayers() (external)</h3>
-
+<div class="paragraph">
+<p><strong>Users</strong>: Reset layer indexes</p>
+</div>
 </div>
 <div class="sect2">
 <h3 id="LBCR-addLayer-uint256-"><a class="anchor" href="#LBCR-addLayer-uint256-"></a>addLayer(uint256 layer) (external)</h3>
-
+<div class="paragraph">
+<p><strong>Users</strong>: Add a new index to the array of layer indexes</p>
+</div>
 </div>
 <div class="sect2">
 <h3 id="LBCR-getAgentFactor-address-"><a class="anchor" href="#LBCR-getAgentFactor-address-"></a>getAgentFactor(address agent) → uint256 (public)</h3>
-
+<div class="paragraph">
+<p><strong>Users</strong>: Get time discounted agent factor (a value between 0 and 1),
+representing the discounted collateral <code>agent</code> should pay</p>
+</div>
 </div>
 <div class="sect2">
 <h3 id="LBCR-getFactor-uint256-"><a class="anchor" href="#LBCR-getFactor-uint256-"></a>getFactor(uint256 layer) → uint256 (public)</h3>
-
+<div class="paragraph">
+<p><strong>Users</strong>: Get the <code>layer</code> factor that the agent is currently in. Usage of this function is discouraged,
+as <code>getAgentFactor</code> provides better game theoretic incentives to behave well</p>
+</div>
 </div>
 <div class="sect2">
-<h3 id="LBCR-setFactor-uint256-uint256-"><a class="anchor" href="#LBCR-setFactor-uint256-uint256-"></a>setFactor(uint256 layer, uint256 factor) → bool (public)</h3>
-
+<h3 id="LBCR-setFactor-uint256-uint256-"><a class="anchor" href="#LBCR-setFactor-uint256-uint256-"></a>setFactor(uint256 layer, uint256 factor) (public)</h3>
+<div class="paragraph">
+<p><strong>Users</strong>: Set the collateralisation <code>factor</code> of a <code>layer</code> index. The <code>factor</code> is a value between 0 and 1</p>
+</div>
 </div>
 <div class="sect2">
 <h3 id="LBCR-getReward-uint256-"><a class="anchor" href="#LBCR-getReward-uint256-"></a>getReward(uint256 action) → uint256 (public)</h3>
-
+<div class="paragraph">
+<p><strong>Return Values</strong>:</p>
+</div>
+<div class="paragraph">
+<p><code>reward</code>: The score an agent receives after performing a certain action. Assumes actions have fixed rewards.</p>
+</div>
 </div>
 <div class="sect2">
 <h3 id="LBCR-setReward-uint256-uint256-"><a class="anchor" href="#LBCR-setReward-uint256-uint256-"></a>setReward(uint256 action, uint256 reward) → bool (public)</h3>
-
+<div class="paragraph">
+<p><strong>Users</strong>: Set the <code>reward</code> for a certain <code>action</code></p>
+</div>
 </div>
 <div class="sect2">
 <h3 id="LBCR-getBounds-uint256-"><a class="anchor" href="#LBCR-getBounds-uint256-"></a>getBounds(uint256 layer) → uint256, uint256 (public)</h3>
-
+<div class="paragraph">
+<p><strong>Users</strong>: Get the pair (<code>lowerScoreBound</code>, <code>upperScoreBound</code>) representing the criteria for demoting or
+promoting an agent in the LBCR</p>
+</div>
 </div>
 <div class="sect2">
 <h3 id="LBCR-setBounds-uint256-uint256-uint256-"><a class="anchor" href="#LBCR-setBounds-uint256-uint256-uint256-"></a>setBounds(uint256 layer, uint256 lower, uint256 upper) → bool (public)</h3>
-
+<div class="paragraph">
+<p><strong>Users</strong>: Given a <code>layer</code> index, set the pair (<code>lowerScoreBound</code>, <code>upperScoreBound</code>) representing the
+criteria for demoting or promoting an agent in the LBCR</p>
+</div>
 </div>
 <div class="sect2">
 <h3 id="LBCR-getAssignment-address-"><a class="anchor" href="#LBCR-getAssignment-address-"></a>getAssignment(address agent) → uint256 assignment (public)</h3>
-
+<div class="paragraph">
+<p><strong>Users</strong>: Get layer index representing the assignment of <code>agent</code> in the current LBCR round</p>
+</div>
 </div>
 <div class="sect2">
 <h3 id="LBCR-getScore-address-"><a class="anchor" href="#LBCR-getScore-address-"></a>getScore(address agent) → uint256 (public)</h3>
-
+<div class="paragraph">
+<p><strong>Users</strong>: Get the score of <code>agent</code> in the current LBCR round</p>
+</div>
 </div>
 <div class="sect2">
 <h3 id="LBCR-getInteractionCount-address-"><a class="anchor" href="#LBCR-getInteractionCount-address-"></a>getInteractionCount(address agent) → uint256 (public)</h3>
-
+<div class="paragraph">
+<p><strong>Users</strong>: Get the number of actions performed by <code>agent</code> since joining the LBCR</p>
+</div>
 </div>
 <div class="sect2">
 <h3 id="LBCR-registerAgent-address-"><a class="anchor" href="#LBCR-registerAgent-address-"></a>registerAgent(address agent) → bool (external)</h3>
-
+<div class="paragraph">
+<p><strong>Users</strong>: Sign <code>agent</code> up to the LBCR. They are initially assigned to the first layer</p>
+</div>
 </div>
 <div class="sect2">
 <h3 id="LBCR-update-address-uint256-"><a class="anchor" href="#LBCR-update-address-uint256-"></a>update(address agent, uint256 action) (external)</h3>
-
+<div class="paragraph">
+<p><strong>Users</strong>: Update the score of <code>agent</code> given they have performed the action encoded as <code>action</code></p>
+</div>
 </div>
 <div class="sect2">
 <h3 id="LBCR-curateIfRoundEnded--"><a class="anchor" href="#LBCR-curateIfRoundEnded--"></a>curateIfRoundEnded() (public)</h3>
-
+<div class="paragraph">
+<p><strong>Users</strong>: If <code>_blockperiod</code> blocks have elapsed since the current round started, the round will end
+and agents will be curated into new layer positions</p>
+</div>
 </div>
 <div class="sect2">
 <h3 id="LBCR-NewBound-uint256-uint256-"><a class="anchor" href="#LBCR-NewBound-uint256-uint256-"></a>NewBound(uint256 lower, uint256 upper)</h3>
