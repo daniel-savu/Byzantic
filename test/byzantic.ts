@@ -19,6 +19,8 @@ const UserProxy = artifacts.require("UserProxy");
 const LBCR = artifacts.require("LBCR");
 const SimpleLending = artifacts.require("SimpleLending");
 const DaiMock = artifacts.require("DaiMock");
+const ZkIdentity = artifacts.require("ZkIdentity");
+
 // const AaveCollateralManager = artifacts.require("AaveCollateralManager");
 
 const privateKey = "01ad2f5ee476f3559b0d2eb8ec22968e847f0dcf3e1fc7ec02e57ecce5000548";
@@ -46,6 +48,7 @@ let simpleLendingTwoLBCR: typeof SimpleLending
 let simpleLendingTwoProxy: typeof WebOfTrust
 
 let daiMock: typeof WebOfTrust
+let zkIdentity: typeof ZkIdentity
 
 
 contract("SimpleLending Protocol", accounts => {
@@ -152,6 +155,8 @@ contract("SimpleLending Protocol", accounts => {
         accs = await web3.eth.getAccounts();
         webOfTrust = await WebOfTrust.new();
         daiMock = await DaiMock.new();
+        zkIdentity = await ZkIdentity.new();
+
         let baseCollateralisationRateValue = 1500;
         let baseCollateralisationRateDecimals = 3;
         let userProxyFactoryAddress = await webOfTrust.getUserProxyFactoryAddress();
@@ -159,11 +164,11 @@ contract("SimpleLending Protocol", accounts => {
         simpleLending = await SimpleLending.new(webOfTrust.address, baseCollateralisationRateValue, baseCollateralisationRateDecimals);
         simpleLendingTwo = await SimpleLending.new(webOfTrust.address, baseCollateralisationRateValue, baseCollateralisationRateDecimals);
 
-        simpleLendingProxy = await SimpleLendingProxy.new(webOfTrust.address, userProxyFactoryAddress, simpleLending.address);
+        simpleLendingProxy = await SimpleLendingProxy.new(webOfTrust.address, userProxyFactoryAddress, simpleLending.address, zkIdentity.address);
         await webOfTrust.addProtocolIntegration(simpleLending.address, simpleLendingProxy.address);
         await initializeLendingProtocol(simpleLending.address);
 
-        simpleLendingTwoProxy = await SimpleLendingProxy.new(webOfTrust.address, userProxyFactoryAddress, simpleLendingTwo.address);
+        simpleLendingTwoProxy = await SimpleLendingProxy.new(webOfTrust.address, userProxyFactoryAddress, simpleLendingTwo.address, zkIdentity.address);
         await webOfTrust.addProtocolIntegration(simpleLendingTwo.address, simpleLendingTwoProxy.address);
         await initializeLendingProtocol(simpleLendingTwo.address);
 

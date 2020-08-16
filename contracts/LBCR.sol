@@ -44,8 +44,6 @@ contract LBCR is Ownable, ILBCR {
 
     constructor() public {
         addAuthorisedContract(msg.sender);
-        // console.log(msg.sender);
-        // console.log(owner());
         _decimals = 3; // e.g. a factor of 1500 is equal to 1.5 times the collateral
         _round = 0; // init rounds
         

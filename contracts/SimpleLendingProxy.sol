@@ -5,6 +5,7 @@ import "@nomiclabs/buidler/console.sol";
 import "./WebOfTrust.sol";
 import "./UserProxy.sol";
 import "./UserProxyFactory.sol";
+import "./IZkIdentity.sol";
 
 /// @notice Example contract to act as a Protocol Proxy template
 contract SimpleLendingProxy is Ownable {
@@ -21,15 +22,18 @@ contract SimpleLendingProxy is Ownable {
     WebOfTrust webOfTrust;
     UserProxyFactory userProxyFactory;
     address payable simpleLendingAddress;
+    address zkIdentityAddress;
 
     constructor(
         address payable webOfTrustAddress,
         address payable UserProxyFactoryAddress,
-        address payable simpleLendingAddressValue
+        address payable simpleLendingAddressValue,
+        address zkIdentityAddressValue
     ) public {
         webOfTrust = WebOfTrust(webOfTrustAddress);
         userProxyFactory = UserProxyFactory(UserProxyFactoryAddress);
         simpleLendingAddress = simpleLendingAddressValue;
+        zkIdentityAddress = zkIdentityAddressValue;
         depositAction = 1;
         borrowAction = 2;
         repayAction = 3;
@@ -54,6 +58,49 @@ contract SimpleLendingProxy is Ownable {
 
     // LendingPool contract
 
+    function userProxyCall(
+        bytes memory abiEncoding, 
+        address callerAddress, 
+        uint256 action, 
+        address reserve, 
+        uint256 amount
+    ) private {
+        UserProxy userProxy = UserProxy(userProxyFactory.getUserProxyAddress(callerAddress));
+        bool success = userProxy.proxyCall(simpleLendingAddress, abiEncoding, reserve, amount);
+        require(success, "SimpleLending action failed");
+        webOfTrust.updateLBCR(simpleLendingAddress, address(userProxy), action);
+    }
+
+    function userProxyCall(
+        bytes memory abiEncoding, 
+        address callerAddress, 
+        uint256 action
+    ) private {
+        UserProxy userProxy = UserProxy(userProxyFactory.getUserProxyAddress(callerAddress));
+        bool success = userProxy.proxyCall(simpleLendingAddress, abiEncoding);
+        require(success, "SimpleLending action failed");
+        webOfTrust.updateLBCR(simpleLendingAddress, address(userProxy), action);
+    }
+
+    function depositPrivately(
+        address reputationAddress, 
+        bytes32 firstNewHashValue, 
+        bytes32 secondNewHashValue, 
+        bytes32[] memory proof,
+        address reserve,
+        uint256 amount
+    ) public onlyRegisteredAgents {
+        bool isIdentityProofValid = IZkIdentity(zkIdentityAddress).proveIdentityAndCall(reputationAddress, firstNewHashValue, secondNewHashValue, proof);
+        require(isIdentityProofValid, "invalid identity proof");
+
+        bytes memory abiEncoding = abi.encodeWithSignature(
+            "deposit(address,uint256)",
+            reserve,
+            amount
+        );
+        userProxyCall(abiEncoding, reputationAddress, depositAction, reserve, amount);
+    }
+
     /// @notice Function that packs the call to the `deposit` function in `SimpleLending` as an abi enconding and then calls 
     /// the `msg.sender`'s `UserProxy` to call `SimpleLending` with the abi encoding
     /// @param reserve Addres of asset to deposit in `SimpleLending`
@@ -64,10 +111,26 @@ contract SimpleLendingProxy is Ownable {
             reserve,
             amount
         );
-        UserProxy userProxy = UserProxy(userProxyFactory.getUserProxyAddress(msg.sender));
-        bool success = userProxy.proxyCall(simpleLendingAddress, abiEncoding, reserve, amount);
-        require(success, "deposit failed");
-        webOfTrust.updateLBCR(simpleLendingAddress, address(userProxy), depositAction);
+        userProxyCall(abiEncoding, msg.sender, depositAction, reserve, amount);
+    }
+
+    function borrowPrivately(
+        address reputationAddress, 
+        bytes32 firstNewHashValue, 
+        bytes32 secondNewHashValue, 
+        bytes32[] memory proof,
+        address reserve,
+        uint256 amount
+    ) public onlyRegisteredAgents {
+        bool isIdentityProofValid = IZkIdentity(zkIdentityAddress).proveIdentityAndCall(reputationAddress, firstNewHashValue, secondNewHashValue, proof);
+        require(isIdentityProofValid, "invalid identity proof");
+
+        bytes memory abiEncoding = abi.encodeWithSignature(
+            "borrow(address,uint256)",
+            reserve,
+            amount
+        );
+        userProxyCall(abiEncoding, reputationAddress, borrowAction);
     }
 
     /// @notice Function that packs the call to the `borrow` function in `SimpleLending` as an abi enconding and then calls 
@@ -80,10 +143,28 @@ contract SimpleLendingProxy is Ownable {
             reserve,
             amount
         );
-        UserProxy userProxy = UserProxy(userProxyFactory.getUserProxyAddress(msg.sender));
-        bool success = userProxy.proxyCall(simpleLendingAddress, abiEncoding);
-        require(success, "borrow failed");
-        webOfTrust.updateLBCR(simpleLendingAddress, address(userProxy), borrowAction);
+        userProxyCall(abiEncoding, msg.sender, borrowAction);
+    }
+
+    function repayPrivately(
+        address reputationAddress, 
+        bytes32 firstNewHashValue, 
+        bytes32 secondNewHashValue, 
+        bytes32[] memory proof,
+        address reserve,
+        uint256 amount,
+        address onbehalf
+    ) public onlyRegisteredAgents {
+        bool isIdentityProofValid = IZkIdentity(zkIdentityAddress).proveIdentityAndCall(reputationAddress, firstNewHashValue, secondNewHashValue, proof);
+        require(isIdentityProofValid, "invalid identity proof");
+
+        bytes memory abiEncoding = abi.encodeWithSignature(
+            "repay(address,uint256,address)",
+            reserve,
+            amount,
+            onbehalf
+        );
+        userProxyCall(abiEncoding, reputationAddress, repayAction, reserve, amount);
     }
 
     /// @notice Function that packs the call to the `repay` function (repaying a loan) in `SimpleLending` as an abi enconding and then calls 
@@ -98,10 +179,30 @@ contract SimpleLendingProxy is Ownable {
             amount,
             onbehalf
         );
-        UserProxy userProxy = UserProxy(userProxyFactory.getUserProxyAddress(msg.sender));
-        bool success = userProxy.proxyCall(simpleLendingAddress, abiEncoding, reserve, amount);
-        require(success, "repayment failed");
-        webOfTrust.updateLBCR(simpleLendingAddress, address(userProxy), repayAction);
+        userProxyCall(abiEncoding, msg.sender, repayAction, reserve, amount);
+    }
+
+    function liquidatePrivately(
+        address reputationAddress, 
+        bytes32 firstNewHashValue, 
+        bytes32 secondNewHashValue, 
+        bytes32[] memory proof,
+        address borrower,
+        address collateralReserve,
+        address loanReserve,
+        uint256 loanAmount
+    ) public onlyRegisteredAgents {
+        bool isIdentityProofValid = IZkIdentity(zkIdentityAddress).proveIdentityAndCall(reputationAddress, firstNewHashValue, secondNewHashValue, proof);
+        require(isIdentityProofValid, "invalid identity proof");
+
+        bytes memory abiEncoding = abi.encodeWithSignature(
+            "liquidate(address,address,address,uint256)",
+            borrower,
+            collateralReserve,
+            loanReserve,
+            loanAmount
+        );
+        userProxyCall(abiEncoding, reputationAddress, liquidateAction, loanReserve, loanAmount);
     }
 
     /// @notice Function that packs the call to the `liquidate` function in `SimpleLending` as an abi enconding and then calls 
@@ -118,11 +219,26 @@ contract SimpleLendingProxy is Ownable {
             loanReserve,
             loanAmount
         );
-        UserProxy userProxy = UserProxy(userProxyFactory.getUserProxyAddress(msg.sender));
-        bool success = userProxy.proxyCall(simpleLendingAddress, abiEncoding, loanReserve, loanAmount);
-        require(success, "liquidation failed");
-        webOfTrust.updateLBCR(simpleLendingAddress, address(userProxy), liquidateAction);
-        // there is no call to updateLBCR for the liquidated, as the score for being liquidated is 0
+        userProxyCall(abiEncoding, msg.sender, liquidateAction, loanReserve, loanAmount);
+    }
+
+    function redeemPrivately(
+        address reputationAddress, 
+        bytes32 firstNewHashValue, 
+        bytes32 secondNewHashValue, 
+        bytes32[] memory proof,
+        address reserve,
+        uint256 amount
+    ) public onlyRegisteredAgents {
+        bool isIdentityProofValid = IZkIdentity(zkIdentityAddress).proveIdentityAndCall(reputationAddress, firstNewHashValue, secondNewHashValue, proof);
+        require(isIdentityProofValid, "invalid identity proof");
+
+        bytes memory abiEncoding = abi.encodeWithSignature(
+            "redeem(address,uint256)",
+            reserve,
+            amount
+        );
+        userProxyCall(abiEncoding, reputationAddress, redeemAction);
     }
 
     /// @notice Function that packs the call to the `redeem` function in `SimpleLending` as an abi enconding and then calls 
@@ -135,12 +251,8 @@ contract SimpleLendingProxy is Ownable {
             reserve,
             amount
         );
-        UserProxy userProxy = UserProxy(userProxyFactory.getUserProxyAddress(msg.sender));
-        bool success = userProxy.proxyCall(simpleLendingAddress, abiEncoding);
-        require(success, "redeem failed");
-        webOfTrust.updateLBCR(simpleLendingAddress, address(userProxy), redeemAction);
+        userProxyCall(abiEncoding, msg.sender, redeemAction);
     }
 
 }
-
 
