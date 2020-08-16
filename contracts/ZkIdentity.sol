@@ -1,25 +1,26 @@
 pragma solidity ^0.5.0;
 
-// import "../zkp/verifier.sol";
+import "./Verifier.sol";
 import "./IProofValidator.sol";
+import "@nomiclabs/buidler/console.sol";
 
 contract ZkIdentity {
 
     mapping(address => bytes32[2]) reputationAddressAuthenticator;
     address validatorContract;
     
-    // constructor(
-    //     address validatorContractAddress
-    // ) public {
-    //     validatorContract = validatorContractAddress;
-    // }
+    constructor(
+        address validatorContractAddress
+    ) public {
+        validatorContract = validatorContractAddress;
+    }
 
     function setReputationAddressAuthentication(bytes32 firstHalfOfHash, bytes32 secondHalfOfHash) external {
         reputationAddressAuthenticator[msg.sender][0] = firstHalfOfHash;
         reputationAddressAuthenticator[msg.sender][1] = secondHalfOfHash;
     }
 
-    function proveIdentityAndCall(
+    function proveIdentity(
         address reputationAddress, 
         bytes32 firstNewHashValue, 
         bytes32 secondNewHashValue, 

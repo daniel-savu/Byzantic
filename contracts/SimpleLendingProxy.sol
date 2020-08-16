@@ -90,7 +90,7 @@ contract SimpleLendingProxy is Ownable {
         address reserve,
         uint256 amount
     ) public onlyRegisteredAgents {
-        bool isIdentityProofValid = IZkIdentity(zkIdentityAddress).proveIdentityAndCall(reputationAddress, firstNewHashValue, secondNewHashValue, proof);
+        bool isIdentityProofValid = IZkIdentity(zkIdentityAddress).proveIdentity(reputationAddress, firstNewHashValue, secondNewHashValue, proof);
         require(isIdentityProofValid, "invalid identity proof");
 
         bytes memory abiEncoding = abi.encodeWithSignature(
@@ -122,7 +122,7 @@ contract SimpleLendingProxy is Ownable {
         address reserve,
         uint256 amount
     ) public onlyRegisteredAgents {
-        bool isIdentityProofValid = IZkIdentity(zkIdentityAddress).proveIdentityAndCall(reputationAddress, firstNewHashValue, secondNewHashValue, proof);
+        bool isIdentityProofValid = IZkIdentity(zkIdentityAddress).proveIdentity(reputationAddress, firstNewHashValue, secondNewHashValue, proof);
         require(isIdentityProofValid, "invalid identity proof");
 
         bytes memory abiEncoding = abi.encodeWithSignature(
@@ -155,7 +155,7 @@ contract SimpleLendingProxy is Ownable {
         uint256 amount,
         address onbehalf
     ) public onlyRegisteredAgents {
-        bool isIdentityProofValid = IZkIdentity(zkIdentityAddress).proveIdentityAndCall(reputationAddress, firstNewHashValue, secondNewHashValue, proof);
+        bool isIdentityProofValid = IZkIdentity(zkIdentityAddress).proveIdentity(reputationAddress, firstNewHashValue, secondNewHashValue, proof);
         require(isIdentityProofValid, "invalid identity proof");
 
         bytes memory abiEncoding = abi.encodeWithSignature(
@@ -192,7 +192,7 @@ contract SimpleLendingProxy is Ownable {
         address loanReserve,
         uint256 loanAmount
     ) public onlyRegisteredAgents {
-        bool isIdentityProofValid = IZkIdentity(zkIdentityAddress).proveIdentityAndCall(reputationAddress, firstNewHashValue, secondNewHashValue, proof);
+        bool isIdentityProofValid = IZkIdentity(zkIdentityAddress).proveIdentity(reputationAddress, firstNewHashValue, secondNewHashValue, proof);
         require(isIdentityProofValid, "invalid identity proof");
 
         bytes memory abiEncoding = abi.encodeWithSignature(
@@ -230,7 +230,7 @@ contract SimpleLendingProxy is Ownable {
         address reserve,
         uint256 amount
     ) public onlyRegisteredAgents {
-        bool isIdentityProofValid = IZkIdentity(zkIdentityAddress).proveIdentityAndCall(reputationAddress, firstNewHashValue, secondNewHashValue, proof);
+        bool isIdentityProofValid = IZkIdentity(zkIdentityAddress).proveIdentity(reputationAddress, firstNewHashValue, secondNewHashValue, proof);
         require(isIdentityProofValid, "invalid identity proof");
 
         bytes memory abiEncoding = abi.encodeWithSignature(

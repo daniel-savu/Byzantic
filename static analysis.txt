@@ -1,0 +1,4720 @@
+dani@morrow securify2 % sudo docker run -it -v /Users/dani/dani/Pro/facultate/Master/Term_3_Dissertation/byzantic/contracts:/share securify /share/combined.sol
+pragma directive defines a prior version to 0.5.12. Changing pragma version to 0.5.12....
+
+
+Severity:    LOW
+Pattern:     Benign Reentrancy
+Description: Reentrancy is equivalent with two consecutive calls of
+             the function
+Type:        Warning
+Contract:    WebOfTrust
+Line:        32
+Source: 
+>         protocolToLBCR[protocolAddress] = address(lbcr);
+>         lbcr.addAuthorisedContract(address(userProxyFactory));
+>         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         lbcr.addAuthorisedContract(msg.sender);
+
+
+Severity:    LOW
+Pattern:     Benign Reentrancy
+Description: Reentrancy is equivalent with two consecutive calls of
+             the function
+Type:        Warning
+Contract:    WebOfTrust
+Line:        33
+Source: 
+>         lbcr.addAuthorisedContract(address(userProxyFactory));
+>         lbcr.addAuthorisedContract(msg.sender);
+>         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         lbcrs.push(lbcr);
+
+
+Severity:    LOW
+Pattern:     Benign Reentrancy
+Description: Reentrancy is equivalent with two consecutive calls of
+             the function
+Type:        Warning
+Contract:    WebOfTrust
+Line:        35
+Source: 
+>         lbcrs.push(lbcr);
+>         userProxyFactory.addLBCR(address(lbcr));
+>         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         protocolToProxy[protocolAddress] = protocolProxyAddress;
+
+
+Severity:    LOW
+Pattern:     Benign Reentrancy
+Description: Reentrancy is equivalent with two consecutive calls of
+             the function
+Type:        Warning
+Contract:    UserProxyFactory
+Line:        141
+Source: 
+>         for(uint i = 0; i < agents.length; i++) {
+>             lbcr.registerAgent(agents[i]);
+>             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         }
+
+
+Severity:    INFO
+Pattern:     Constable State Variables
+Description: State variables that do not change should be declared as
+             constants.
+Type:        Violation
+Contract:    SimpleLending
+Line:        786
+Source: 
+> 
+>     address ethAddress = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>     uint256 collateralizationDecimals = 3; // decimals to calculate collateral factor
+
+
+Severity:    INFO
+Pattern:     Constable State Variables
+Description: State variables that do not change should be declared as
+             constants.
+Type:        Violation
+Contract:    SimpleLending
+Line:        787
+Source: 
+>     address ethAddress = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
+>     uint256 collateralizationDecimals = 3; // decimals to calculate collateral factor
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>     uint conversionDecimals = 25;
+
+
+Severity:    INFO
+Pattern:     Constable State Variables
+Description: State variables that do not change should be declared as
+             constants.
+Type:        Violation
+Contract:    SimpleLending
+Line:        788
+Source: 
+>     uint256 collateralizationDecimals = 3; // decimals to calculate collateral factor
+>     uint conversionDecimals = 25;
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 
+
+
+Severity:    LOW
+Pattern:     External Calls of Functions
+Description: A public function that is never called within the
+             contract should be marked as external
+Type:        Violation
+Contract:    WebOfTrust
+Line:        40
+Source: 
+> 
+>     function getUserProxyFactoryAddress() public view returns (address) {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         return address(userProxyFactory);
+
+
+Severity:    LOW
+Pattern:     External Calls of Functions
+Description: A public function that is never called within the
+             contract should be marked as external
+Type:        Violation
+Contract:    WebOfTrust
+Line:        44
+Source: 
+> 
+>     function getProtocolLBCR(address protocolAddress) public view returns (address) {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         return protocolToLBCR[protocolAddress];
+
+
+Severity:    LOW
+Pattern:     External Calls of Functions
+Description: A public function that is never called within the
+             contract should be marked as external
+Type:        Violation
+Contract:    WebOfTrust
+Line:        48
+Source: 
+> 
+>     function updateLBCR(address protocolAddress, address agent, uint256 action) public {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         address proxyAddress = protocolToProxy[protocolAddress];
+
+
+Severity:    LOW
+Pattern:     External Calls of Functions
+Description: A public function that is never called within the
+             contract should be marked as external
+Type:        Violation
+Contract:    WebOfTrust
+Line:        89
+Source: 
+> 
+>     function curateLBCRs() public {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         for(uint i = 0; i < lbcrs.length; i++) {
+
+
+Severity:    LOW
+Pattern:     External Calls of Functions
+Description: A public function that is never called within the
+             contract should be marked as external
+Type:        Violation
+Contract:    UserProxyFactory
+Line:        136
+Source: 
+> 
+>     function addLBCR(address lbcrAddress) public {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         LBCR lbcr = LBCR(lbcrAddress);
+
+
+Severity:    LOW
+Pattern:     External Calls of Functions
+Description: A public function that is never called within the
+             contract should be marked as external
+Type:        Violation
+Contract:    UserProxy
+Line:        256
+Source: 
+> 
+>     function proxyCall(
+>     ^^^^^^^^^^^^^^^^^^^
+>         address target,
+
+
+Severity:    LOW
+Pattern:     External Calls of Functions
+Description: A public function that is never called within the
+             contract should be marked as external
+Type:        Violation
+Contract:    SimpleLendingProxy
+Line:        318
+Source: 
+> 
+>     function setSimpleLendingAddress(address payable simpleLendingAddress) public  {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         simpleLending = SimpleLending(simpleLendingAddress);
+
+
+Severity:    LOW
+Pattern:     External Calls of Functions
+Description: A public function that is never called within the
+             contract should be marked as external
+Type:        Violation
+Contract:    SimpleLendingProxy
+Line:        327
+Source: 
+> 
+>     function deposit(address reserve, uint256 amount) public {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         bytes memory abiEncoding = abi.encodeWithSignature(
+
+
+Severity:    LOW
+Pattern:     External Calls of Functions
+Description: A public function that is never called within the
+             contract should be marked as external
+Type:        Violation
+Contract:    SimpleLendingProxy
+Line:        339
+Source: 
+> 
+>     function borrow(address reserve, uint256 amount) public {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         bytes memory abiEncoding = abi.encodeWithSignature(
+
+
+Severity:    LOW
+Pattern:     External Calls of Functions
+Description: A public function that is never called within the
+             contract should be marked as external
+Type:        Violation
+Contract:    SimpleLendingProxy
+Line:        351
+Source: 
+> 
+>     function repay(address reserve, uint256 amount, address onbehalf) public {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         bytes memory abiEncoding = abi.encodeWithSignature(
+
+
+Severity:    LOW
+Pattern:     External Calls of Functions
+Description: A public function that is never called within the
+             contract should be marked as external
+Type:        Violation
+Contract:    SimpleLendingProxy
+Line:        364
+Source: 
+> 
+>     function liquidate(address borrower, address collateralReserve, address loanReserve, uint256 loanAmount) public {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         bytes memory abiEncoding = abi.encodeWithSignature(
+
+
+Severity:    LOW
+Pattern:     External Calls of Functions
+Description: A public function that is never called within the
+             contract should be marked as external
+Type:        Violation
+Contract:    SimpleLendingProxy
+Line:        379
+Source: 
+> 
+>     function redeem(address reserve, uint256 amount) public {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         bytes memory abiEncoding = abi.encodeWithSignature(
+
+
+Severity:    LOW
+Pattern:     External Calls of Functions
+Description: A public function that is never called within the
+             contract should be marked as external
+Type:        Violation
+Contract:    LBCR
+Line:        441
+Source: 
+> 
+>     function addAuthorisedContract(address authorisedContract) public onlyAuthorised {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         authorisedContracts.push(authorisedContract);
+
+
+Severity:    LOW
+Pattern:     External Calls of Functions
+Description: A public function that is never called within the
+             contract should be marked as external
+Type:        Violation
+Contract:    LBCR
+Line:        473
+Source: 
+> 
+>     function getLayers() public view returns(uint[] memory) {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         return _layers;
+
+
+Severity:    LOW
+Pattern:     External Calls of Functions
+Description: A public function that is never called within the
+             contract should be marked as external
+Type:        Violation
+Contract:    LBCR
+Line:        477
+Source: 
+> 
+>     function setLayers(uint8[] memory layers) public {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>          // set layers
+
+
+Severity:    LOW
+Pattern:     External Calls of Functions
+Description: A public function that is never called within the
+             contract should be marked as external
+Type:        Violation
+Contract:    LBCR
+Line:        482
+Source: 
+> 
+>     function resetLayers() public {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         delete _layers;
+
+
+Severity:    LOW
+Pattern:     External Calls of Functions
+Description: A public function that is never called within the
+             contract should be marked as external
+Type:        Violation
+Contract:    LBCR
+Line:        486
+Source: 
+> 
+>     function addLayer(uint layer) public {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         _layers.push(layer);
+
+
+Severity:    LOW
+Pattern:     External Calls of Functions
+Description: A public function that is never called within the
+             contract should be marked as external
+Type:        Violation
+Contract:    LBCR
+Line:        493
+Source: 
+>     // ##############
+>     function getAgentFactor(address agent) public view returns (uint256) {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         uint assignment = getAssignment(agent);
+
+
+Severity:    LOW
+Pattern:     External Calls of Functions
+Description: A public function that is never called within the
+             contract should be marked as external
+Type:        Violation
+Contract:    LBCR
+Line:        501
+Source: 
+> 
+>     function getFactor(uint layer) public view returns (uint256) {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         return _factors[layer];
+
+
+Severity:    LOW
+Pattern:     External Calls of Functions
+Description: A public function that is never called within the
+             contract should be marked as external
+Type:        Violation
+Contract:    LBCR
+Line:        505
+Source: 
+> 
+>     function setFactor(uint layer, uint256 factor) public onlyAuthorised returns (bool) {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         // require(factor >= (10 ** _decimals), "factor needs to be above or equal to 1.0");
+
+
+Severity:    LOW
+Pattern:     External Calls of Functions
+Description: A public function that is never called within the
+             contract should be marked as external
+Type:        Violation
+Contract:    LBCR
+Line:        516
+Source: 
+> 
+>     function getReward(uint256 action) public view returns (uint256) {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         return _rewards[action];
+
+
+Severity:    LOW
+Pattern:     External Calls of Functions
+Description: A public function that is never called within the
+             contract should be marked as external
+Type:        Violation
+Contract:    LBCR
+Line:        520
+Source: 
+> 
+>     function setReward(uint256 action, uint256 reward) public onlyAuthorised returns (bool) {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         _rewards[action] = reward;
+
+
+Severity:    LOW
+Pattern:     External Calls of Functions
+Description: A public function that is never called within the
+             contract should be marked as external
+Type:        Violation
+Contract:    LBCR
+Line:        529
+Source: 
+> 
+>     function getBounds(uint layer) public view returns (uint256, uint256) {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         return (_lower[layer], _upper[layer]);
+
+
+Severity:    LOW
+Pattern:     External Calls of Functions
+Description: A public function that is never called within the
+             contract should be marked as external
+Type:        Violation
+Contract:    LBCR
+Line:        533
+Source: 
+> 
+>     function setBounds(uint layer, uint256 lower, uint256 upper) public onlyAuthorised returns (bool) {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         _lower[layer] = lower;
+
+
+Severity:    LOW
+Pattern:     External Calls of Functions
+Description: A public function that is never called within the
+             contract should be marked as external
+Type:        Violation
+Contract:    LBCR
+Line:        568
+Source: 
+> 
+>     function getScore(address agent) public view returns (uint256) {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         uint assignment = getAssignment(agent);
+
+
+Severity:    LOW
+Pattern:     External Calls of Functions
+Description: A public function that is never called within the
+             contract should be marked as external
+Type:        Violation
+Contract:    LBCR
+Line:        576
+Source: 
+> 
+>     function getInteractionCount(address agent) public view returns (uint256) {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         return _interactionCount[agent];
+
+
+Severity:    LOW
+Pattern:     External Calls of Functions
+Description: A public function that is never called within the
+             contract should be marked as external
+Type:        Violation
+Contract:    LBCR
+Line:        580
+Source: 
+> 
+>     function registerAgent(address agent) public returns (bool) {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         // register agent
+
+
+Severity:    LOW
+Pattern:     External Calls of Functions
+Description: A public function that is never called within the
+             contract should be marked as external
+Type:        Violation
+Contract:    LBCR
+Line:        602
+Source: 
+> 
+>     function update(address agent, uint256 action) public returns (bool) {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         _scores[_round][agent] += _rewards[action];
+
+
+Severity:    LOW
+Pattern:     External Calls of Functions
+Description: A public function that is never called within the
+             contract should be marked as external
+Type:        Violation
+Contract:    LBCR
+Line:        632
+Source: 
+> 
+>     function curate() public onlyAuthorised returns (bool) {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         require(_start != 0, "period not started");
+
+
+Severity:    LOW
+Pattern:     External Calls of Functions
+Description: A public function that is never called within the
+             contract should be marked as external
+Type:        Violation
+Contract:    DaiMock
+Line:        697
+Source: 
+> 
+>     function mint(address to, uint256 amount) public {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         // _mint(to, amount);
+
+
+Severity:    LOW
+Pattern:     External Calls of Functions
+Description: A public function that is never called within the
+             contract should be marked as external
+Type:        Violation
+Contract:    SimpleLending
+Line:        812
+Source: 
+> 
+>     function addReserve(address newReserve) public {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         reserves.push(newReserve);
+
+
+Severity:    LOW
+Pattern:     External Calls of Functions
+Description: A public function that is never called within the
+             contract should be marked as external
+Type:        Violation
+Contract:    SimpleLending
+Line:        816
+Source: 
+> 
+>     function deposit(address reserve, uint256 amount) public payable {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         if(reserve == ethAddress) {
+
+
+Severity:    LOW
+Pattern:     External Calls of Functions
+Description: A public function that is never called within the
+             contract should be marked as external
+Type:        Violation
+Contract:    SimpleLending
+Line:        826
+Source: 
+> 
+>     function borrow(address reserve, uint256 amount) public {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         require(hasEnoughCollateral(reserve, amount), "too little collateral");
+
+
+Severity:    LOW
+Pattern:     External Calls of Functions
+Description: A public function that is never called within the
+             contract should be marked as external
+Type:        Violation
+Contract:    SimpleLending
+Line:        833
+Source: 
+> 
+>     function repay(address reserve, uint256 amount, address onBehalf) public payable {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         require(userLoans[onBehalf][reserve] >= amount, "amount is larger than actual borrow");
+
+
+Severity:    LOW
+Pattern:     External Calls of Functions
+Description: A public function that is never called within the
+             contract should be marked as external
+Type:        Violation
+Contract:    SimpleLending
+Line:        844
+Source: 
+> 
+>     function liquidate(address borrower, address collateralReserve, address loanReserve, uint256 loanAmount) public payable {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         require(
+
+
+Severity:    LOW
+Pattern:     External Calls of Functions
+Description: A public function that is never called within the
+             contract should be marked as external
+Type:        Violation
+Contract:    SimpleLending
+Line:        865
+Source: 
+> 
+>     function redeem(address reserve, uint256 amount) public {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         require(!isUnderCollateralised(msg.sender), "agent would become undercollateralized after redeem");
+
+
+Severity:    LOW
+Pattern:     External Calls of Functions
+Description: A public function that is never called within the
+             contract should be marked as external
+Type:        Violation
+Contract:    SimpleLending
+Line:        902
+Source: 
+> 
+>     function getUserDepositToReserve(address account, address reserve) public view returns (uint) {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         return userDeposits[account][reserve];
+
+
+Severity:    LOW
+Pattern:     External Calls of Functions
+Description: A public function that is never called within the
+             contract should be marked as external
+Type:        Violation
+Contract:    SimpleLending
+Line:        915
+Source: 
+> 
+>     function getUserLoansFromReserve(address account, address reserve) public view returns (uint) {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         return userLoans[account][reserve];
+
+
+Severity:    HIGH
+Pattern:     External call in loop
+Description: If a single call in the loop fails or revers, it will
+             cause all other calls to fail as well.
+Type:        Warning
+Contract:    WebOfTrust
+Line:        32
+Source: 
+>         protocolToLBCR[protocolAddress] = address(lbcr);
+>         lbcr.addAuthorisedContract(address(userProxyFactory));
+>         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         lbcr.addAuthorisedContract(msg.sender);
+
+
+Severity:    HIGH
+Pattern:     External call in loop
+Description: If a single call in the loop fails or revers, it will
+             cause all other calls to fail as well.
+Type:        Warning
+Contract:    WebOfTrust
+Line:        33
+Source: 
+>         lbcr.addAuthorisedContract(address(userProxyFactory));
+>         lbcr.addAuthorisedContract(msg.sender);
+>         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         lbcrs.push(lbcr);
+
+
+Severity:    HIGH
+Pattern:     External call in loop
+Description: If a single call in the loop fails or revers, it will
+             cause all other calls to fail as well.
+Type:        Warning
+Contract:    WebOfTrust
+Line:        35
+Source: 
+>         lbcrs.push(lbcr);
+>         userProxyFactory.addLBCR(address(lbcr));
+>         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         protocolToProxy[protocolAddress] = protocolProxyAddress;
+
+
+Severity:    HIGH
+Pattern:     External call in loop
+Description: If a single call in the loop fails or revers, it will
+             cause all other calls to fail as well.
+Type:        Warning
+Contract:    WebOfTrust
+Line:        55
+Source: 
+>         LBCR lbcr = LBCR(protocolToLBCR[protocolAddress]);
+>         lbcr.update(agent, action);
+>         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+>     }
+
+
+Severity:    HIGH
+Pattern:     External call in loop
+Description: If a single call in the loop fails or revers, it will
+             cause all other calls to fail as well.
+Type:        Warning
+Contract:    UserProxy
+Line:        217
+Source: 
+>         if(reserve != aETHAddress) {
+>             return IERC20(reserve).balanceOf(address(this)) >= amount;
+>                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         } else {
+
+
+Severity:    HIGH
+Pattern:     External call in loop
+Description: If a single call in the loop fails or revers, it will
+             cause all other calls to fail as well.
+Type:        Warning
+Contract:    UserProxy
+Line:        226
+Source: 
+>         if(_reserve != aETHAddress) {
+>             IERC20(_reserve).transfer(msg.sender, _amount);
+>             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         } else {
+
+
+Severity:    HIGH
+Pattern:     External call in loop
+Description: If a single call in the loop fails or revers, it will
+             cause all other calls to fail as well.
+Type:        Warning
+Contract:    UserProxy
+Line:        228
+Source: 
+>         } else {
+>             msg.sender.transfer(_amount);
+>             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         }
+
+
+Severity:    HIGH
+Pattern:     External call in loop
+Description: If a single call in the loop fails or revers, it will
+             cause all other calls to fail as well.
+Type:        Warning
+Contract:    UserProxy
+Line:        236
+Source: 
+>         } else {
+>             IERC20(_reserve).transferFrom(msg.sender, address(this), _amount);
+>             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         }
+
+
+Severity:    HIGH
+Pattern:     External call in loop
+Description: If a single call in the loop fails or revers, it will
+             cause all other calls to fail as well.
+Type:        Warning
+Contract:    UserProxy
+Line:        242
+Source: 
+>         if(_reserve != aETHAddress) {
+>             return IERC20(_reserve).balanceOf(address(this));
+>                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         } else {
+
+
+Severity:    HIGH
+Pattern:     External call in loop
+Description: If a single call in the loop fails or revers, it will
+             cause all other calls to fail as well.
+Type:        Warning
+Contract:    UserProxy
+Line:        211
+Source: 
+>     modifier onlyProtocolProxies() {
+>         require(IWebOfTrust(webOfTrustAddress).isProtocolProxy(msg.sender), "Caller is not protocol proxy");
+>                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         _;
+
+
+Severity:    HIGH
+Pattern:     External call in loop
+Description: If a single call in the loop fails or revers, it will
+             cause all other calls to fail as well.
+Type:        Warning
+Contract:    UserProxy
+Line:        271
+Source: 
+>             if(reserve != aETHAddress) {
+>                 IERC20(reserve).approve(target, amount);
+>                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>                 (success, ) = target.call(abiEncoding);
+
+
+Severity:    HIGH
+Pattern:     External call in loop
+Description: If a single call in the loop fails or revers, it will
+             cause all other calls to fail as well.
+Type:        Warning
+Contract:    UserProxy
+Line:        272
+Source: 
+>                 IERC20(reserve).approve(target, amount);
+>                 (success, ) = target.call(abiEncoding);
+>                               ^^^^^^^^^^^^^^^^^^^^^^^^
+>             } else {
+
+
+Severity:    HIGH
+Pattern:     External call in loop
+Description: If a single call in the loop fails or revers, it will
+             cause all other calls to fail as well.
+Type:        Warning
+Contract:    UserProxy
+Line:        274
+Source: 
+>             } else {
+>                 (success, ) = target.call.value(amount)(abiEncoding);
+>                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>             }
+
+
+Severity:    HIGH
+Pattern:     External call in loop
+Description: If a single call in the loop fails or revers, it will
+             cause all other calls to fail as well.
+Type:        Warning
+Contract:    UserProxy
+Line:        277
+Source: 
+>         } else {
+>             (success, ) = target.call(abiEncoding);
+>                           ^^^^^^^^^^^^^^^^^^^^^^^^
+>         }
+
+
+Severity:    HIGH
+Pattern:     External call in loop
+Description: If a single call in the loop fails or revers, it will
+             cause all other calls to fail as well.
+Type:        Warning
+Contract:    SimpleLending
+Line:        820
+Source: 
+>         } else {
+>             IERC20(reserve).transferFrom(msg.sender, address(this), amount);
+>             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         }
+
+
+Severity:    HIGH
+Pattern:     External call in loop
+Description: If a single call in the loop fails or revers, it will
+             cause all other calls to fail as well.
+Type:        Warning
+Contract:    SimpleLending
+Line:        875
+Source: 
+>         if(reserve == ethAddress) {
+>             payee.transfer(amount);
+>             ^^^^^^^^^^^^^^^^^^^^^^
+>         } else {
+
+
+Severity:    HIGH
+Pattern:     External call in loop
+Description: If a single call in the loop fails or revers, it will
+             cause all other calls to fail as well.
+Type:        Warning
+Contract:    SimpleLending
+Line:        877
+Source: 
+>         } else {
+>             IERC20(reserve).transfer(payee, amount);
+>             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         }
+
+
+Severity:    HIGH
+Pattern:     External call in loop
+Description: If a single call in the loop fails or revers, it will
+             cause all other calls to fail as well.
+Type:        Warning
+Contract:    SimpleLending
+Line:        923
+Source: 
+>         uint accountCollateralizationRatio = baseCollateralisationRate * IWebOfTrust(webOfTrustAddress).getAggregateAgentFactorForProtocol(account, address(this));
+>         uint collateral = (deposits / accountCollateralizationRatio) * (10 ** (baseCollateralisationRateDecimals + IWebOfTrust(webOfTrustAddress).getAgentFactorDecimals()));
+>                                                                                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         require(!isUnderCollateralised(account), "agent is undercollateralized");
+
+
+Severity:    HIGH
+Pattern:     External call in loop
+Description: If a single call in the loop fails or revers, it will
+             cause all other calls to fail as well.
+Type:        Warning
+Contract:    SimpleLending
+Line:        952
+Source: 
+>         uint accountCollateralizationRatio = baseCollateralisationRate * IWebOfTrust(webOfTrustAddress).getAggregateAgentFactorForProtocol(account, address(this));
+>         uint collateralInUse = (borrows * accountCollateralizationRatio) / (10 ** (baseCollateralisationRateDecimals + IWebOfTrust(webOfTrustAddress).getAgentFactorDecimals()));
+>                                                                                                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         return (collateralInUse, conversionDecimals);
+
+
+Severity:    HIGH
+Pattern:     External call in loop
+Description: If a single call in the loop fails or revers, it will
+             cause all other calls to fail as well.
+Type:        Warning
+Contract:    SimpleLending
+Line:        838
+Source: 
+>         } else {
+>             IERC20(reserve).transferFrom(msg.sender, address(this), amount);
+>             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         }
+
+
+Severity:    HIGH
+Pattern:     External call in loop
+Description: If a single call in the loop fails or revers, it will
+             cause all other calls to fail as well.
+Type:        Warning
+Contract:    SimpleLending
+Line:        852
+Source: 
+>         } else {
+>             IERC20(loanReserve).transferFrom(msg.sender, address(this), loanAmount);
+>             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         }
+
+
+Severity:    HIGH
+Pattern:     External call in loop
+Description: If a single call in the loop fails or revers, it will
+             cause all other calls to fail as well.
+Type:        Violation
+Contract:    WebOfTrust
+Line:        76
+Source: 
+>             LBCR lbcr = lbcrs[i];
+>             if(lbcr.getInteractionCount(agent) > 0) {
+>                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>                 agentFactorSum += (lbcr.getAgentFactor(agent) * ILBCR(LBCRAddress).getCompatibilityScoreWith(address(lbcr)));
+
+
+Severity:    HIGH
+Pattern:     External call in loop
+Description: If a single call in the loop fails or revers, it will
+             cause all other calls to fail as well.
+Type:        Violation
+Contract:    WebOfTrust
+Line:        77
+Source: 
+>             if(lbcr.getInteractionCount(agent) > 0) {
+>                 agentFactorSum += (lbcr.getAgentFactor(agent) * ILBCR(LBCRAddress).getCompatibilityScoreWith(address(lbcr)));
+>                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+>                 agentFactorDenominator += ILBCR(LBCRAddress).getCompatibilityScoreWith(address(lbcr));
+
+
+Severity:    HIGH
+Pattern:     External call in loop
+Description: If a single call in the loop fails or revers, it will
+             cause all other calls to fail as well.
+Type:        Violation
+Contract:    WebOfTrust
+Line:        77
+Source: 
+>             if(lbcr.getInteractionCount(agent) > 0) {
+>                 agentFactorSum += (lbcr.getAgentFactor(agent) * ILBCR(LBCRAddress).getCompatibilityScoreWith(address(lbcr)));
+>                                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>                 agentFactorDenominator += ILBCR(LBCRAddress).getCompatibilityScoreWith(address(lbcr));
+
+
+Severity:    HIGH
+Pattern:     External call in loop
+Description: If a single call in the loop fails or revers, it will
+             cause all other calls to fail as well.
+Type:        Violation
+Contract:    WebOfTrust
+Line:        78
+Source: 
+>                 agentFactorSum += (lbcr.getAgentFactor(agent) * ILBCR(LBCRAddress).getCompatibilityScoreWith(address(lbcr)));
+>                 agentFactorDenominator += ILBCR(LBCRAddress).getCompatibilityScoreWith(address(lbcr));
+>                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>             }
+
+
+Severity:    HIGH
+Pattern:     External call in loop
+Description: If a single call in the loop fails or revers, it will
+             cause all other calls to fail as well.
+Type:        Violation
+Contract:    WebOfTrust
+Line:        91
+Source: 
+>         for(uint i = 0; i < lbcrs.length; i++) {
+>             lbcrs[i].curate();
+>             ^^^^^^^^^^^^^^^^^
+>         }
+
+
+Severity:    HIGH
+Pattern:     External call in loop
+Description: If a single call in the loop fails or revers, it will
+             cause all other calls to fail as well.
+Type:        Violation
+Contract:    UserProxyFactory
+Line:        128
+Source: 
+>             for(uint i = 0; i < lbcrs.length; i++) {
+>                 lbcrs[i].registerAgent(address(userProxy));
+>                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>             }
+
+
+Severity:    HIGH
+Pattern:     External call in loop
+Description: If a single call in the loop fails or revers, it will
+             cause all other calls to fail as well.
+Type:        Violation
+Contract:    UserProxyFactory
+Line:        141
+Source: 
+>         for(uint i = 0; i < agents.length; i++) {
+>             lbcr.registerAgent(agents[i]);
+>             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         }
+
+
+Severity:    HIGH
+Pattern:     External call in loop
+Description: If a single call in the loop fails or revers, it will
+             cause all other calls to fail as well.
+Type:        Violation
+Contract:    SimpleLending
+Line:        922
+Source: 
+>         (uint borrows, ) = getUserLoansInETH(account);
+>         uint accountCollateralizationRatio = baseCollateralisationRate * IWebOfTrust(webOfTrustAddress).getAggregateAgentFactorForProtocol(account, address(this));
+>                                                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         uint collateral = (deposits / accountCollateralizationRatio) * (10 ** (baseCollateralisationRateDecimals + IWebOfTrust(webOfTrustAddress).getAgentFactorDecimals()));
+
+
+Severity:    HIGH
+Pattern:     External call in loop
+Description: If a single call in the loop fails or revers, it will
+             cause all other calls to fail as well.
+Type:        Violation
+Contract:    SimpleLending
+Line:        951
+Source: 
+>         (uint borrows, ) = getUserLoansInETH(account);
+>         uint accountCollateralizationRatio = baseCollateralisationRate * IWebOfTrust(webOfTrustAddress).getAggregateAgentFactorForProtocol(account, address(this));
+>                                                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         uint collateralInUse = (borrows * accountCollateralizationRatio) / (10 ** (baseCollateralisationRateDecimals + IWebOfTrust(webOfTrustAddress).getAgentFactorDecimals()));
+
+
+Severity:    MEDIUM
+Pattern:     Locked Ether
+Description: Contracts that may receive ether must also allow users to
+             extract the deposited ether from the contract.
+Type:        Violation
+Contract:    WebOfTrust
+Line:        11
+Source: 
+> 
+> contract WebOfTrust {
+> ^^^^^^^^^^^^^^^^^^^^^
+>     address constant aETHAddress = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
+
+
+Severity:    MEDIUM
+Pattern:     Locked Ether
+Description: Contracts that may receive ether must also allow users to
+             extract the deposited ether from the contract.
+Type:        Violation
+Contract:    UserProxyFactory
+Line:        106
+Source: 
+> 
+> contract UserProxyFactory {
+> ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>     mapping (address => UserProxy) userAddressToUserProxy;
+
+
+Severity:    MEDIUM
+Pattern:     Locked Ether
+Description: Contracts that may receive ether must also allow users to
+             extract the deposited ether from the contract.
+Type:        Violation
+Contract:    SimpleLendingProxy
+Line:        285
+Source: 
+> 
+> contract SimpleLendingProxy {
+> ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>     address constant LendingPoolAddressesProviderAddress = 0x24a42fD28C976A61Df5D00D0599C34c4f90748c8;
+
+
+Severity:    INFO
+Pattern:     Low Level Calls
+Description: Usage of <address>.call should be avoided
+Type:        Violation
+Contract:    UserProxy
+Line:        272
+Source: 
+>                 IERC20(reserve).approve(target, amount);
+>                 (success, ) = target.call(abiEncoding);
+>                               ^^^^^^^^^^^^^^^^^^^^^^^^
+>             } else {
+
+
+Severity:    INFO
+Pattern:     Low Level Calls
+Description: Usage of <address>.call should be avoided
+Type:        Violation
+Contract:    UserProxy
+Line:        274
+Source: 
+>             } else {
+>                 (success, ) = target.call.value(amount)(abiEncoding);
+>                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>             }
+
+
+Severity:    INFO
+Pattern:     Low Level Calls
+Description: Usage of <address>.call should be avoided
+Type:        Violation
+Contract:    UserProxy
+Line:        277
+Source: 
+>         } else {
+>             (success, ) = target.call(abiEncoding);
+>                           ^^^^^^^^^^^^^^^^^^^^^^^^
+>         }
+
+
+Severity:    MEDIUM
+Pattern:     Missing Input Validation
+Description: Method arguments must be sanitized before they are used
+             in computations.
+Type:        Warning
+Contract:    WebOfTrust
+Line:        48
+Source: 
+> 
+>     function updateLBCR(address protocolAddress, address agent, uint256 action) public {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         address proxyAddress = protocolToProxy[protocolAddress];
+
+
+Severity:    MEDIUM
+Pattern:     Missing Input Validation
+Description: Method arguments must be sanitized before they are used
+             in computations.
+Type:        Warning
+Contract:    UserProxyFactory
+Line:        136
+Source: 
+> 
+>     function addLBCR(address lbcrAddress) public {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         LBCR lbcr = LBCR(lbcrAddress);
+
+
+Severity:    MEDIUM
+Pattern:     Missing Input Validation
+Description: Method arguments must be sanitized before they are used
+             in computations.
+Type:        Warning
+Contract:    UserProxy
+Line:        223
+Source: 
+> 
+>     function withdrawFunds(address _reserve, uint256 _amount) external onlyAgentOwner {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         require(hasEnoughFunds(_reserve, _amount), "You don't have enough funds");
+
+
+Severity:    MEDIUM
+Pattern:     Missing Input Validation
+Description: Method arguments must be sanitized before they are used
+             in computations.
+Type:        Warning
+Contract:    UserProxy
+Line:        232
+Source: 
+> 
+>     function depositFunds(address _reserve, uint256 _amount) external payable onlyAgentOwner {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         if(_reserve == aETHAddress) {
+
+
+Severity:    MEDIUM
+Pattern:     Missing Input Validation
+Description: Method arguments must be sanitized before they are used
+             in computations.
+Type:        Warning
+Contract:    UserProxy
+Line:        256
+Source: 
+> 
+>     function proxyCall(
+>     ^^^^^^^^^^^^^^^^^^^
+>         address target,
+
+
+Severity:    MEDIUM
+Pattern:     Missing Input Validation
+Description: Method arguments must be sanitized before they are used
+             in computations.
+Type:        Warning
+Contract:    LBCR
+Line:        477
+Source: 
+> 
+>     function setLayers(uint8[] memory layers) public {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>          // set layers
+
+
+Severity:    MEDIUM
+Pattern:     Missing Input Validation
+Description: Method arguments must be sanitized before they are used
+             in computations.
+Type:        Warning
+Contract:    LBCR
+Line:        493
+Source: 
+>     // ##############
+>     function getAgentFactor(address agent) public view returns (uint256) {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         uint assignment = getAssignment(agent);
+
+
+Severity:    MEDIUM
+Pattern:     Missing Input Validation
+Description: Method arguments must be sanitized before they are used
+             in computations.
+Type:        Warning
+Contract:    LBCR
+Line:        568
+Source: 
+> 
+>     function getScore(address agent) public view returns (uint256) {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         uint assignment = getAssignment(agent);
+
+
+Severity:    MEDIUM
+Pattern:     Missing Input Validation
+Description: Method arguments must be sanitized before they are used
+             in computations.
+Type:        Warning
+Contract:    SimpleLending
+Line:        804
+Source: 
+> 
+>     function setBaseCollateralisationRate(uint baseCollateralisationRateValue) external  {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         baseCollateralisationRate = baseCollateralisationRateValue;
+
+
+Severity:    MEDIUM
+Pattern:     Missing Input Validation
+Description: Method arguments must be sanitized before they are used
+             in computations.
+Type:        Warning
+Contract:    SimpleLending
+Line:        816
+Source: 
+> 
+>     function deposit(address reserve, uint256 amount) public payable {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         if(reserve == ethAddress) {
+
+
+Severity:    MEDIUM
+Pattern:     Missing Input Validation
+Description: Method arguments must be sanitized before they are used
+             in computations.
+Type:        Warning
+Contract:    SimpleLending
+Line:        844
+Source: 
+> 
+>     function liquidate(address borrower, address collateralReserve, address loanReserve, uint256 loanAmount) public payable {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         require(
+
+
+Severity:    MEDIUM
+Pattern:     Missing Input Validation
+Description: Method arguments must be sanitized before they are used
+             in computations.
+Type:        Warning
+Contract:    SimpleLending
+Line:        865
+Source: 
+> 
+>     function redeem(address reserve, uint256 amount) public {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         require(!isUnderCollateralised(msg.sender), "agent would become undercollateralized after redeem");
+
+
+Severity:    MEDIUM
+Pattern:     Missing Input Validation
+Description: Method arguments must be sanitized before they are used
+             in computations.
+Type:        Warning
+Contract:    SimpleLending
+Line:        919
+Source: 
+> 
+>     function getBorrowableAmountInETH(address account) public returns (uint, uint) {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         (uint deposits, ) = getUserDepositsInETH(account);
+
+
+Severity:    MEDIUM
+Pattern:     Missing Input Validation
+Description: Method arguments must be sanitized before they are used
+             in computations.
+Type:        Warning
+Contract:    SimpleLending
+Line:        929
+Source: 
+> 
+>     function isUnderCollateralised(address account) public view returns (bool) {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         (uint collateralInUse, ) = getCollateralInUseInETH(account);
+
+
+Severity:    MEDIUM
+Pattern:     Missing Input Validation
+Description: Method arguments must be sanitized before they are used
+             in computations.
+Type:        Warning
+Contract:    SimpleLending
+Line:        935
+Source: 
+> 
+>     function getMaxAmountToLiquidateInReserve(address account, address reserve) public view returns (uint) {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         require(isUnderCollateralised(account), "Account is not undercollateralised");
+
+
+Severity:    MEDIUM
+Pattern:     Missing Input Validation
+Description: Method arguments must be sanitized before they are used
+             in computations.
+Type:        Warning
+Contract:    SimpleLending
+Line:        949
+Source: 
+> 
+>     function getCollateralInUseInETH(address account) public view returns (uint, uint) {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         (uint borrows, ) = getUserLoansInETH(account);
+
+
+Severity:    MEDIUM
+Pattern:     Missing Input Validation
+Description: Method arguments must be sanitized before they are used
+             in computations.
+Type:        Violation
+Contract:    WebOfTrust
+Line:        28
+Source: 
+> 
+>     function addProtocolIntegration(address protocolAddress, address protocolProxyAddress) external {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         require(protocolToLBCR[protocolAddress] == address(0), "protocol has already been added");
+
+
+Severity:    MEDIUM
+Pattern:     Missing Input Validation
+Description: Method arguments must be sanitized before they are used
+             in computations.
+Type:        Violation
+Contract:    WebOfTrust
+Line:        44
+Source: 
+> 
+>     function getProtocolLBCR(address protocolAddress) public view returns (address) {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         return protocolToLBCR[protocolAddress];
+
+
+Severity:    MEDIUM
+Pattern:     Missing Input Validation
+Description: Method arguments must be sanitized before they are used
+             in computations.
+Type:        Violation
+Contract:    WebOfTrust
+Line:        63
+Source: 
+>      */
+>     function getAggregateAgentFactorForProtocol(address agent, address protocol) external view returns (uint256) {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         // a factor of 900 is equal to 0.9 times the collateral
+
+
+Severity:    MEDIUM
+Pattern:     Missing Input Validation
+Description: Method arguments must be sanitized before they are used
+             in computations.
+Type:        Violation
+Contract:    WebOfTrust
+Line:        69
+Source: 
+> 
+>     function aggregateLBCRsForProtocol(address agent, address protocol) public view returns (uint) {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         uint agentFactorSum = 0;
+
+
+Severity:    MEDIUM
+Pattern:     Missing Input Validation
+Description: Method arguments must be sanitized before they are used
+             in computations.
+Type:        Violation
+Contract:    WebOfTrust
+Line:        99
+Source: 
+> 
+>     function isProtocolProxy(address addr) external returns (bool) {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         return protocolProxy[addr];
+
+
+Severity:    MEDIUM
+Pattern:     Missing Input Validation
+Description: Method arguments must be sanitized before they are used
+             in computations.
+Type:        Violation
+Contract:    UserProxyFactory
+Line:        155
+Source: 
+> 
+>     function isUserProxy(address userProxyAddress) external view returns (bool) {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         return userProxyToUserAddress[userProxyAddress] != address(0);
+
+
+Severity:    MEDIUM
+Pattern:     Missing Input Validation
+Description: Method arguments must be sanitized before they are used
+             in computations.
+Type:        Violation
+Contract:    UserProxyFactory
+Line:        159
+Source: 
+> 
+>     function getUserProxyAddress(address userAddress) external view returns (address payable) {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         return address(userAddressToUserProxy[userAddress]);
+
+
+Severity:    MEDIUM
+Pattern:     Missing Input Validation
+Description: Method arguments must be sanitized before they are used
+             in computations.
+Type:        Violation
+Contract:    UserProxy
+Line:        188
+Source: 
+> 
+>     function addAuthorisedContract(address authorisedContract) public onlyAuthorised {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         authorisedContracts.push(authorisedContract);
+
+
+Severity:    MEDIUM
+Pattern:     Missing Input Validation
+Description: Method arguments must be sanitized before they are used
+             in computations.
+Type:        Violation
+Contract:    UserProxy
+Line:        248
+Source: 
+> 
+>     function proxyCall(address target, bytes memory abiEncoding) public onlyProtocolProxies returns (bool) {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         // the following variables are set to 0 because they are not applicable to this call
+
+
+Severity:    MEDIUM
+Pattern:     Missing Input Validation
+Description: Method arguments must be sanitized before they are used
+             in computations.
+Type:        Violation
+Contract:    SimpleLendingProxy
+Line:        318
+Source: 
+> 
+>     function setSimpleLendingAddress(address payable simpleLendingAddress) public  {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         simpleLending = SimpleLending(simpleLendingAddress);
+
+
+Severity:    MEDIUM
+Pattern:     Missing Input Validation
+Description: Method arguments must be sanitized before they are used
+             in computations.
+Type:        Violation
+Contract:    SimpleLendingProxy
+Line:        327
+Source: 
+> 
+>     function deposit(address reserve, uint256 amount) public {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         bytes memory abiEncoding = abi.encodeWithSignature(
+
+
+Severity:    MEDIUM
+Pattern:     Missing Input Validation
+Description: Method arguments must be sanitized before they are used
+             in computations.
+Type:        Violation
+Contract:    SimpleLendingProxy
+Line:        339
+Source: 
+> 
+>     function borrow(address reserve, uint256 amount) public {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         bytes memory abiEncoding = abi.encodeWithSignature(
+
+
+Severity:    MEDIUM
+Pattern:     Missing Input Validation
+Description: Method arguments must be sanitized before they are used
+             in computations.
+Type:        Violation
+Contract:    SimpleLendingProxy
+Line:        351
+Source: 
+> 
+>     function repay(address reserve, uint256 amount, address onbehalf) public {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         bytes memory abiEncoding = abi.encodeWithSignature(
+
+
+Severity:    MEDIUM
+Pattern:     Missing Input Validation
+Description: Method arguments must be sanitized before they are used
+             in computations.
+Type:        Violation
+Contract:    SimpleLendingProxy
+Line:        364
+Source: 
+> 
+>     function liquidate(address borrower, address collateralReserve, address loanReserve, uint256 loanAmount) public {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         bytes memory abiEncoding = abi.encodeWithSignature(
+
+
+Severity:    MEDIUM
+Pattern:     Missing Input Validation
+Description: Method arguments must be sanitized before they are used
+             in computations.
+Type:        Violation
+Contract:    SimpleLendingProxy
+Line:        379
+Source: 
+> 
+>     function redeem(address reserve, uint256 amount) public {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         bytes memory abiEncoding = abi.encodeWithSignature(
+
+
+Severity:    MEDIUM
+Pattern:     Missing Input Validation
+Description: Method arguments must be sanitized before they are used
+             in computations.
+Type:        Violation
+Contract:    LBCR
+Line:        441
+Source: 
+> 
+>     function addAuthorisedContract(address authorisedContract) public onlyAuthorised {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         authorisedContracts.push(authorisedContract);
+
+
+Severity:    MEDIUM
+Pattern:     Missing Input Validation
+Description: Method arguments must be sanitized before they are used
+             in computations.
+Type:        Violation
+Contract:    LBCR
+Line:        465
+Source: 
+> 
+>     function setCompatibilityScoreWith(address protocol, uint256 score) external {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         compatibilityScores[protocol] = score;
+
+
+Severity:    MEDIUM
+Pattern:     Missing Input Validation
+Description: Method arguments must be sanitized before they are used
+             in computations.
+Type:        Violation
+Contract:    LBCR
+Line:        486
+Source: 
+> 
+>     function addLayer(uint layer) public {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         _layers.push(layer);
+
+
+Severity:    MEDIUM
+Pattern:     Missing Input Validation
+Description: Method arguments must be sanitized before they are used
+             in computations.
+Type:        Violation
+Contract:    LBCR
+Line:        501
+Source: 
+> 
+>     function getFactor(uint layer) public view returns (uint256) {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         return _factors[layer];
+
+
+Severity:    MEDIUM
+Pattern:     Missing Input Validation
+Description: Method arguments must be sanitized before they are used
+             in computations.
+Type:        Violation
+Contract:    LBCR
+Line:        505
+Source: 
+> 
+>     function setFactor(uint layer, uint256 factor) public onlyAuthorised returns (bool) {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         // require(factor >= (10 ** _decimals), "factor needs to be above or equal to 1.0");
+
+
+Severity:    MEDIUM
+Pattern:     Missing Input Validation
+Description: Method arguments must be sanitized before they are used
+             in computations.
+Type:        Violation
+Contract:    LBCR
+Line:        516
+Source: 
+> 
+>     function getReward(uint256 action) public view returns (uint256) {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         return _rewards[action];
+
+
+Severity:    MEDIUM
+Pattern:     Missing Input Validation
+Description: Method arguments must be sanitized before they are used
+             in computations.
+Type:        Violation
+Contract:    LBCR
+Line:        520
+Source: 
+> 
+>     function setReward(uint256 action, uint256 reward) public onlyAuthorised returns (bool) {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         _rewards[action] = reward;
+
+
+Severity:    MEDIUM
+Pattern:     Missing Input Validation
+Description: Method arguments must be sanitized before they are used
+             in computations.
+Type:        Violation
+Contract:    LBCR
+Line:        529
+Source: 
+> 
+>     function getBounds(uint layer) public view returns (uint256, uint256) {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         return (_lower[layer], _upper[layer]);
+
+
+Severity:    MEDIUM
+Pattern:     Missing Input Validation
+Description: Method arguments must be sanitized before they are used
+             in computations.
+Type:        Violation
+Contract:    LBCR
+Line:        533
+Source: 
+> 
+>     function setBounds(uint layer, uint256 lower, uint256 upper) public onlyAuthorised returns (bool) {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         _lower[layer] = lower;
+
+
+Severity:    MEDIUM
+Pattern:     Missing Input Validation
+Description: Method arguments must be sanitized before they are used
+             in computations.
+Type:        Violation
+Contract:    LBCR
+Line:        576
+Source: 
+> 
+>     function getInteractionCount(address agent) public view returns (uint256) {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         return _interactionCount[agent];
+
+
+Severity:    MEDIUM
+Pattern:     Missing Input Validation
+Description: Method arguments must be sanitized before they are used
+             in computations.
+Type:        Violation
+Contract:    LBCR
+Line:        580
+Source: 
+> 
+>     function registerAgent(address agent) public returns (bool) {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         // register agent
+
+
+Severity:    MEDIUM
+Pattern:     Missing Input Validation
+Description: Method arguments must be sanitized before they are used
+             in computations.
+Type:        Violation
+Contract:    LBCR
+Line:        602
+Source: 
+> 
+>     function update(address agent, uint256 action) public returns (bool) {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         _scores[_round][agent] += _rewards[action];
+
+
+Severity:    MEDIUM
+Pattern:     Missing Input Validation
+Description: Method arguments must be sanitized before they are used
+             in computations.
+Type:        Violation
+Contract:    DaiMock
+Line:        697
+Source: 
+> 
+>     function mint(address to, uint256 amount) public {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         // _mint(to, amount);
+
+
+Severity:    MEDIUM
+Pattern:     Missing Input Validation
+Description: Method arguments must be sanitized before they are used
+             in computations.
+Type:        Violation
+Contract:    SimpleLending
+Line:        812
+Source: 
+> 
+>     function addReserve(address newReserve) public {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         reserves.push(newReserve);
+
+
+Severity:    MEDIUM
+Pattern:     Missing Input Validation
+Description: Method arguments must be sanitized before they are used
+             in computations.
+Type:        Violation
+Contract:    SimpleLending
+Line:        882
+Source: 
+> 
+>     function hasEnoughCollateral(address reserve, uint256 amount) public returns (bool) {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         (uint borrowableAmountInETH, ) = getBorrowableAmountInETH(msg.sender);
+
+
+Severity:    MEDIUM
+Pattern:     Missing Input Validation
+Description: Method arguments must be sanitized before they are used
+             in computations.
+Type:        Violation
+Contract:    SimpleLending
+Line:        893
+Source: 
+> 
+>     function getUserDepositsInETH(address account) public view returns (uint, uint) {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         uint deposits = 0;
+
+
+Severity:    MEDIUM
+Pattern:     Missing Input Validation
+Description: Method arguments must be sanitized before they are used
+             in computations.
+Type:        Violation
+Contract:    SimpleLending
+Line:        902
+Source: 
+> 
+>     function getUserDepositToReserve(address account, address reserve) public view returns (uint) {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         return userDeposits[account][reserve];
+
+
+Severity:    MEDIUM
+Pattern:     Missing Input Validation
+Description: Method arguments must be sanitized before they are used
+             in computations.
+Type:        Violation
+Contract:    SimpleLending
+Line:        906
+Source: 
+> 
+>     function getUserLoansInETH(address account) public view returns (uint, uint) {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         uint borrows = 0;
+
+
+Severity:    MEDIUM
+Pattern:     Missing Input Validation
+Description: Method arguments must be sanitized before they are used
+             in computations.
+Type:        Violation
+Contract:    SimpleLending
+Line:        915
+Source: 
+> 
+>     function getUserLoansFromReserve(address account, address reserve) public view returns (uint) {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         return userLoans[account][reserve];
+
+
+Severity:    MEDIUM
+Pattern:     Missing Input Validation
+Description: Method arguments must be sanitized before they are used
+             in computations.
+Type:        Violation
+Contract:    SimpleLending
+Line:        957
+Source: 
+> 
+>     function conversionRate(address fromReserve, address toReserve) public view returns (uint, uint) {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         uint from = reserveLiquidity[fromReserve];
+
+
+Severity:    MEDIUM
+Pattern:     Missing Input Validation
+Description: Method arguments must be sanitized before they are used
+             in computations.
+Type:        Violation
+Contract:    SimpleLending
+Line:        970
+Source: 
+> 
+>     function convert(address fromReserve, address toReserve, uint amount) public view returns (uint, uint) {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         (uint conversionRate, uint decimals) = conversionRate(fromReserve, toReserve);
+
+
+Severity:    MEDIUM
+Pattern:     Missing Input Validation
+Description: Method arguments must be sanitized before they are used
+             in computations.
+Type:        Violation
+Contract:    SimpleLending
+Line:        975
+Source: 
+> 
+>     function divideByConversionDecimals(uint x) public returns (uint) {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         return x / (10 ** conversionDecimals);
+
+
+Severity:    MEDIUM
+Pattern:     Multiplication after division
+Description: Information might be lost due to division before
+             multiplication
+Type:        Violation
+Contract:    SimpleLending
+Line:        972
+Source: 
+>         (uint conversionRate, uint decimals) = conversionRate(fromReserve, toReserve);
+>         return (amount * conversionRate, decimals);
+>                 ^^^^^^^^^^^^^^^^^^^^^^^
+>     }
+
+
+Severity:    MEDIUM
+Pattern:     Multiplication after division
+Description: Information might be lost due to division before
+             multiplication
+Type:        Violation
+Contract:    SimpleLending
+Line:        966
+Source: 
+>         
+>         uint conversion = to * (10 ** conversionDecimals) / from;
+>                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         return (conversion, conversionDecimals);
+
+
+Severity:    MEDIUM
+Pattern:     Multiplication after division
+Description: Information might be lost due to division before
+             multiplication
+Type:        Violation
+Contract:    SimpleLending
+Line:        923
+Source: 
+>         uint accountCollateralizationRatio = baseCollateralisationRate * IWebOfTrust(webOfTrustAddress).getAggregateAgentFactorForProtocol(account, address(this));
+>         uint collateral = (deposits / accountCollateralizationRatio) * (10 ** (baseCollateralisationRateDecimals + IWebOfTrust(webOfTrustAddress).getAgentFactorDecimals()));
+>                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         require(!isUnderCollateralised(account), "agent is undercollateralized");
+
+
+Severity:    MEDIUM
+Pattern:     Multiplication after division
+Description: Information might be lost due to division before
+             multiplication
+Type:        Violation
+Contract:    SimpleLending
+Line:        952
+Source: 
+>         uint accountCollateralizationRatio = baseCollateralisationRate * IWebOfTrust(webOfTrustAddress).getAggregateAgentFactorForProtocol(account, address(this));
+>         uint collateralInUse = (borrows * accountCollateralizationRatio) / (10 ** (baseCollateralisationRateDecimals + IWebOfTrust(webOfTrustAddress).getAgentFactorDecimals()));
+>                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         return (collateralInUse, conversionDecimals);
+
+
+Severity:    MEDIUM
+Pattern:     Multiplication after division
+Description: Information might be lost due to division before
+             multiplication
+Type:        Violation
+Contract:    SimpleLending
+Line:        980
+Source: 
+>     function applyLiquidationDiscount(uint sum) internal returns (uint) {
+>         return sum * 10 / 9;
+>                ^^^^^^^^
+>     }
+
+
+Severity:    MEDIUM
+Pattern:     No-Ether-Involved Reentrancy
+Description: Reentrancy that involves no ether
+Type:        Warning
+Contract:    WebOfTrust
+Line:        32
+Source: 
+>         protocolToLBCR[protocolAddress] = address(lbcr);
+>         lbcr.addAuthorisedContract(address(userProxyFactory));
+>         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         lbcr.addAuthorisedContract(msg.sender);
+
+
+Severity:    MEDIUM
+Pattern:     No-Ether-Involved Reentrancy
+Description: Reentrancy that involves no ether
+Type:        Warning
+Contract:    WebOfTrust
+Line:        33
+Source: 
+>         lbcr.addAuthorisedContract(address(userProxyFactory));
+>         lbcr.addAuthorisedContract(msg.sender);
+>         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         lbcrs.push(lbcr);
+
+
+Severity:    MEDIUM
+Pattern:     No-Ether-Involved Reentrancy
+Description: Reentrancy that involves no ether
+Type:        Warning
+Contract:    WebOfTrust
+Line:        35
+Source: 
+>         lbcrs.push(lbcr);
+>         userProxyFactory.addLBCR(address(lbcr));
+>         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         protocolToProxy[protocolAddress] = protocolProxyAddress;
+
+
+Severity:    MEDIUM
+Pattern:     No-Ether-Involved Reentrancy
+Description: Reentrancy that involves no ether
+Type:        Warning
+Contract:    UserProxyFactory
+Line:        128
+Source: 
+>             for(uint i = 0; i < lbcrs.length; i++) {
+>                 lbcrs[i].registerAgent(address(userProxy));
+>                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>             }
+
+
+Severity:    MEDIUM
+Pattern:     No-Ether-Involved Reentrancy
+Description: Reentrancy that involves no ether
+Type:        Warning
+Contract:    SimpleLending
+Line:        820
+Source: 
+>         } else {
+>             IERC20(reserve).transferFrom(msg.sender, address(this), amount);
+>             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         }
+
+
+Severity:    MEDIUM
+Pattern:     No-Ether-Involved Reentrancy
+Description: Reentrancy that involves no ether
+Type:        Warning
+Contract:    SimpleLending
+Line:        877
+Source: 
+>         } else {
+>             IERC20(reserve).transfer(payee, amount);
+>             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         }
+
+
+Severity:    MEDIUM
+Pattern:     No-Ether-Involved Reentrancy
+Description: Reentrancy that involves no ether
+Type:        Warning
+Contract:    SimpleLending
+Line:        838
+Source: 
+>         } else {
+>             IERC20(reserve).transferFrom(msg.sender, address(this), amount);
+>             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         }
+
+
+Severity:    MEDIUM
+Pattern:     No-Ether-Involved Reentrancy
+Description: Reentrancy that involves no ether
+Type:        Warning
+Contract:    SimpleLending
+Line:        852
+Source: 
+>         } else {
+>             IERC20(loanReserve).transferFrom(msg.sender, address(this), loanAmount);
+>             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         }
+
+
+Severity:    CRITICAL
+Pattern:     Reentrancy with constant gas
+Description: Ether transfers (such as send and transfer) that are
+             followed by state changes may be reentrant.
+Type:        Warning
+Contract:    SimpleLending
+Line:        875
+Source: 
+>         if(reserve == ethAddress) {
+>             payee.transfer(amount);
+>             ^^^^^^^^^^^^^^^^^^^^^^
+>         } else {
+
+
+Severity:    HIGH
+Pattern:     Repeated Call to Untrusted Contract
+Description: Repeated call to an untrusted contract may result in
+             different values
+Type:        Violation
+Contract:    WebOfTrust
+Line:        32
+Source: 
+>         protocolToLBCR[protocolAddress] = address(lbcr);
+>         lbcr.addAuthorisedContract(address(userProxyFactory));
+>         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         lbcr.addAuthorisedContract(msg.sender);
+
+
+Severity:    HIGH
+Pattern:     Repeated Call to Untrusted Contract
+Description: Repeated call to an untrusted contract may result in
+             different values
+Type:        Violation
+Contract:    WebOfTrust
+Line:        33
+Source: 
+>         lbcr.addAuthorisedContract(address(userProxyFactory));
+>         lbcr.addAuthorisedContract(msg.sender);
+>         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         lbcrs.push(lbcr);
+
+
+Severity:    MEDIUM
+Pattern:     Shadowed Local Variable
+Description: Reports local variable declarations that shadow
+             declarations from outer scopes.
+Type:        Violation
+Contract:    SimpleLending
+Line:        971
+Source: 
+>     function convert(address fromReserve, address toReserve, uint amount) public view returns (uint, uint) {
+>         (uint conversionRate, uint decimals) = conversionRate(fromReserve, toReserve);
+>          ^^^^^^^^^^^^^^^^^^^
+>         return (amount * conversionRate, decimals);
+
+
+Severity:    INFO
+Pattern:     Solidity Naming Convention
+Description: Reports declarations that do not adhere to Solidity's
+             naming convention.
+Type:        Violation
+Contract:    WebOfTrust
+Line:        12
+Source: 
+> contract WebOfTrust {
+>     address constant aETHAddress = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>     UserProxyFactory userProxyFactory;
+
+
+Severity:    INFO
+Pattern:     Solidity Naming Convention
+Description: Reports declarations that do not adhere to Solidity's
+             naming convention.
+Type:        Violation
+Contract:    WebOfTrust
+Line:        72
+Source: 
+>         uint agentFactorDenominator = 0;
+>         address LBCRAddress = protocolToLBCR[protocol];
+>         ^^^^^^^^^^^^^^^^^^^
+> 
+
+
+Severity:    INFO
+Pattern:     Solidity Naming Convention
+Description: Reports declarations that do not adhere to Solidity's
+             naming convention.
+Type:        Violation
+Contract:    UserProxy
+Line:        173
+Source: 
+>     address[] authorisedContracts;
+>     address constant aETHAddress = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>     address constant LendingPoolAddressesProviderAddress = 0x24a42fD28C976A61Df5D00D0599C34c4f90748c8;
+
+
+Severity:    INFO
+Pattern:     Solidity Naming Convention
+Description: Reports declarations that do not adhere to Solidity's
+             naming convention.
+Type:        Violation
+Contract:    UserProxy
+Line:        174
+Source: 
+>     address constant aETHAddress = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
+>     address constant LendingPoolAddressesProviderAddress = 0x24a42fD28C976A61Df5D00D0599C34c4f90748c8;
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>     mapping(address => int256) agentFundsInPool;
+
+
+Severity:    INFO
+Pattern:     Solidity Naming Convention
+Description: Reports declarations that do not adhere to Solidity's
+             naming convention.
+Type:        Violation
+Contract:    SimpleLendingProxy
+Line:        286
+Source: 
+> contract SimpleLendingProxy {
+>     address constant LendingPoolAddressesProviderAddress = 0x24a42fD28C976A61Df5D00D0599C34c4f90748c8;
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>     address constant aETHAddress = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
+
+
+Severity:    INFO
+Pattern:     Solidity Naming Convention
+Description: Reports declarations that do not adhere to Solidity's
+             naming convention.
+Type:        Violation
+Contract:    SimpleLendingProxy
+Line:        287
+Source: 
+>     address constant LendingPoolAddressesProviderAddress = 0x24a42fD28C976A61Df5D00D0599C34c4f90748c8;
+>     address constant aETHAddress = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>     address constant aETHContractAddress = 0x3a3A65aAb0dd2A17E3F1947bA16138cd37d08c04;
+
+
+Severity:    INFO
+Pattern:     Solidity Naming Convention
+Description: Reports declarations that do not adhere to Solidity's
+             naming convention.
+Type:        Violation
+Contract:    SimpleLendingProxy
+Line:        288
+Source: 
+>     address constant aETHAddress = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
+>     address constant aETHContractAddress = 0x3a3A65aAb0dd2A17E3F1947bA16138cd37d08c04;
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 
+
+
+Severity:    INFO
+Pattern:     Solidity Naming Convention
+Description: Reports declarations that do not adhere to Solidity's
+             naming convention.
+Type:        Violation
+Contract:    SimpleLending
+Line:        854
+Source: 
+>         }
+>         (uint returnedCollateralAmount, ) = convert(loanReserve, collateralReserve, loanAmount);
+>          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         returnedCollateralAmount = applyLiquidationDiscount(returnedCollateralAmount);
+
+
+Severity:    INFO
+Pattern:     Solidity Naming Convention
+Description: Reports declarations that do not adhere to Solidity's
+             naming convention.
+Type:        Violation
+Contract:    SimpleLending
+Line:        883
+Source: 
+>     function hasEnoughCollateral(address reserve, uint256 amount) public returns (bool) {
+>         (uint borrowableAmountInETH, ) = getBorrowableAmountInETH(msg.sender);
+>          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         (uint loanWorthInETH, ) = convert(reserve, ethAddress, amount);
+
+
+Severity:    INFO
+Pattern:     Solidity Naming Convention
+Description: Reports declarations that do not adhere to Solidity's
+             naming convention.
+Type:        Violation
+Contract:    SimpleLending
+Line:        884
+Source: 
+>         (uint borrowableAmountInETH, ) = getBorrowableAmountInETH(msg.sender);
+>         (uint loanWorthInETH, ) = convert(reserve, ethAddress, amount);
+>          ^^^^^^^^^^^^^^^^^^^
+>         return borrowableAmountInETH >= loanWorthInETH;
+
+
+Severity:    INFO
+Pattern:     Solidity Naming Convention
+Description: Reports declarations that do not adhere to Solidity's
+             naming convention.
+Type:        Violation
+Contract:    SimpleLending
+Line:        896
+Source: 
+>         for(uint i = 0; i < reserves.length; i++) {
+>             (uint conversion, ) = convert(reserves[i], ethAddress, userDeposits[account][reserves[i]]);
+>              ^^^^^^^^^^^^^^^
+>             deposits += conversion;
+
+
+Severity:    INFO
+Pattern:     Solidity Naming Convention
+Description: Reports declarations that do not adhere to Solidity's
+             naming convention.
+Type:        Violation
+Contract:    SimpleLending
+Line:        909
+Source: 
+>         for(uint i = 0; i < reserves.length; i++) {
+>             (uint conversion, ) = convert(reserves[i], ethAddress, userLoans[account][reserves[i]]);
+>              ^^^^^^^^^^^^^^^
+>             borrows += conversion;
+
+
+Severity:    INFO
+Pattern:     Solidity Naming Convention
+Description: Reports declarations that do not adhere to Solidity's
+             naming convention.
+Type:        Violation
+Contract:    SimpleLending
+Line:        920
+Source: 
+>     function getBorrowableAmountInETH(address account) public returns (uint, uint) {
+>         (uint deposits, ) = getUserDepositsInETH(account);
+>          ^^^^^^^^^^^^^
+>         (uint borrows, ) = getUserLoansInETH(account);
+
+
+Severity:    INFO
+Pattern:     Solidity Naming Convention
+Description: Reports declarations that do not adhere to Solidity's
+             naming convention.
+Type:        Violation
+Contract:    SimpleLending
+Line:        921
+Source: 
+>         (uint deposits, ) = getUserDepositsInETH(account);
+>         (uint borrows, ) = getUserLoansInETH(account);
+>          ^^^^^^^^^^^^
+>         uint accountCollateralizationRatio = baseCollateralisationRate * IWebOfTrust(webOfTrustAddress).getAggregateAgentFactorForProtocol(account, address(this));
+
+
+Severity:    INFO
+Pattern:     Solidity Naming Convention
+Description: Reports declarations that do not adhere to Solidity's
+             naming convention.
+Type:        Violation
+Contract:    SimpleLending
+Line:        930
+Source: 
+>     function isUnderCollateralised(address account) public view returns (bool) {
+>         (uint collateralInUse, ) = getCollateralInUseInETH(account);
+>          ^^^^^^^^^^^^^^^^^^^^
+>         (uint deposits, ) = getUserDepositsInETH(account);
+
+
+Severity:    INFO
+Pattern:     Solidity Naming Convention
+Description: Reports declarations that do not adhere to Solidity's
+             naming convention.
+Type:        Violation
+Contract:    SimpleLending
+Line:        931
+Source: 
+>         (uint collateralInUse, ) = getCollateralInUseInETH(account);
+>         (uint deposits, ) = getUserDepositsInETH(account);
+>          ^^^^^^^^^^^^^
+>         return deposits < collateralInUse;
+
+
+Severity:    INFO
+Pattern:     Solidity Naming Convention
+Description: Reports declarations that do not adhere to Solidity's
+             naming convention.
+Type:        Violation
+Contract:    SimpleLending
+Line:        937
+Source: 
+>         require(isUnderCollateralised(account), "Account is not undercollateralised");
+>         (uint collateralInUse, ) = getCollateralInUseInETH(account);
+>          ^^^^^^^^^^^^^^^^^^^^
+>         (uint deposits, ) = getUserDepositsInETH(account);
+
+
+Severity:    INFO
+Pattern:     Solidity Naming Convention
+Description: Reports declarations that do not adhere to Solidity's
+             naming convention.
+Type:        Violation
+Contract:    SimpleLending
+Line:        938
+Source: 
+>         (uint collateralInUse, ) = getCollateralInUseInETH(account);
+>         (uint deposits, ) = getUserDepositsInETH(account);
+>          ^^^^^^^^^^^^^
+> 
+
+
+Severity:    INFO
+Pattern:     Solidity Naming Convention
+Description: Reports declarations that do not adhere to Solidity's
+             naming convention.
+Type:        Violation
+Contract:    SimpleLending
+Line:        942
+Source: 
+> 
+>         (uint maxAmountToLiquidateInReserve, ) = convert(ethAddress, reserve, maxAmountToLiquidateInEth);
+>          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         maxAmountToLiquidateInReserve = maxAmountToLiquidateInReserve / (10 ** conversionDecimals);
+
+
+Severity:    INFO
+Pattern:     Solidity Naming Convention
+Description: Reports declarations that do not adhere to Solidity's
+             naming convention.
+Type:        Violation
+Contract:    SimpleLending
+Line:        950
+Source: 
+>     function getCollateralInUseInETH(address account) public view returns (uint, uint) {
+>         (uint borrows, ) = getUserLoansInETH(account);
+>          ^^^^^^^^^^^^
+>         uint accountCollateralizationRatio = baseCollateralisationRate * IWebOfTrust(webOfTrustAddress).getAggregateAgentFactorForProtocol(account, address(this));
+
+
+Severity:    INFO
+Pattern:     State variables default visibility
+Description: Visibility of state variables should be stated explicitly
+Type:        Violation
+Contract:    WebOfTrust
+Line:        12
+Source: 
+> contract WebOfTrust {
+>     address constant aETHAddress = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>     UserProxyFactory userProxyFactory;
+
+
+Severity:    INFO
+Pattern:     State variables default visibility
+Description: Visibility of state variables should be stated explicitly
+Type:        Violation
+Contract:    WebOfTrust
+Line:        13
+Source: 
+>     address constant aETHAddress = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
+>     UserProxyFactory userProxyFactory;
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>     LBCR[] lbcrs;
+
+
+Severity:    INFO
+Pattern:     State variables default visibility
+Description: Visibility of state variables should be stated explicitly
+Type:        Violation
+Contract:    WebOfTrust
+Line:        14
+Source: 
+>     UserProxyFactory userProxyFactory;
+>     LBCR[] lbcrs;
+>     ^^^^^^^^^^^^
+>     mapping (address => address) protocolToLBCR;
+
+
+Severity:    INFO
+Pattern:     State variables default visibility
+Description: Visibility of state variables should be stated explicitly
+Type:        Violation
+Contract:    WebOfTrust
+Line:        15
+Source: 
+>     LBCR[] lbcrs;
+>     mapping (address => address) protocolToLBCR;
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>     mapping (address => address) protocolToProxy;
+
+
+Severity:    INFO
+Pattern:     State variables default visibility
+Description: Visibility of state variables should be stated explicitly
+Type:        Violation
+Contract:    WebOfTrust
+Line:        16
+Source: 
+>     mapping (address => address) protocolToLBCR;
+>     mapping (address => address) protocolToProxy;
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>     mapping (address => bool) protocolProxy;
+
+
+Severity:    INFO
+Pattern:     State variables default visibility
+Description: Visibility of state variables should be stated explicitly
+Type:        Violation
+Contract:    WebOfTrust
+Line:        17
+Source: 
+>     mapping (address => address) protocolToProxy;
+>     mapping (address => bool) protocolProxy;
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>     uint agentFactorDecimals;
+
+
+Severity:    INFO
+Pattern:     State variables default visibility
+Description: Visibility of state variables should be stated explicitly
+Type:        Violation
+Contract:    WebOfTrust
+Line:        18
+Source: 
+>     mapping (address => bool) protocolProxy;
+>     uint agentFactorDecimals;
+>     ^^^^^^^^^^^^^^^^^^^^^^^^
+> 
+
+
+Severity:    INFO
+Pattern:     State variables default visibility
+Description: Visibility of state variables should be stated explicitly
+Type:        Violation
+Contract:    UserProxyFactory
+Line:        107
+Source: 
+> contract UserProxyFactory {
+>     mapping (address => UserProxy) userAddressToUserProxy;
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>     mapping (address => address) userProxyToUserAddress;
+
+
+Severity:    INFO
+Pattern:     State variables default visibility
+Description: Visibility of state variables should be stated explicitly
+Type:        Violation
+Contract:    UserProxyFactory
+Line:        108
+Source: 
+>     mapping (address => UserProxy) userAddressToUserProxy;
+>     mapping (address => address) userProxyToUserAddress;
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 
+
+
+Severity:    INFO
+Pattern:     State variables default visibility
+Description: Visibility of state variables should be stated explicitly
+Type:        Violation
+Contract:    UserProxyFactory
+Line:        110
+Source: 
+> 
+>     LBCR[] lbcrs;
+>     ^^^^^^^^^^^^
+>     WebOfTrust webOfTrust;
+
+
+Severity:    INFO
+Pattern:     State variables default visibility
+Description: Visibility of state variables should be stated explicitly
+Type:        Violation
+Contract:    UserProxyFactory
+Line:        111
+Source: 
+>     LBCR[] lbcrs;
+>     WebOfTrust webOfTrust;
+>     ^^^^^^^^^^^^^^^^^^^^^
+>     mapping (address => bool) isAgentInitialized;
+
+
+Severity:    INFO
+Pattern:     State variables default visibility
+Description: Visibility of state variables should be stated explicitly
+Type:        Violation
+Contract:    UserProxyFactory
+Line:        112
+Source: 
+>     WebOfTrust webOfTrust;
+>     mapping (address => bool) isAgentInitialized;
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>     address[] agents;
+
+
+Severity:    INFO
+Pattern:     State variables default visibility
+Description: Visibility of state variables should be stated explicitly
+Type:        Violation
+Contract:    UserProxyFactory
+Line:        113
+Source: 
+>     mapping (address => bool) isAgentInitialized;
+>     address[] agents;
+>     ^^^^^^^^^^^^^^^^
+> 
+
+
+Severity:    INFO
+Pattern:     State variables default visibility
+Description: Visibility of state variables should be stated explicitly
+Type:        Violation
+Contract:    UserProxy
+Line:        168
+Source: 
+> contract UserProxy {
+>     address agentOwner;
+>     ^^^^^^^^^^^^^^^^^^
+>     uint256 constant INT256_MAX = ~(uint256(1) << 255);
+
+
+Severity:    INFO
+Pattern:     State variables default visibility
+Description: Visibility of state variables should be stated explicitly
+Type:        Violation
+Contract:    UserProxy
+Line:        169
+Source: 
+>     address agentOwner;
+>     uint256 constant INT256_MAX = ~(uint256(1) << 255);
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 
+
+
+Severity:    INFO
+Pattern:     State variables default visibility
+Description: Visibility of state variables should be stated explicitly
+Type:        Violation
+Contract:    UserProxy
+Line:        172
+Source: 
+>     // only callable by (all the) user protocol proxies
+>     address[] authorisedContracts;
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>     address constant aETHAddress = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
+
+
+Severity:    INFO
+Pattern:     State variables default visibility
+Description: Visibility of state variables should be stated explicitly
+Type:        Violation
+Contract:    UserProxy
+Line:        173
+Source: 
+>     address[] authorisedContracts;
+>     address constant aETHAddress = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>     address constant LendingPoolAddressesProviderAddress = 0x24a42fD28C976A61Df5D00D0599C34c4f90748c8;
+
+
+Severity:    INFO
+Pattern:     State variables default visibility
+Description: Visibility of state variables should be stated explicitly
+Type:        Violation
+Contract:    UserProxy
+Line:        174
+Source: 
+>     address constant aETHAddress = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
+>     address constant LendingPoolAddressesProviderAddress = 0x24a42fD28C976A61Df5D00D0599C34c4f90748c8;
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>     mapping(address => int256) agentFundsInPool;
+
+
+Severity:    INFO
+Pattern:     State variables default visibility
+Description: Visibility of state variables should be stated explicitly
+Type:        Violation
+Contract:    UserProxy
+Line:        175
+Source: 
+>     address constant LendingPoolAddressesProviderAddress = 0x24a42fD28C976A61Df5D00D0599C34c4f90748c8;
+>     mapping(address => int256) agentFundsInPool;
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>     LBCR[] lbcrs;
+
+
+Severity:    INFO
+Pattern:     State variables default visibility
+Description: Visibility of state variables should be stated explicitly
+Type:        Violation
+Contract:    UserProxy
+Line:        176
+Source: 
+>     mapping(address => int256) agentFundsInPool;
+>     LBCR[] lbcrs;
+>     ^^^^^^^^^^^^
+>     address webOfTrustAddress;
+
+
+Severity:    INFO
+Pattern:     State variables default visibility
+Description: Visibility of state variables should be stated explicitly
+Type:        Violation
+Contract:    UserProxy
+Line:        177
+Source: 
+>     LBCR[] lbcrs;
+>     address webOfTrustAddress;
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^
+> 
+
+
+Severity:    INFO
+Pattern:     State variables default visibility
+Description: Visibility of state variables should be stated explicitly
+Type:        Violation
+Contract:    UserProxy
+Line:        193
+Source: 
+>     modifier onlyAuthorised() {
+>         bool isAuthorised = false;
+>         ^^^^^^^^^^^^^^^^^
+> 
+
+
+Severity:    INFO
+Pattern:     State variables default visibility
+Description: Visibility of state variables should be stated explicitly
+Type:        Violation
+Contract:    UserProxy
+Line:        195
+Source: 
+> 
+>         for (uint i = 0; i < authorisedContracts.length; i++) {
+>              ^^^^^^
+>             if(authorisedContracts[i] == msg.sender) {
+
+
+Severity:    INFO
+Pattern:     State variables default visibility
+Description: Visibility of state variables should be stated explicitly
+Type:        Violation
+Contract:    SimpleLendingProxy
+Line:        286
+Source: 
+> contract SimpleLendingProxy {
+>     address constant LendingPoolAddressesProviderAddress = 0x24a42fD28C976A61Df5D00D0599C34c4f90748c8;
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>     address constant aETHAddress = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
+
+
+Severity:    INFO
+Pattern:     State variables default visibility
+Description: Visibility of state variables should be stated explicitly
+Type:        Violation
+Contract:    SimpleLendingProxy
+Line:        287
+Source: 
+>     address constant LendingPoolAddressesProviderAddress = 0x24a42fD28C976A61Df5D00D0599C34c4f90748c8;
+>     address constant aETHAddress = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>     address constant aETHContractAddress = 0x3a3A65aAb0dd2A17E3F1947bA16138cd37d08c04;
+
+
+Severity:    INFO
+Pattern:     State variables default visibility
+Description: Visibility of state variables should be stated explicitly
+Type:        Violation
+Contract:    SimpleLendingProxy
+Line:        288
+Source: 
+>     address constant aETHAddress = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
+>     address constant aETHContractAddress = 0x3a3A65aAb0dd2A17E3F1947bA16138cd37d08c04;
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 
+
+
+Severity:    INFO
+Pattern:     State variables default visibility
+Description: Visibility of state variables should be stated explicitly
+Type:        Violation
+Contract:    SimpleLendingProxy
+Line:        290
+Source: 
+> 
+>     uint256 depositAction;
+>     ^^^^^^^^^^^^^^^^^^^^^
+>     uint256 borrowAction;
+
+
+Severity:    INFO
+Pattern:     State variables default visibility
+Description: Visibility of state variables should be stated explicitly
+Type:        Violation
+Contract:    SimpleLendingProxy
+Line:        291
+Source: 
+>     uint256 depositAction;
+>     uint256 borrowAction;
+>     ^^^^^^^^^^^^^^^^^^^^
+>     uint256 repayAction;
+
+
+Severity:    INFO
+Pattern:     State variables default visibility
+Description: Visibility of state variables should be stated explicitly
+Type:        Violation
+Contract:    SimpleLendingProxy
+Line:        292
+Source: 
+>     uint256 borrowAction;
+>     uint256 repayAction;
+>     ^^^^^^^^^^^^^^^^^^^
+>     uint256 liquidateAction;
+
+
+Severity:    INFO
+Pattern:     State variables default visibility
+Description: Visibility of state variables should be stated explicitly
+Type:        Violation
+Contract:    SimpleLendingProxy
+Line:        293
+Source: 
+>     uint256 repayAction;
+>     uint256 liquidateAction;
+>     ^^^^^^^^^^^^^^^^^^^^^^^
+>     uint256 flashLoanAction;
+
+
+Severity:    INFO
+Pattern:     State variables default visibility
+Description: Visibility of state variables should be stated explicitly
+Type:        Violation
+Contract:    SimpleLendingProxy
+Line:        294
+Source: 
+>     uint256 liquidateAction;
+>     uint256 flashLoanAction;
+>     ^^^^^^^^^^^^^^^^^^^^^^^
+>     uint256 redeemAction;
+
+
+Severity:    INFO
+Pattern:     State variables default visibility
+Description: Visibility of state variables should be stated explicitly
+Type:        Violation
+Contract:    SimpleLendingProxy
+Line:        295
+Source: 
+>     uint256 flashLoanAction;
+>     uint256 redeemAction;
+>     ^^^^^^^^^^^^^^^^^^^^
+>     WebOfTrust webOfTrust;
+
+
+Severity:    INFO
+Pattern:     State variables default visibility
+Description: Visibility of state variables should be stated explicitly
+Type:        Violation
+Contract:    SimpleLendingProxy
+Line:        296
+Source: 
+>     uint256 redeemAction;
+>     WebOfTrust webOfTrust;
+>     ^^^^^^^^^^^^^^^^^^^^^
+>     UserProxyFactory userProxyFactory;
+
+
+Severity:    INFO
+Pattern:     State variables default visibility
+Description: Visibility of state variables should be stated explicitly
+Type:        Violation
+Contract:    SimpleLendingProxy
+Line:        297
+Source: 
+>     WebOfTrust webOfTrust;
+>     UserProxyFactory userProxyFactory;
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>     SimpleLending simpleLending;
+
+
+Severity:    INFO
+Pattern:     State variables default visibility
+Description: Visibility of state variables should be stated explicitly
+Type:        Violation
+Contract:    SimpleLendingProxy
+Line:        298
+Source: 
+>     UserProxyFactory userProxyFactory;
+>     SimpleLending simpleLending;
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 
+
+
+Severity:    INFO
+Pattern:     State variables default visibility
+Description: Visibility of state variables should be stated explicitly
+Type:        Violation
+Contract:    LBCR
+Line:        397
+Source: 
+> contract LBCR is ILBCR {
+>     address[] authorisedContracts;
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 
+
+
+Severity:    INFO
+Pattern:     State variables default visibility
+Description: Visibility of state variables should be stated explicitly
+Type:        Violation
+Contract:    LBCR
+Line:        399
+Source: 
+> 
+>     uint256 _decimals; // decimals to calculate collateral factor
+>     ^^^^^^^^^^^^^^^^^
+> 
+
+
+Severity:    INFO
+Pattern:     State variables default visibility
+Description: Visibility of state variables should be stated explicitly
+Type:        Violation
+Contract:    LBCR
+Line:        402
+Source: 
+>     // Implementation of L = (lower, upper, factor)
+>     uint[] _layers; // array of layers, e.g. {1,2,3,4}
+>     ^^^^^^^^^^^^^^
+>     mapping (uint => uint256) _lower; // lower bound of layer
+
+
+Severity:    INFO
+Pattern:     State variables default visibility
+Description: Visibility of state variables should be stated explicitly
+Type:        Violation
+Contract:    LBCR
+Line:        403
+Source: 
+>     uint[] _layers; // array of layers, e.g. {1,2,3,4}
+>     mapping (uint => uint256) _lower; // lower bound of layer
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>     mapping (uint => uint256) _upper; // upper bound of layer
+
+
+Severity:    INFO
+Pattern:     State variables default visibility
+Description: Visibility of state variables should be stated explicitly
+Type:        Violation
+Contract:    LBCR
+Line:        404
+Source: 
+>     mapping (uint => uint256) _lower; // lower bound of layer
+>     mapping (uint => uint256) _upper; // upper bound of layer
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>     mapping (uint => uint256) _factors; // factor of layer
+
+
+Severity:    INFO
+Pattern:     State variables default visibility
+Description: Visibility of state variables should be stated explicitly
+Type:        Violation
+Contract:    LBCR
+Line:        405
+Source: 
+>     mapping (uint => uint256) _upper; // upper bound of layer
+>     mapping (uint => uint256) _factors; // factor of layer
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 
+
+
+Severity:    INFO
+Pattern:     State variables default visibility
+Description: Visibility of state variables should be stated explicitly
+Type:        Violation
+Contract:    LBCR
+Line:        408
+Source: 
+>     // Implementation of the relevant agreement parameters A = (phi, payment, score, deposits)
+>     mapping (uint256 => uint256) _rewards; // reward (score) for performing an action
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 
+
+
+Severity:    INFO
+Pattern:     State variables default visibility
+Description: Visibility of state variables should be stated explicitly
+Type:        Violation
+Contract:    LBCR
+Line:        411
+Source: 
+>     // Implementation of the registry
+>     mapping (uint256 => mapping (address => uint)) _assignments; // layer assignment by round and agent
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>     mapping (uint256 => mapping (address => uint256)) _scores; // score by round and agent
+
+
+Severity:    INFO
+Pattern:     State variables default visibility
+Description: Visibility of state variables should be stated explicitly
+Type:        Violation
+Contract:    LBCR
+Line:        412
+Source: 
+>     mapping (uint256 => mapping (address => uint)) _assignments; // layer assignment by round and agent
+>     mapping (uint256 => mapping (address => uint256)) _scores; // score by round and agent
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>     mapping (address => uint256) _interactionCount;
+
+
+Severity:    INFO
+Pattern:     State variables default visibility
+Description: Visibility of state variables should be stated explicitly
+Type:        Violation
+Contract:    LBCR
+Line:        413
+Source: 
+>     mapping (uint256 => mapping (address => uint256)) _scores; // score by round and agent
+>     mapping (address => uint256) _interactionCount;
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>     uint256 _round; // current round in the protocol
+
+
+Severity:    INFO
+Pattern:     State variables default visibility
+Description: Visibility of state variables should be stated explicitly
+Type:        Violation
+Contract:    LBCR
+Line:        414
+Source: 
+>     mapping (address => uint256) _interactionCount;
+>     uint256 _round; // current round in the protocol
+>     ^^^^^^^^^^^^^^
+>     
+
+
+Severity:    INFO
+Pattern:     State variables default visibility
+Description: Visibility of state variables should be stated explicitly
+Type:        Violation
+Contract:    LBCR
+Line:        416
+Source: 
+>     
+>     mapping (address => bool) _agents; // track all agents
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>     address[] agentList;
+
+
+Severity:    INFO
+Pattern:     State variables default visibility
+Description: Visibility of state variables should be stated explicitly
+Type:        Violation
+Contract:    LBCR
+Line:        417
+Source: 
+>     mapping (address => bool) _agents; // track all agents
+>     address[] agentList;
+>     ^^^^^^^^^^^^^^^^^^^
+> 
+
+
+Severity:    INFO
+Pattern:     State variables default visibility
+Description: Visibility of state variables should be stated explicitly
+Type:        Violation
+Contract:    LBCR
+Line:        419
+Source: 
+> 
+>     uint256 _blockperiod; // block period until curation
+>     ^^^^^^^^^^^^^^^^^^^^
+>     uint256 _start; // start of period
+
+
+Severity:    INFO
+Pattern:     State variables default visibility
+Description: Visibility of state variables should be stated explicitly
+Type:        Violation
+Contract:    LBCR
+Line:        420
+Source: 
+>     uint256 _blockperiod; // block period until curation
+>     uint256 _start; // start of period
+>     ^^^^^^^^^^^^^^
+>     uint256 _end; // end of period
+
+
+Severity:    INFO
+Pattern:     State variables default visibility
+Description: Visibility of state variables should be stated explicitly
+Type:        Violation
+Contract:    LBCR
+Line:        421
+Source: 
+>     uint256 _start; // start of period
+>     uint256 _end; // end of period
+>     ^^^^^^^^^^^^
+>     mapping(address => uint) compatibilityScores;
+
+
+Severity:    INFO
+Pattern:     State variables default visibility
+Description: Visibility of state variables should be stated explicitly
+Type:        Violation
+Contract:    LBCR
+Line:        422
+Source: 
+>     uint256 _end; // end of period
+>     mapping(address => uint) compatibilityScores;
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>     mapping(address => uint) timeDiscountedFactors;
+
+
+Severity:    INFO
+Pattern:     State variables default visibility
+Description: Visibility of state variables should be stated explicitly
+Type:        Violation
+Contract:    LBCR
+Line:        423
+Source: 
+>     mapping(address => uint) compatibilityScores;
+>     mapping(address => uint) timeDiscountedFactors;
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 
+
+
+Severity:    INFO
+Pattern:     State variables default visibility
+Description: Visibility of state variables should be stated explicitly
+Type:        Violation
+Contract:    LBCR
+Line:        425
+Source: 
+> 
+>     uint recentFactorTimeDiscount;
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>     uint olderFactorTimeDiscount;
+
+
+Severity:    INFO
+Pattern:     State variables default visibility
+Description: Visibility of state variables should be stated explicitly
+Type:        Violation
+Contract:    LBCR
+Line:        426
+Source: 
+>     uint recentFactorTimeDiscount;
+>     uint olderFactorTimeDiscount;
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 
+
+
+Severity:    INFO
+Pattern:     State variables default visibility
+Description: Visibility of state variables should be stated explicitly
+Type:        Violation
+Contract:    LBCR
+Line:        446
+Source: 
+>     modifier onlyAuthorised() {
+>         bool isAuthorised = false;
+>         ^^^^^^^^^^^^^^^^^
+> 
+
+
+Severity:    INFO
+Pattern:     State variables default visibility
+Description: Visibility of state variables should be stated explicitly
+Type:        Violation
+Contract:    LBCR
+Line:        448
+Source: 
+> 
+>         for (uint i = 0; i < authorisedContracts.length; i++) {
+>              ^^^^^^
+>             if(authorisedContracts[i] == msg.sender) {
+
+
+Severity:    INFO
+Pattern:     State variables default visibility
+Description: Visibility of state variables should be stated explicitly
+Type:        Violation
+Contract:    SimpleLending
+Line:        778
+Source: 
+> contract SimpleLending {
+>     mapping (address => mapping(address => uint)) userDeposits;
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>     mapping (address => mapping(address => uint)) userLoans;
+
+
+Severity:    INFO
+Pattern:     State variables default visibility
+Description: Visibility of state variables should be stated explicitly
+Type:        Violation
+Contract:    SimpleLending
+Line:        779
+Source: 
+>     mapping (address => mapping(address => uint)) userDeposits;
+>     mapping (address => mapping(address => uint)) userLoans;
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>     mapping(address => uint) reserveLiquidity;
+
+
+Severity:    INFO
+Pattern:     State variables default visibility
+Description: Visibility of state variables should be stated explicitly
+Type:        Violation
+Contract:    SimpleLending
+Line:        780
+Source: 
+>     mapping (address => mapping(address => uint)) userLoans;
+>     mapping(address => uint) reserveLiquidity;
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>     address webOfTrustAddress;
+
+
+Severity:    INFO
+Pattern:     State variables default visibility
+Description: Visibility of state variables should be stated explicitly
+Type:        Violation
+Contract:    SimpleLending
+Line:        781
+Source: 
+>     mapping(address => uint) reserveLiquidity;
+>     address webOfTrustAddress;
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^
+>     address[] reserves;
+
+
+Severity:    INFO
+Pattern:     State variables default visibility
+Description: Visibility of state variables should be stated explicitly
+Type:        Violation
+Contract:    SimpleLending
+Line:        782
+Source: 
+>     address webOfTrustAddress;
+>     address[] reserves;
+>     ^^^^^^^^^^^^^^^^^^
+>     uint baseCollateralisationRate;
+
+
+Severity:    INFO
+Pattern:     State variables default visibility
+Description: Visibility of state variables should be stated explicitly
+Type:        Violation
+Contract:    SimpleLending
+Line:        783
+Source: 
+>     address[] reserves;
+>     uint baseCollateralisationRate;
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>     uint baseCollateralisationRateDecimals;
+
+
+Severity:    INFO
+Pattern:     State variables default visibility
+Description: Visibility of state variables should be stated explicitly
+Type:        Violation
+Contract:    SimpleLending
+Line:        784
+Source: 
+>     uint baseCollateralisationRate;
+>     uint baseCollateralisationRateDecimals;
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 
+
+
+Severity:    INFO
+Pattern:     State variables default visibility
+Description: Visibility of state variables should be stated explicitly
+Type:        Violation
+Contract:    SimpleLending
+Line:        786
+Source: 
+> 
+>     address ethAddress = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>     uint256 collateralizationDecimals = 3; // decimals to calculate collateral factor
+
+
+Severity:    INFO
+Pattern:     State variables default visibility
+Description: Visibility of state variables should be stated explicitly
+Type:        Violation
+Contract:    SimpleLending
+Line:        787
+Source: 
+>     address ethAddress = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
+>     uint256 collateralizationDecimals = 3; // decimals to calculate collateral factor
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>     uint conversionDecimals = 25;
+
+
+Severity:    INFO
+Pattern:     State variables default visibility
+Description: Visibility of state variables should be stated explicitly
+Type:        Violation
+Contract:    SimpleLending
+Line:        788
+Source: 
+>     uint256 collateralizationDecimals = 3; // decimals to calculate collateral factor
+>     uint conversionDecimals = 25;
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 
+
+
+Severity:    INFO
+Pattern:     State variables default visibility
+Description: Visibility of state variables should be stated explicitly
+Type:        Violation
+Contract:    SimpleLending
+Line:        888
+Source: 
+> 
+>     modifier enoughLiquidity(address reserve, uint256 amount) {
+>                              ^^^^^^^^^^^^^^^
+>         require(reserveLiquidity[reserve] >= amount, "not enough reserve liquidity");
+
+
+Severity:    INFO
+Pattern:     State variables default visibility
+Description: Visibility of state variables should be stated explicitly
+Type:        Violation
+Contract:    SimpleLending
+Line:        888
+Source: 
+> 
+>     modifier enoughLiquidity(address reserve, uint256 amount) {
+>                                               ^^^^^^^^^^^^^^
+>         require(reserveLiquidity[reserve] >= amount, "not enough reserve liquidity");
+
+
+Severity:    CRITICAL
+Pattern:     Transaction Order Affects Ether Amount
+Description: The amount of ether transferred must not be influenced by
+             other transactions.
+Type:        Warning
+Contract:    UserProxy
+Line:        228
+Source: 
+>         } else {
+>             msg.sender.transfer(_amount);
+>             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         }
+
+
+Severity:    CRITICAL
+Pattern:     Transaction Order Affects Ether Amount
+Description: The amount of ether transferred must not be influenced by
+             other transactions.
+Type:        Warning
+Contract:    SimpleLending
+Line:        875
+Source: 
+>         if(reserve == ethAddress) {
+>             payee.transfer(amount);
+>             ^^^^^^^^^^^^^^^^^^^^^^
+>         } else {
+
+
+Severity:    CRITICAL
+Pattern:     Transaction Order Affects Ether Receiver
+Description: The receiver of ether transfers must not be influenced by
+             other transactions.
+Type:        Warning
+Contract:    UserProxy
+Line:        228
+Source: 
+>         } else {
+>             msg.sender.transfer(_amount);
+>             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         }
+
+
+Severity:    CRITICAL
+Pattern:     Transaction Order Affects Ether Receiver
+Description: The receiver of ether transfers must not be influenced by
+             other transactions.
+Type:        Warning
+Contract:    SimpleLending
+Line:        875
+Source: 
+>         if(reserve == ethAddress) {
+>             payee.transfer(amount);
+>             ^^^^^^^^^^^^^^^^^^^^^^
+>         } else {
+
+
+Severity:    CRITICAL
+Pattern:     Transaction Order Affects Ether Receiver
+Description: The receiver of ether transfers must not be influenced by
+             other transactions.
+Type:        Violation
+Contract:    UserProxy
+Line:        274
+Source: 
+>             } else {
+>                 (success, ) = target.call.value(amount)(abiEncoding);
+>                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>             }
+
+
+Severity:    CRITICAL
+Pattern:     Transaction Order Affects Execution of Ether Transfer
+Description: Ether transfers whose execution can be manipulated by
+             other transactions must be inspected for unintended
+             behavior.
+Type:        Violation
+Contract:    UserProxy
+Line:        228
+Source: 
+>         } else {
+>             msg.sender.transfer(_amount);
+>             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         }
+
+
+Severity:    CRITICAL
+Pattern:     Transaction Order Affects Execution of Ether Transfer
+Description: Ether transfers whose execution can be manipulated by
+             other transactions must be inspected for unintended
+             behavior.
+Type:        Violation
+Contract:    UserProxy
+Line:        274
+Source: 
+>             } else {
+>                 (success, ) = target.call.value(amount)(abiEncoding);
+>                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>             }
+
+
+Severity:    CRITICAL
+Pattern:     Transaction Order Affects Execution of Ether Transfer
+Description: Ether transfers whose execution can be manipulated by
+             other transactions must be inspected for unintended
+             behavior.
+Type:        Violation
+Contract:    SimpleLending
+Line:        875
+Source: 
+>         if(reserve == ethAddress) {
+>             payee.transfer(amount);
+>             ^^^^^^^^^^^^^^^^^^^^^^
+>         } else {
+
+
+Severity:    HIGH
+Pattern:     Unhandled Exception
+Description: The return value of statements that may return error
+             values must be explicitly checked.
+Type:        Warning
+Contract:    WebOfTrust
+Line:        76
+Source: 
+>             LBCR lbcr = lbcrs[i];
+>             if(lbcr.getInteractionCount(agent) > 0) {
+>                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>                 agentFactorSum += (lbcr.getAgentFactor(agent) * ILBCR(LBCRAddress).getCompatibilityScoreWith(address(lbcr)));
+
+
+Severity:    HIGH
+Pattern:     Unhandled Exception
+Description: The return value of statements that may return error
+             values must be explicitly checked.
+Type:        Warning
+Contract:    WebOfTrust
+Line:        78
+Source: 
+>                 agentFactorSum += (lbcr.getAgentFactor(agent) * ILBCR(LBCRAddress).getCompatibilityScoreWith(address(lbcr)));
+>                 agentFactorDenominator += ILBCR(LBCRAddress).getCompatibilityScoreWith(address(lbcr));
+>                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>             }
+
+
+Severity:    HIGH
+Pattern:     Unhandled Exception
+Description: The return value of statements that may return error
+             values must be explicitly checked.
+Type:        Warning
+Contract:    UserProxy
+Line:        217
+Source: 
+>         if(reserve != aETHAddress) {
+>             return IERC20(reserve).balanceOf(address(this)) >= amount;
+>                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         } else {
+
+
+Severity:    HIGH
+Pattern:     Unhandled Exception
+Description: The return value of statements that may return error
+             values must be explicitly checked.
+Type:        Warning
+Contract:    UserProxy
+Line:        211
+Source: 
+>     modifier onlyProtocolProxies() {
+>         require(IWebOfTrust(webOfTrustAddress).isProtocolProxy(msg.sender), "Caller is not protocol proxy");
+>                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         _;
+
+
+Severity:    HIGH
+Pattern:     Unhandled Exception
+Description: The return value of statements that may return error
+             values must be explicitly checked.
+Type:        Warning
+Contract:    SimpleLendingProxy
+Line:        334
+Source: 
+>         UserProxy userProxy = UserProxy(userProxyFactory.getUserProxyAddress(msg.sender));
+>         bool success = userProxy.proxyCall(address(simpleLending), abiEncoding, reserve, amount);
+>                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         require(success, "deposit failed");
+
+
+Severity:    HIGH
+Pattern:     Unhandled Exception
+Description: The return value of statements that may return error
+             values must be explicitly checked.
+Type:        Warning
+Contract:    SimpleLendingProxy
+Line:        346
+Source: 
+>         UserProxy userProxy = UserProxy(userProxyFactory.getUserProxyAddress(msg.sender));
+>         bool success = userProxy.proxyCall(address(simpleLending), abiEncoding);
+>                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         require(success, "borrow failed");
+
+
+Severity:    HIGH
+Pattern:     Unhandled Exception
+Description: The return value of statements that may return error
+             values must be explicitly checked.
+Type:        Warning
+Contract:    SimpleLendingProxy
+Line:        359
+Source: 
+>         UserProxy userProxy = UserProxy(userProxyFactory.getUserProxyAddress(msg.sender));
+>         bool success = userProxy.proxyCall(address(simpleLending), abiEncoding, reserve, amount);
+>                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         require(success, "repayment failed");
+
+
+Severity:    HIGH
+Pattern:     Unhandled Exception
+Description: The return value of statements that may return error
+             values must be explicitly checked.
+Type:        Warning
+Contract:    SimpleLendingProxy
+Line:        373
+Source: 
+>         UserProxy userProxy = UserProxy(userProxyFactory.getUserProxyAddress(msg.sender));
+>         bool success = userProxy.proxyCall(address(simpleLending), abiEncoding, loanReserve, loanAmount);
+>                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         require(success, "liquidation failed");
+
+
+Severity:    HIGH
+Pattern:     Unhandled Exception
+Description: The return value of statements that may return error
+             values must be explicitly checked.
+Type:        Warning
+Contract:    SimpleLendingProxy
+Line:        386
+Source: 
+>         UserProxy userProxy = UserProxy(userProxyFactory.getUserProxyAddress(msg.sender));
+>         bool success = userProxy.proxyCall(address(simpleLending), abiEncoding);
+>                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         require(success, "redeem failed");
+
+
+Severity:    HIGH
+Pattern:     Unhandled Exception
+Description: The return value of statements that may return error
+             values must be explicitly checked.
+Type:        Violation
+Contract:    WebOfTrust
+Line:        32
+Source: 
+>         protocolToLBCR[protocolAddress] = address(lbcr);
+>         lbcr.addAuthorisedContract(address(userProxyFactory));
+>         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         lbcr.addAuthorisedContract(msg.sender);
+
+
+Severity:    HIGH
+Pattern:     Unhandled Exception
+Description: The return value of statements that may return error
+             values must be explicitly checked.
+Type:        Violation
+Contract:    WebOfTrust
+Line:        33
+Source: 
+>         lbcr.addAuthorisedContract(address(userProxyFactory));
+>         lbcr.addAuthorisedContract(msg.sender);
+>         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         lbcrs.push(lbcr);
+
+
+Severity:    HIGH
+Pattern:     Unhandled Exception
+Description: The return value of statements that may return error
+             values must be explicitly checked.
+Type:        Violation
+Contract:    WebOfTrust
+Line:        35
+Source: 
+>         lbcrs.push(lbcr);
+>         userProxyFactory.addLBCR(address(lbcr));
+>         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         protocolToProxy[protocolAddress] = protocolProxyAddress;
+
+
+Severity:    HIGH
+Pattern:     Unhandled Exception
+Description: The return value of statements that may return error
+             values must be explicitly checked.
+Type:        Violation
+Contract:    WebOfTrust
+Line:        55
+Source: 
+>         LBCR lbcr = LBCR(protocolToLBCR[protocolAddress]);
+>         lbcr.update(agent, action);
+>         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+>     }
+
+
+Severity:    HIGH
+Pattern:     Unhandled Exception
+Description: The return value of statements that may return error
+             values must be explicitly checked.
+Type:        Violation
+Contract:    WebOfTrust
+Line:        77
+Source: 
+>             if(lbcr.getInteractionCount(agent) > 0) {
+>                 agentFactorSum += (lbcr.getAgentFactor(agent) * ILBCR(LBCRAddress).getCompatibilityScoreWith(address(lbcr)));
+>                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+>                 agentFactorDenominator += ILBCR(LBCRAddress).getCompatibilityScoreWith(address(lbcr));
+
+
+Severity:    HIGH
+Pattern:     Unhandled Exception
+Description: The return value of statements that may return error
+             values must be explicitly checked.
+Type:        Violation
+Contract:    WebOfTrust
+Line:        77
+Source: 
+>             if(lbcr.getInteractionCount(agent) > 0) {
+>                 agentFactorSum += (lbcr.getAgentFactor(agent) * ILBCR(LBCRAddress).getCompatibilityScoreWith(address(lbcr)));
+>                                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>                 agentFactorDenominator += ILBCR(LBCRAddress).getCompatibilityScoreWith(address(lbcr));
+
+
+Severity:    HIGH
+Pattern:     Unhandled Exception
+Description: The return value of statements that may return error
+             values must be explicitly checked.
+Type:        Violation
+Contract:    WebOfTrust
+Line:        91
+Source: 
+>         for(uint i = 0; i < lbcrs.length; i++) {
+>             lbcrs[i].curate();
+>             ^^^^^^^^^^^^^^^^^
+>         }
+
+
+Severity:    HIGH
+Pattern:     Unhandled Exception
+Description: The return value of statements that may return error
+             values must be explicitly checked.
+Type:        Violation
+Contract:    UserProxyFactory
+Line:        128
+Source: 
+>             for(uint i = 0; i < lbcrs.length; i++) {
+>                 lbcrs[i].registerAgent(address(userProxy));
+>                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>             }
+
+
+Severity:    HIGH
+Pattern:     Unhandled Exception
+Description: The return value of statements that may return error
+             values must be explicitly checked.
+Type:        Violation
+Contract:    UserProxyFactory
+Line:        141
+Source: 
+>         for(uint i = 0; i < agents.length; i++) {
+>             lbcr.registerAgent(agents[i]);
+>             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         }
+
+
+Severity:    HIGH
+Pattern:     Unhandled Exception
+Description: The return value of statements that may return error
+             values must be explicitly checked.
+Type:        Violation
+Contract:    UserProxy
+Line:        226
+Source: 
+>         if(_reserve != aETHAddress) {
+>             IERC20(_reserve).transfer(msg.sender, _amount);
+>             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         } else {
+
+
+Severity:    HIGH
+Pattern:     Unhandled Exception
+Description: The return value of statements that may return error
+             values must be explicitly checked.
+Type:        Violation
+Contract:    UserProxy
+Line:        236
+Source: 
+>         } else {
+>             IERC20(_reserve).transferFrom(msg.sender, address(this), _amount);
+>             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         }
+
+
+Severity:    HIGH
+Pattern:     Unhandled Exception
+Description: The return value of statements that may return error
+             values must be explicitly checked.
+Type:        Violation
+Contract:    UserProxy
+Line:        242
+Source: 
+>         if(_reserve != aETHAddress) {
+>             return IERC20(_reserve).balanceOf(address(this));
+>                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         } else {
+
+
+Severity:    HIGH
+Pattern:     Unhandled Exception
+Description: The return value of statements that may return error
+             values must be explicitly checked.
+Type:        Violation
+Contract:    UserProxy
+Line:        271
+Source: 
+>             if(reserve != aETHAddress) {
+>                 IERC20(reserve).approve(target, amount);
+>                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>                 (success, ) = target.call(abiEncoding);
+
+
+Severity:    HIGH
+Pattern:     Unhandled Exception
+Description: The return value of statements that may return error
+             values must be explicitly checked.
+Type:        Violation
+Contract:    SimpleLendingProxy
+Line:        333
+Source: 
+>         );
+>         UserProxy userProxy = UserProxy(userProxyFactory.getUserProxyAddress(msg.sender));
+>                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         bool success = userProxy.proxyCall(address(simpleLending), abiEncoding, reserve, amount);
+
+
+Severity:    HIGH
+Pattern:     Unhandled Exception
+Description: The return value of statements that may return error
+             values must be explicitly checked.
+Type:        Violation
+Contract:    SimpleLendingProxy
+Line:        336
+Source: 
+>         require(success, "deposit failed");
+>         webOfTrust.updateLBCR(address(simpleLending), address(userProxy), depositAction);
+>         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>     }
+
+
+Severity:    HIGH
+Pattern:     Unhandled Exception
+Description: The return value of statements that may return error
+             values must be explicitly checked.
+Type:        Violation
+Contract:    SimpleLendingProxy
+Line:        345
+Source: 
+>         );
+>         UserProxy userProxy = UserProxy(userProxyFactory.getUserProxyAddress(msg.sender));
+>                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         bool success = userProxy.proxyCall(address(simpleLending), abiEncoding);
+
+
+Severity:    HIGH
+Pattern:     Unhandled Exception
+Description: The return value of statements that may return error
+             values must be explicitly checked.
+Type:        Violation
+Contract:    SimpleLendingProxy
+Line:        348
+Source: 
+>         require(success, "borrow failed");
+>         webOfTrust.updateLBCR(address(simpleLending), address(userProxy), borrowAction);
+>         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>     }
+
+
+Severity:    HIGH
+Pattern:     Unhandled Exception
+Description: The return value of statements that may return error
+             values must be explicitly checked.
+Type:        Violation
+Contract:    SimpleLendingProxy
+Line:        358
+Source: 
+>         );
+>         UserProxy userProxy = UserProxy(userProxyFactory.getUserProxyAddress(msg.sender));
+>                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         bool success = userProxy.proxyCall(address(simpleLending), abiEncoding, reserve, amount);
+
+
+Severity:    HIGH
+Pattern:     Unhandled Exception
+Description: The return value of statements that may return error
+             values must be explicitly checked.
+Type:        Violation
+Contract:    SimpleLendingProxy
+Line:        361
+Source: 
+>         require(success, "repayment failed");
+>         webOfTrust.updateLBCR(address(simpleLending), address(userProxy), repayAction);
+>         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>     }
+
+
+Severity:    HIGH
+Pattern:     Unhandled Exception
+Description: The return value of statements that may return error
+             values must be explicitly checked.
+Type:        Violation
+Contract:    SimpleLendingProxy
+Line:        372
+Source: 
+>         );
+>         UserProxy userProxy = UserProxy(userProxyFactory.getUserProxyAddress(msg.sender));
+>                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         bool success = userProxy.proxyCall(address(simpleLending), abiEncoding, loanReserve, loanAmount);
+
+
+Severity:    HIGH
+Pattern:     Unhandled Exception
+Description: The return value of statements that may return error
+             values must be explicitly checked.
+Type:        Violation
+Contract:    SimpleLendingProxy
+Line:        375
+Source: 
+>         require(success, "liquidation failed");
+>         webOfTrust.updateLBCR(address(simpleLending), address(userProxy), liquidateAction);
+>         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         // there is no call to updateLBCR for the liquidated, as the score for being liquidated is 0
+
+
+Severity:    HIGH
+Pattern:     Unhandled Exception
+Description: The return value of statements that may return error
+             values must be explicitly checked.
+Type:        Violation
+Contract:    SimpleLendingProxy
+Line:        385
+Source: 
+>         );
+>         UserProxy userProxy = UserProxy(userProxyFactory.getUserProxyAddress(msg.sender));
+>                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         bool success = userProxy.proxyCall(address(simpleLending), abiEncoding);
+
+
+Severity:    HIGH
+Pattern:     Unhandled Exception
+Description: The return value of statements that may return error
+             values must be explicitly checked.
+Type:        Violation
+Contract:    SimpleLendingProxy
+Line:        388
+Source: 
+>         require(success, "redeem failed");
+>         webOfTrust.updateLBCR(address(simpleLending), address(userProxy), redeemAction);
+>         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>     }
+
+
+Severity:    HIGH
+Pattern:     Unhandled Exception
+Description: The return value of statements that may return error
+             values must be explicitly checked.
+Type:        Violation
+Contract:    SimpleLending
+Line:        820
+Source: 
+>         } else {
+>             IERC20(reserve).transferFrom(msg.sender, address(this), amount);
+>             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         }
+
+
+Severity:    HIGH
+Pattern:     Unhandled Exception
+Description: The return value of statements that may return error
+             values must be explicitly checked.
+Type:        Violation
+Contract:    SimpleLending
+Line:        877
+Source: 
+>         } else {
+>             IERC20(reserve).transfer(payee, amount);
+>             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         }
+
+
+Severity:    HIGH
+Pattern:     Unhandled Exception
+Description: The return value of statements that may return error
+             values must be explicitly checked.
+Type:        Violation
+Contract:    SimpleLending
+Line:        922
+Source: 
+>         (uint borrows, ) = getUserLoansInETH(account);
+>         uint accountCollateralizationRatio = baseCollateralisationRate * IWebOfTrust(webOfTrustAddress).getAggregateAgentFactorForProtocol(account, address(this));
+>                                                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         uint collateral = (deposits / accountCollateralizationRatio) * (10 ** (baseCollateralisationRateDecimals + IWebOfTrust(webOfTrustAddress).getAgentFactorDecimals()));
+
+
+Severity:    HIGH
+Pattern:     Unhandled Exception
+Description: The return value of statements that may return error
+             values must be explicitly checked.
+Type:        Violation
+Contract:    SimpleLending
+Line:        923
+Source: 
+>         uint accountCollateralizationRatio = baseCollateralisationRate * IWebOfTrust(webOfTrustAddress).getAggregateAgentFactorForProtocol(account, address(this));
+>         uint collateral = (deposits / accountCollateralizationRatio) * (10 ** (baseCollateralisationRateDecimals + IWebOfTrust(webOfTrustAddress).getAgentFactorDecimals()));
+>                                                                                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         require(!isUnderCollateralised(account), "agent is undercollateralized");
+
+
+Severity:    HIGH
+Pattern:     Unhandled Exception
+Description: The return value of statements that may return error
+             values must be explicitly checked.
+Type:        Violation
+Contract:    SimpleLending
+Line:        951
+Source: 
+>         (uint borrows, ) = getUserLoansInETH(account);
+>         uint accountCollateralizationRatio = baseCollateralisationRate * IWebOfTrust(webOfTrustAddress).getAggregateAgentFactorForProtocol(account, address(this));
+>                                                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         uint collateralInUse = (borrows * accountCollateralizationRatio) / (10 ** (baseCollateralisationRateDecimals + IWebOfTrust(webOfTrustAddress).getAgentFactorDecimals()));
+
+
+Severity:    HIGH
+Pattern:     Unhandled Exception
+Description: The return value of statements that may return error
+             values must be explicitly checked.
+Type:        Violation
+Contract:    SimpleLending
+Line:        952
+Source: 
+>         uint accountCollateralizationRatio = baseCollateralisationRate * IWebOfTrust(webOfTrustAddress).getAggregateAgentFactorForProtocol(account, address(this));
+>         uint collateralInUse = (borrows * accountCollateralizationRatio) / (10 ** (baseCollateralisationRateDecimals + IWebOfTrust(webOfTrustAddress).getAgentFactorDecimals()));
+>                                                                                                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         return (collateralInUse, conversionDecimals);
+
+
+Severity:    HIGH
+Pattern:     Unhandled Exception
+Description: The return value of statements that may return error
+             values must be explicitly checked.
+Type:        Violation
+Contract:    SimpleLending
+Line:        838
+Source: 
+>         } else {
+>             IERC20(reserve).transferFrom(msg.sender, address(this), amount);
+>             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         }
+
+
+Severity:    HIGH
+Pattern:     Unhandled Exception
+Description: The return value of statements that may return error
+             values must be explicitly checked.
+Type:        Violation
+Contract:    SimpleLending
+Line:        852
+Source: 
+>         } else {
+>             IERC20(loanReserve).transferFrom(msg.sender, address(this), loanAmount);
+>             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         }
+
+
+Severity:    CRITICAL
+Pattern:     Unrestricted Ether Flow
+Description: The execution of ether flows should be restricted to an
+             authorized set of users.
+Type:        Warning
+Contract:    SimpleLending
+Line:        875
+Source: 
+>         if(reserve == ethAddress) {
+>             payee.transfer(amount);
+>             ^^^^^^^^^^^^^^^^^^^^^^
+>         } else {
+
+
+Severity:    CRITICAL
+Pattern:     Unrestricted Ether Flow
+Description: The execution of ether flows should be restricted to an
+             authorized set of users.
+Type:        Violation
+Contract:    UserProxy
+Line:        274
+Source: 
+>             } else {
+>                 (success, ) = target.call.value(amount)(abiEncoding);
+>                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>             }
+
+
+Severity:    CRITICAL
+Pattern:     Unrestricted write to storage
+Description: Contract fields that can be modified by any user must be
+             inspected.
+Type:        Warning
+Contract:    LBCR
+Line:        610
+Source: 
+> 
+>         _interactionCount[agent] += 1;
+>         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 
+
+
+Severity:    CRITICAL
+Pattern:     Unrestricted write to storage
+Description: Contract fields that can be modified by any user must be
+             inspected.
+Type:        Warning
+Contract:    LBCR
+Line:        615
+Source: 
+>             // asignment in the next round
+>             _assignments[_round + 1][agent] = assignment + 1;
+>             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         // demote the agent to the previous layer
+
+
+Severity:    CRITICAL
+Pattern:     Unrestricted write to storage
+Description: Contract fields that can be modified by any user must be
+             inspected.
+Type:        Warning
+Contract:    LBCR
+Line:        619
+Source: 
+>             // asignment in the next round
+>             _assignments[_round + 1][agent] = assignment - 1;
+>             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         // agent layer remans the same
+
+
+Severity:    CRITICAL
+Pattern:     Unrestricted write to storage
+Description: Contract fields that can be modified by any user must be
+             inspected.
+Type:        Warning
+Contract:    LBCR
+Line:        622
+Source: 
+>         } else {
+>             _assignments[_round + 1][agent] = assignment;
+>             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         }
+
+
+Severity:    CRITICAL
+Pattern:     Unrestricted write to storage
+Description: Contract fields that can be modified by any user must be
+             inspected.
+Type:        Warning
+Contract:    SimpleLending
+Line:        830
+Source: 
+>         makePayment(reserve, amount, msg.sender);
+>         userLoans[msg.sender][reserve] += amount;
+>         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>     }
+
+
+Severity:    CRITICAL
+Pattern:     Unrestricted write to storage
+Description: Contract fields that can be modified by any user must be
+             inspected.
+Type:        Warning
+Contract:    SimpleLending
+Line:        879
+Source: 
+>         }
+>         reserveLiquidity[reserve] -= amount;
+>         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>     }
+
+
+Severity:    CRITICAL
+Pattern:     Unrestricted write to storage
+Description: Contract fields that can be modified by any user must be
+             inspected.
+Type:        Warning
+Contract:    SimpleLending
+Line:        858
+Source: 
+> 
+>         userLoans[borrower][loanReserve] -= loanAmount;
+>         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         userDeposits[borrower][collateralReserve] -= returnedCollateralAmount;
+
+
+Severity:    CRITICAL
+Pattern:     Unrestricted write to storage
+Description: Contract fields that can be modified by any user must be
+             inspected.
+Type:        Warning
+Contract:    SimpleLending
+Line:        859
+Source: 
+>         userLoans[borrower][loanReserve] -= loanAmount;
+>         userDeposits[borrower][collateralReserve] -= returnedCollateralAmount;
+>         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         makePayment(collateralReserve, returnedCollateralAmount, msg.sender);
+
+
+Severity:    CRITICAL
+Pattern:     Unrestricted write to storage
+Description: Contract fields that can be modified by any user must be
+             inspected.
+Type:        Warning
+Contract:    SimpleLending
+Line:        861
+Source: 
+>         makePayment(collateralReserve, returnedCollateralAmount, msg.sender);
+>         reserveLiquidity[loanReserve] += loanAmount;
+>         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         reserveLiquidity[collateralReserve] -= returnedCollateralAmount;
+
+
+Severity:    CRITICAL
+Pattern:     Unrestricted write to storage
+Description: Contract fields that can be modified by any user must be
+             inspected.
+Type:        Warning
+Contract:    SimpleLending
+Line:        862
+Source: 
+>         reserveLiquidity[loanReserve] += loanAmount;
+>         reserveLiquidity[collateralReserve] -= returnedCollateralAmount;
+>         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>     }
+
+
+Severity:    CRITICAL
+Pattern:     Unrestricted write to storage
+Description: Contract fields that can be modified by any user must be
+             inspected.
+Type:        Violation
+Contract:    WebOfTrust
+Line:        31
+Source: 
+>         LBCR lbcr = new LBCR();
+>         protocolToLBCR[protocolAddress] = address(lbcr);
+>         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         lbcr.addAuthorisedContract(address(userProxyFactory));
+
+
+Severity:    CRITICAL
+Pattern:     Unrestricted write to storage
+Description: Contract fields that can be modified by any user must be
+             inspected.
+Type:        Violation
+Contract:    WebOfTrust
+Line:        34
+Source: 
+>         lbcr.addAuthorisedContract(msg.sender);
+>         lbcrs.push(lbcr);
+>         ^^^^^^^^^^^^^^^^
+>         userProxyFactory.addLBCR(address(lbcr));
+
+
+Severity:    CRITICAL
+Pattern:     Unrestricted write to storage
+Description: Contract fields that can be modified by any user must be
+             inspected.
+Type:        Violation
+Contract:    WebOfTrust
+Line:        36
+Source: 
+>         userProxyFactory.addLBCR(address(lbcr));
+>         protocolToProxy[protocolAddress] = protocolProxyAddress;
+>         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         protocolProxy[protocolProxyAddress] = true;
+
+
+Severity:    CRITICAL
+Pattern:     Unrestricted write to storage
+Description: Contract fields that can be modified by any user must be
+             inspected.
+Type:        Violation
+Contract:    WebOfTrust
+Line:        37
+Source: 
+>         protocolToProxy[protocolAddress] = protocolProxyAddress;
+>         protocolProxy[protocolProxyAddress] = true;
+>         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>     }
+
+
+Severity:    CRITICAL
+Pattern:     Unrestricted write to storage
+Description: Contract fields that can be modified by any user must be
+             inspected.
+Type:        Violation
+Contract:    UserProxyFactory
+Line:        139
+Source: 
+>         require(!lbcrAlreadyAdded(lbcr), "lbcr already added in user proxy");
+>         lbcrs.push(lbcr);
+>         ^^^^^^^^^^^^^^^^
+>         for(uint i = 0; i < agents.length; i++) {
+
+
+Severity:    CRITICAL
+Pattern:     Unrestricted write to storage
+Description: Contract fields that can be modified by any user must be
+             inspected.
+Type:        Violation
+Contract:    SimpleLendingProxy
+Line:        319
+Source: 
+>     function setSimpleLendingAddress(address payable simpleLendingAddress) public  {
+>         simpleLending = SimpleLending(simpleLendingAddress);
+>         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>     }
+
+
+Severity:    CRITICAL
+Pattern:     Unrestricted write to storage
+Description: Contract fields that can be modified by any user must be
+             inspected.
+Type:        Violation
+Contract:    LBCR
+Line:        466
+Source: 
+>     function setCompatibilityScoreWith(address protocol, uint256 score) external {
+>         compatibilityScores[protocol] = score;
+>         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>     }
+
+
+Severity:    CRITICAL
+Pattern:     Unrestricted write to storage
+Description: Contract fields that can be modified by any user must be
+             inspected.
+Type:        Violation
+Contract:    LBCR
+Line:        479
+Source: 
+>          // set layers
+>         _layers = layers;
+>         ^^^^^^^^^^^^^^^^
+>     }
+
+
+Severity:    CRITICAL
+Pattern:     Unrestricted write to storage
+Description: Contract fields that can be modified by any user must be
+             inspected.
+Type:        Violation
+Contract:    LBCR
+Line:        483
+Source: 
+>     function resetLayers() public {
+>         delete _layers;
+>         ^^^^^^^^^^^^^^
+>     }
+
+
+Severity:    CRITICAL
+Pattern:     Unrestricted write to storage
+Description: Contract fields that can be modified by any user must be
+             inspected.
+Type:        Violation
+Contract:    LBCR
+Line:        487
+Source: 
+>     function addLayer(uint layer) public {
+>         _layers.push(layer);
+>         ^^^^^^^^^^^^^^^^^^^
+>     }
+
+
+Severity:    CRITICAL
+Pattern:     Unrestricted write to storage
+Description: Contract fields that can be modified by any user must be
+             inspected.
+Type:        Violation
+Contract:    LBCR
+Line:        582
+Source: 
+>         // register agent
+>         _agents[agent] = true;
+>         ^^^^^^^^^^^^^^^^^^^^^
+>         // asign agent to lowest layer
+
+
+Severity:    CRITICAL
+Pattern:     Unrestricted write to storage
+Description: Contract fields that can be modified by any user must be
+             inspected.
+Type:        Violation
+Contract:    LBCR
+Line:        584
+Source: 
+>         // asign agent to lowest layer
+>         _assignments[_round][agent] = _layers[0];
+>         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         // update the score of the agent
+
+
+Severity:    CRITICAL
+Pattern:     Unrestricted write to storage
+Description: Contract fields that can be modified by any user must be
+             inspected.
+Type:        Violation
+Contract:    LBCR
+Line:        586
+Source: 
+>         // update the score of the agent
+>         _scores[_round][agent] += _rewards[0];
+>         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 
+
+
+Severity:    CRITICAL
+Pattern:     Unrestricted write to storage
+Description: Contract fields that can be modified by any user must be
+             inspected.
+Type:        Violation
+Contract:    LBCR
+Line:        588
+Source: 
+> 
+>         timeDiscountedFactors[agent] = _factors[_assignments[_round][agent]];
+>         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         agentList.push(agent);
+
+
+Severity:    CRITICAL
+Pattern:     Unrestricted write to storage
+Description: Contract fields that can be modified by any user must be
+             inspected.
+Type:        Violation
+Contract:    LBCR
+Line:        589
+Source: 
+>         timeDiscountedFactors[agent] = _factors[_assignments[_round][agent]];
+>         agentList.push(agent);
+>         ^^^^^^^^^^^^^^^^^^^^^
+>         
+
+
+Severity:    CRITICAL
+Pattern:     Unrestricted write to storage
+Description: Contract fields that can be modified by any user must be
+             inspected.
+Type:        Violation
+Contract:    LBCR
+Line:        603
+Source: 
+>     function update(address agent, uint256 action) public returns (bool) {
+>         _scores[_round][agent] += _rewards[action];
+>         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 
+
+
+Severity:    CRITICAL
+Pattern:     Unrestricted write to storage
+Description: Contract fields that can be modified by any user must be
+             inspected.
+Type:        Violation
+Contract:    SimpleLending
+Line:        805
+Source: 
+>     function setBaseCollateralisationRate(uint baseCollateralisationRateValue) external  {
+>         baseCollateralisationRate = baseCollateralisationRateValue;
+>         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>     }
+
+
+Severity:    CRITICAL
+Pattern:     Unrestricted write to storage
+Description: Contract fields that can be modified by any user must be
+             inspected.
+Type:        Violation
+Contract:    SimpleLending
+Line:        813
+Source: 
+>     function addReserve(address newReserve) public {
+>         reserves.push(newReserve);
+>         ^^^^^^^^^^^^^^^^^^^^^^^^^
+>     }
+
+
+Severity:    CRITICAL
+Pattern:     Unrestricted write to storage
+Description: Contract fields that can be modified by any user must be
+             inspected.
+Type:        Violation
+Contract:    SimpleLending
+Line:        822
+Source: 
+>         }
+>         userDeposits[msg.sender][reserve] += amount;
+>         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         reserveLiquidity[reserve] += amount;
+
+
+Severity:    CRITICAL
+Pattern:     Unrestricted write to storage
+Description: Contract fields that can be modified by any user must be
+             inspected.
+Type:        Violation
+Contract:    SimpleLending
+Line:        823
+Source: 
+>         userDeposits[msg.sender][reserve] += amount;
+>         reserveLiquidity[reserve] += amount;
+>         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>     }
+
+
+Severity:    CRITICAL
+Pattern:     Unrestricted write to storage
+Description: Contract fields that can be modified by any user must be
+             inspected.
+Type:        Violation
+Contract:    SimpleLending
+Line:        840
+Source: 
+>         }
+>         userLoans[onBehalf][reserve] -= amount;
+>         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         reserveLiquidity[reserve] += amount;
+
+
+Severity:    CRITICAL
+Pattern:     Unrestricted write to storage
+Description: Contract fields that can be modified by any user must be
+             inspected.
+Type:        Violation
+Contract:    SimpleLending
+Line:        841
+Source: 
+>         userLoans[onBehalf][reserve] -= amount;
+>         reserveLiquidity[reserve] += amount;
+>         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>     }
+
+
+Severity:    MEDIUM
+Pattern:     Unused Return Pattern
+Description: The value returned by an external function call is never
+             used
+Type:        Violation
+Contract:    WebOfTrust
+Line:        55
+Source: 
+>         LBCR lbcr = LBCR(protocolToLBCR[protocolAddress]);
+>         lbcr.update(agent, action);
+>         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+>     }
+
+
+Severity:    MEDIUM
+Pattern:     Unused Return Pattern
+Description: The value returned by an external function call is never
+             used
+Type:        Violation
+Contract:    WebOfTrust
+Line:        91
+Source: 
+>         for(uint i = 0; i < lbcrs.length; i++) {
+>             lbcrs[i].curate();
+>             ^^^^^^^^^^^^^^^^^
+>         }
+
+
+Severity:    MEDIUM
+Pattern:     Unused Return Pattern
+Description: The value returned by an external function call is never
+             used
+Type:        Violation
+Contract:    UserProxyFactory
+Line:        128
+Source: 
+>             for(uint i = 0; i < lbcrs.length; i++) {
+>                 lbcrs[i].registerAgent(address(userProxy));
+>                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>             }
+
+
+Severity:    MEDIUM
+Pattern:     Unused Return Pattern
+Description: The value returned by an external function call is never
+             used
+Type:        Violation
+Contract:    UserProxyFactory
+Line:        141
+Source: 
+>         for(uint i = 0; i < agents.length; i++) {
+>             lbcr.registerAgent(agents[i]);
+>             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         }
+
+
+Severity:    MEDIUM
+Pattern:     Unused Return Pattern
+Description: The value returned by an external function call is never
+             used
+Type:        Violation
+Contract:    UserProxy
+Line:        226
+Source: 
+>         if(_reserve != aETHAddress) {
+>             IERC20(_reserve).transfer(msg.sender, _amount);
+>             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         } else {
+
+
+Severity:    MEDIUM
+Pattern:     Unused Return Pattern
+Description: The value returned by an external function call is never
+             used
+Type:        Violation
+Contract:    UserProxy
+Line:        236
+Source: 
+>         } else {
+>             IERC20(_reserve).transferFrom(msg.sender, address(this), _amount);
+>             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         }
+
+
+Severity:    MEDIUM
+Pattern:     Unused Return Pattern
+Description: The value returned by an external function call is never
+             used
+Type:        Violation
+Contract:    UserProxy
+Line:        271
+Source: 
+>             if(reserve != aETHAddress) {
+>                 IERC20(reserve).approve(target, amount);
+>                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>                 (success, ) = target.call(abiEncoding);
+
+
+Severity:    MEDIUM
+Pattern:     Unused Return Pattern
+Description: The value returned by an external function call is never
+             used
+Type:        Violation
+Contract:    SimpleLending
+Line:        820
+Source: 
+>         } else {
+>             IERC20(reserve).transferFrom(msg.sender, address(this), amount);
+>             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         }
+
+
+Severity:    MEDIUM
+Pattern:     Unused Return Pattern
+Description: The value returned by an external function call is never
+             used
+Type:        Violation
+Contract:    SimpleLending
+Line:        877
+Source: 
+>         } else {
+>             IERC20(reserve).transfer(payee, amount);
+>             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         }
+
+
+Severity:    MEDIUM
+Pattern:     Unused Return Pattern
+Description: The value returned by an external function call is never
+             used
+Type:        Violation
+Contract:    SimpleLending
+Line:        838
+Source: 
+>         } else {
+>             IERC20(reserve).transferFrom(msg.sender, address(this), amount);
+>             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         }
+
+
+Severity:    MEDIUM
+Pattern:     Unused Return Pattern
+Description: The value returned by an external function call is never
+             used
+Type:        Violation
+Contract:    SimpleLending
+Line:        852
+Source: 
+>         } else {
+>             IERC20(loanReserve).transferFrom(msg.sender, address(this), loanAmount);
+>             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         }
+
+
+Severity:    INFO
+Pattern:     Unused State Variable
+Description: Unused state variables should be removed.
+Type:        Violation
+Contract:    WebOfTrust
+Line:        12
+Source: 
+> contract WebOfTrust {
+>     address constant aETHAddress = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>     UserProxyFactory userProxyFactory;
+
+
+Severity:    INFO
+Pattern:     Unused State Variable
+Description: Unused state variables should be removed.
+Type:        Violation
+Contract:    UserProxy
+Line:        169
+Source: 
+>     address agentOwner;
+>     uint256 constant INT256_MAX = ~(uint256(1) << 255);
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 
+
+
+Severity:    INFO
+Pattern:     Unused State Variable
+Description: Unused state variables should be removed.
+Type:        Violation
+Contract:    UserProxy
+Line:        174
+Source: 
+>     address constant aETHAddress = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
+>     address constant LendingPoolAddressesProviderAddress = 0x24a42fD28C976A61Df5D00D0599C34c4f90748c8;
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>     mapping(address => int256) agentFundsInPool;
+
+
+Severity:    INFO
+Pattern:     Unused State Variable
+Description: Unused state variables should be removed.
+Type:        Violation
+Contract:    UserProxy
+Line:        175
+Source: 
+>     address constant LendingPoolAddressesProviderAddress = 0x24a42fD28C976A61Df5D00D0599C34c4f90748c8;
+>     mapping(address => int256) agentFundsInPool;
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>     LBCR[] lbcrs;
+
+
+Severity:    INFO
+Pattern:     Unused State Variable
+Description: Unused state variables should be removed.
+Type:        Violation
+Contract:    UserProxy
+Line:        176
+Source: 
+>     mapping(address => int256) agentFundsInPool;
+>     LBCR[] lbcrs;
+>     ^^^^^^^^^^^^
+>     address webOfTrustAddress;
+
+
+Severity:    INFO
+Pattern:     Unused State Variable
+Description: Unused state variables should be removed.
+Type:        Violation
+Contract:    SimpleLendingProxy
+Line:        286
+Source: 
+> contract SimpleLendingProxy {
+>     address constant LendingPoolAddressesProviderAddress = 0x24a42fD28C976A61Df5D00D0599C34c4f90748c8;
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>     address constant aETHAddress = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
+
+
+Severity:    INFO
+Pattern:     Unused State Variable
+Description: Unused state variables should be removed.
+Type:        Violation
+Contract:    SimpleLendingProxy
+Line:        287
+Source: 
+>     address constant LendingPoolAddressesProviderAddress = 0x24a42fD28C976A61Df5D00D0599C34c4f90748c8;
+>     address constant aETHAddress = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>     address constant aETHContractAddress = 0x3a3A65aAb0dd2A17E3F1947bA16138cd37d08c04;
+
+
+Severity:    INFO
+Pattern:     Unused State Variable
+Description: Unused state variables should be removed.
+Type:        Violation
+Contract:    SimpleLendingProxy
+Line:        288
+Source: 
+>     address constant aETHAddress = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
+>     address constant aETHContractAddress = 0x3a3A65aAb0dd2A17E3F1947bA16138cd37d08c04;
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 
+
+
+Severity:    INFO
+Pattern:     Unused State Variable
+Description: Unused state variables should be removed.
+Type:        Violation
+Contract:    SimpleLendingProxy
+Line:        294
+Source: 
+>     uint256 liquidateAction;
+>     uint256 flashLoanAction;
+>     ^^^^^^^^^^^^^^^^^^^^^^^
+>     uint256 redeemAction;
+
+
+Severity:    INFO
+Pattern:     Unused State Variable
+Description: Unused state variables should be removed.
+Type:        Violation
+Contract:    SimpleLending
+Line:        787
+Source: 
+>     address ethAddress = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
+>     uint256 collateralizationDecimals = 3; // decimals to calculate collateral factor
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>     uint conversionDecimals = 25;
+
+
+dani@morrow securify2 % 

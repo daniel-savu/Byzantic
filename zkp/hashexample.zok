@@ -1,7 +1,7 @@
 import "hashes/sha256/512bitPacked" as sha256packed
 
-def main(private field a, private field b, private field c, private field d, field firstHash, field secondHash) -> field:
+def main(private field a, private field b, private field c, private field d, field firstHash, field secondHash) -> (field):
     field[2] h = sha256packed([a, b, c, d])
-    assert(h[0] == 261673453623746781313652579402536373323)
-    assert(h[1] == 140016560968775928873505512069829327042)
+    assert(h[0] == firstHash)
+    assert(h[1] == secondHash)
     return 1

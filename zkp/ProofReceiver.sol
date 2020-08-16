@@ -2,7 +2,7 @@
 mapping(address => bytes32[2]) reputationAddressAuthenticator
 
 
-function proveIdentityAndCall(
+function proveIdentity(
 	address reputationAddress, 
 	bytes32 firstNewHashValue, 
 	bytes32 secondNewHashValue, 

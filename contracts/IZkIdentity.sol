@@ -2,7 +2,7 @@ pragma solidity ^0.5.0;
 
 
 interface IZkIdentity {
-    function proveIdentityAndCall(
+    function proveIdentity(
         address reputationAddress, 
         bytes32 firstNewHashValue, 
         bytes32 secondNewHashValue, 

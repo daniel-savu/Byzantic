@@ -560,9 +560,9 @@ contract Verifier {
         vk.gamma = Pairing.G2Point([uint256(0x011016e22ae045444f50fb80f246ec486c7e02af09132cd38c4fcf484983e4f2), uint256(0x00e83c788c2878d1d5eba3ed49b0d81e4c0487dedc3e4d1c2baab5833785b62f)], [uint256(0x05eb89e741ed5b5d611cebf92d1ed02cd6f3311089f0d400df7d9ced5a48fd41), uint256(0x132a90a3b0d369ccd66e2a5ba04a935e44d8ad5dca93a76bba592a578130a911)]);
         vk.delta = Pairing.G2Point([uint256(0x065f6a3323a2abffd621fc263f348eb914904b68d5897729ae34a6b9d33f0852), uint256(0x0c3b60f59d3bd50328a04c0ff6d979199685d0526f89f6ac29d6174ce24707a2)], [uint256(0x26e7ebce2b44efef6b6315938e33f0a8ecc82dbad635c9efa681ed85bbb59982), uint256(0x12e0f3721230a0f38f6c9913048d5230fd2615ef3ff7f6ee4b20dfe0bdea1a86)]);
         vk.gamma_abc = new Pairing.G1Point[](4);
-        vk.gamma_abc[0] = Pairing.G1Point(uint256(0x1b5e636ef5a0b930467958a62ffea2a47cb18c11bb5d90f43f89beda77b32c9c), uint256(0x0ce1a6d3bb6c7a417a9003b702d720d9756875cf91436d900d694256e136ed52));
-        vk.gamma_abc[1] = Pairing.G1Point(uint256(0x1bac97c147e1a949fcd4bbd899debce33cc7820dd38ce562bc5155c963fed39e), uint256(0x2cb06af936c01e688e9f4375844294b8d82cdee3bd39cec1b08567a8ba2a4eca));
-        vk.gamma_abc[2] = Pairing.G1Point(uint256(0x13786fe51adf8ef426dbd5cb6bf39bc783a1c28a32886f44b1b5fc7a01d00e1b), uint256(0x26e6d1fbaf3fc2cba1b6e213020beb3126746cc32413936573930f02ae3f8ed7));
+        vk.gamma_abc[0] = Pairing.G1Point(uint256(0x2962e1ab38589837c78b9c6f3d0be5a8c6d20616636b60350ac9784752fe8258), uint256(0x003841dc4f776415c2abe7533aca2d36350f7c279170358c3f50951c622be50b));
+        vk.gamma_abc[1] = Pairing.G1Point(uint256(0x2a389ea4b9fb28bb02a02250ec1c475b87e4f5190446b9feedf8b20ca698bb08), uint256(0x2ff34d278c28ec6e7528b67278e36a09ece407ad9ca954210a84e125444560e8));
+        vk.gamma_abc[2] = Pairing.G1Point(uint256(0x2cd33c7106c76d3700fd3c031605063c9c4bb479d7d88d7688c989ac8dff8c77), uint256(0x03d4a9f1c3fa3293963801943377bdd992b39f39dd7b62a85bd938640745adc8));
         vk.gamma_abc[3] = Pairing.G1Point(uint256(0x0b9e34a02673186490711f41c26d7f580199b896a06f3999a859359becb8b4c1), uint256(0x280d2e93d06cd9d313f8b866db2c29ae5e2b0542cd9d62dc498e5b7514fe13f7));
     }
     function verify(uint[] memory input, Proof memory proof) internal view returns (uint) {

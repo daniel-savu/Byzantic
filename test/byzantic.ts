@@ -12,6 +12,8 @@ var web3 = env.web3;
 var artifacts = env.artifacts;
 var contract = env.contract;
 
+const fs = require('fs');
+
 const WebOfTrust = artifacts.require("WebOfTrust");
 const SimpleLendingProxy = artifacts.require("SimpleLendingProxy");
 const UserProxyFactory = artifacts.require("UserProxyFactory");
@@ -20,6 +22,7 @@ const LBCR = artifacts.require("LBCR");
 const SimpleLending = artifacts.require("SimpleLending");
 const DaiMock = artifacts.require("DaiMock");
 const ZkIdentity = artifacts.require("ZkIdentity");
+const Verifier = artifacts.require("Verifier");
 
 // const AaveCollateralManager = artifacts.require("AaveCollateralManager");
 
@@ -49,6 +52,7 @@ let simpleLendingTwoProxy: typeof WebOfTrust
 
 let daiMock: typeof WebOfTrust
 let zkIdentity: typeof ZkIdentity
+let verifier: typeof Verifier;
 
 
 contract("SimpleLending Protocol", accounts => {
@@ -155,7 +159,9 @@ contract("SimpleLending Protocol", accounts => {
         accs = await web3.eth.getAccounts();
         webOfTrust = await WebOfTrust.new();
         daiMock = await DaiMock.new();
-        zkIdentity = await ZkIdentity.new();
+
+        verifier = await Verifier.new();
+        zkIdentity = await ZkIdentity.new(verifier.address);
 
         let baseCollateralisationRateValue = 1500;
         let baseCollateralisationRateDecimals = 3;
@@ -205,8 +211,8 @@ contract("SimpleLending Protocol", accounts => {
         let baseCollateralisationRateValue = 1500;
         let baseCollateralisationRateDecimals = 3;
 
-        simpleLending = await SimpleLending.new(webOfTrust.address, baseCollateralisationRateValue, baseCollateralisationRateDecimals);
-        simpleLendingProxy = await SimpleLendingProxy.new(webOfTrust.address, userProxyFactoryAddress, simpleLending.address);
+        simpleLending = await SimpleLending.new(webOfTrust.address, baseCollateralisationRateValue, baseCollateralisationRateDecimals, zkIdentity.address);
+        simpleLendingProxy = await SimpleLendingProxy.new(webOfTrust.address, userProxyFactoryAddress, simpleLending.address, zkIdentity.address);
         await webOfTrust.addProtocolIntegration(simpleLending.address, simpleLendingProxy.address);
         await initializeLendingProtocol(simpleLending.address);
 
@@ -353,7 +359,7 @@ contract("SimpleLending Protocol", accounts => {
         console.log(`ethBalanceLeftInUserProxy: ${ethBalanceLeftInUserProxy}`);
     });
     
-    it("Should deposit to, borrow from and be liquidated by SimpleLending", async function () {
+    xit("Should deposit to, borrow from and be liquidated by SimpleLending", async function () {
         const userProxyAddress = await userProxyFactory.getUserProxyAddress(accs[0]);
         const userProxy = await UserProxy.at(userProxyAddress);
         let tr = await userProxy.depositFunds(
@@ -446,7 +452,7 @@ contract("SimpleLending Protocol", accounts => {
     });
 
 
-    it("Should deposit to, borrow from and be liquidated by SimpleLending through Byzantic", async function () {
+    xit("Should deposit to, borrow from and be liquidated by SimpleLending through Byzantic", async function () {
         await webOfTrust.registerAgent({
             from: accs[1],
         });
@@ -566,7 +572,6 @@ contract("SimpleLending Protocol", accounts => {
 
     });
 
-    
     xit("Should deposit to SimpleLending and SimpleLendingTwo", async function () {
         const userProxyAddress = await userProxyFactory.getUserProxyAddress(accs[0]);
         const userProxy = await UserProxy.at(userProxyAddress);
@@ -620,6 +625,49 @@ contract("SimpleLending Protocol", accounts => {
 
         let conversionRate = await simpleLending.conversionRate(daiMock.address, ethAddress);
         console.log(`(conversion rate from daiMock to eth: ${divideByConversionDecimals(conversionRate)})`);
+    });
+
+    describe('ZkIdentity functionality', async () => {
+        const { encodeProof } = require('./encodeProof');
+        let firstHash: any;
+        let secondHash: any;
+        let proofObject: any;
+
+        const rawProof = fs.readFileSync('./zkp/proof.json');
+        proofObject = JSON.parse(rawProof);
+        (
+            { inputs: [firstHash, secondHash] } = proofObject
+        );
+
+
+        it('should perform a privacy-preserving call', async () => {
+            await zkIdentity.setReputationAddressAuthentication(firstHash, secondHash);
+
+            const proof = encodeProof(proofObject);
+
+            const userProxyAddress = await userProxyFactory.getUserProxyAddress(accs[0]);
+            const userProxy = await UserProxy.at(userProxyAddress);
+            let tr = await userProxy.depositFunds(
+                ethAddress,
+                web3.utils.toWei('2', 'ether'),
+                {
+                    from: accs[0],
+                    value: web3.utils.toHex(web3.utils.toWei('2', 'ether'))
+                }
+            );
+    
+            tr = await simpleLendingProxy.depositPrivately(
+                accs[0], //reputation address
+                firstHash,
+                secondHash,
+                proof,
+                ethAddress,
+                web3.utils.toWei('1', 'ether')
+            );
+
+            let totalDepositsAsETH = await simpleLending.getUserDepositToReserve(userProxy.address, ethAddress);
+            assert(totalDepositsAsETH.toString() == web3.utils.toWei('1', 'ether').toString());
+        });
     });
 
 });
