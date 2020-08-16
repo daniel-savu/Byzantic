@@ -44,11 +44,6 @@ contract SimpleLendingProxy is Ownable {
 
     function() external payable {}
 
-    modifier onlyRegisteredAgents() {
-        require(webOfTrust.isAgentRegistered(msg.sender), "Caller is registered");
-        _;
-    }
-
     function setSimpleLendingAddress(address payable simpleLendingAddressValue) public onlyOwner {
         simpleLendingAddress = simpleLendingAddressValue;
     }
@@ -76,6 +71,7 @@ contract SimpleLendingProxy is Ownable {
         address callerAddress, 
         uint256 action
     ) private {
+
         UserProxy userProxy = UserProxy(userProxyFactory.getUserProxyAddress(callerAddress));
         bool success = userProxy.proxyCall(simpleLendingAddress, abiEncoding);
         require(success, "SimpleLending action failed");
@@ -89,7 +85,7 @@ contract SimpleLendingProxy is Ownable {
         bytes32[] memory proof,
         address reserve,
         uint256 amount
-    ) public onlyRegisteredAgents {
+    ) public {
         bool isIdentityProofValid = IZkIdentity(zkIdentityAddress).proveIdentity(reputationAddress, firstNewHashValue, secondNewHashValue, proof);
         require(isIdentityProofValid, "invalid identity proof");
 
@@ -105,7 +101,7 @@ contract SimpleLendingProxy is Ownable {
     /// the `msg.sender`'s `UserProxy` to call `SimpleLending` with the abi encoding
     /// @param reserve Addres of asset to deposit in `SimpleLending`
     /// @param amount Quantity of `reserve` to deposit in `SimpleLending`
-    function deposit(address reserve, uint256 amount) public onlyRegisteredAgents {
+    function deposit(address reserve, uint256 amount) public {
         bytes memory abiEncoding = abi.encodeWithSignature(
             "deposit(address,uint256)",
             reserve,
@@ -121,7 +117,7 @@ contract SimpleLendingProxy is Ownable {
         bytes32[] memory proof,
         address reserve,
         uint256 amount
-    ) public onlyRegisteredAgents {
+    ) public {
         bool isIdentityProofValid = IZkIdentity(zkIdentityAddress).proveIdentity(reputationAddress, firstNewHashValue, secondNewHashValue, proof);
         require(isIdentityProofValid, "invalid identity proof");
 
@@ -137,7 +133,7 @@ contract SimpleLendingProxy is Ownable {
     /// the `msg.sender`'s `UserProxy` to call `SimpleLending` with the abi encoding
     /// @param reserve Addres of asset to borrow from `SimpleLending`
     /// @param amount Quantity of `reserve` to borrow from `SimpleLending`
-    function borrow(address reserve, uint256 amount) public onlyRegisteredAgents {
+    function borrow(address reserve, uint256 amount) public {
         bytes memory abiEncoding = abi.encodeWithSignature(
             "borrow(address,uint256)",
             reserve,
@@ -154,7 +150,7 @@ contract SimpleLendingProxy is Ownable {
         address reserve,
         uint256 amount,
         address onbehalf
-    ) public onlyRegisteredAgents {
+    ) public {
         bool isIdentityProofValid = IZkIdentity(zkIdentityAddress).proveIdentity(reputationAddress, firstNewHashValue, secondNewHashValue, proof);
         require(isIdentityProofValid, "invalid identity proof");
 
@@ -172,7 +168,7 @@ contract SimpleLendingProxy is Ownable {
     /// @param reserve Addres of asset to repay to `SimpleLending`
     /// @param amount Quantity of `reserve` to repay to `SimpleLending`
     /// @param onbehalf User to repay the bloan on behalf of
-    function repay(address reserve, uint256 amount, address onbehalf) public onlyRegisteredAgents {
+    function repay(address reserve, uint256 amount, address onbehalf) public {
         bytes memory abiEncoding = abi.encodeWithSignature(
             "repay(address,uint256,address)",
             reserve,
@@ -191,7 +187,7 @@ contract SimpleLendingProxy is Ownable {
         address collateralReserve,
         address loanReserve,
         uint256 loanAmount
-    ) public onlyRegisteredAgents {
+    ) public {
         bool isIdentityProofValid = IZkIdentity(zkIdentityAddress).proveIdentity(reputationAddress, firstNewHashValue, secondNewHashValue, proof);
         require(isIdentityProofValid, "invalid identity proof");
 
@@ -211,7 +207,7 @@ contract SimpleLendingProxy is Ownable {
     /// @param collateralReserve Collateral reserve belonging to `borrower` to be paid back in as a result of the liquidation
     /// @param loanReserve Addres of loan asset to liquidate in `SimpleLending`
     /// @param loanAmount Quantity of `reserve` to liquidate from `SimpleLending`
-    function liquidate(address borrower, address collateralReserve, address loanReserve, uint256 loanAmount) public onlyRegisteredAgents {
+    function liquidate(address borrower, address collateralReserve, address loanReserve, uint256 loanAmount) public {
         bytes memory abiEncoding = abi.encodeWithSignature(
             "liquidate(address,address,address,uint256)",
             borrower,
@@ -229,7 +225,7 @@ contract SimpleLendingProxy is Ownable {
         bytes32[] memory proof,
         address reserve,
         uint256 amount
-    ) public onlyRegisteredAgents {
+    ) public {
         bool isIdentityProofValid = IZkIdentity(zkIdentityAddress).proveIdentity(reputationAddress, firstNewHashValue, secondNewHashValue, proof);
         require(isIdentityProofValid, "invalid identity proof");
 
@@ -245,7 +241,7 @@ contract SimpleLendingProxy is Ownable {
     /// the `msg.sender`'s `UserProxy` to call `SimpleLending` with the abi encoding
     /// @param reserve Addres of asset to redeem deposited funds from `SimpleLending`
     /// @param amount Quantity of `reserve` to redeem deposited funds from `SimpleLending`
-    function redeem(address reserve, uint256 amount) public onlyRegisteredAgents {
+    function redeem(address reserve, uint256 amount) public {
         bytes memory abiEncoding = abi.encodeWithSignature(
             "redeem(address,uint256)",
             reserve,

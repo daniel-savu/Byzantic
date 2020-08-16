@@ -656,15 +656,21 @@ contract("SimpleLending Protocol", accounts => {
                 }
             );
     
+            // make a call to SimpleLending from accs[1], but using the reputation of accs[0]
             tr = await simpleLendingProxy.depositPrivately(
                 accs[0], //reputation address
                 firstHash,
                 secondHash,
                 proof,
                 ethAddress,
-                web3.utils.toWei('1', 'ether')
+                web3.utils.toWei('1', 'ether'),
+                {
+                    from: accs[1],
+                }
             );
 
+            // the userProxy of accs[0] should have sent the deposit to SimpleLending, because accs[1] 
+            // proved it was linked to accs[0]
             let totalDepositsAsETH = await simpleLending.getUserDepositToReserve(userProxy.address, ethAddress);
             assert(totalDepositsAsETH.toString() == web3.utils.toWei('1', 'ether').toString());
         });

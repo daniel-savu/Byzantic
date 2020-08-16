@@ -63,6 +63,7 @@ contract UserProxyFactory is Ownable {
     }
 
     function getUserProxyAddress(address userAddress) external view returns (address payable) {
+        require(address(userAddressToUserProxy[userAddress]) != address(0), "userProxy does not exist");
         return address(userAddressToUserProxy[userAddress]);
     }
 
