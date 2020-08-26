@@ -66,21 +66,21 @@ contract UserProxy is Ownable {
         }
     }
     /// @notice Withdraw funds from a UserProxy in Byzantic to the owner's personal account
-    function withdrawFunds(address _reserve, uint256 _amount) external onlyAgentOwner {
-        require(hasEnoughFunds(_reserve, _amount), "You don't have enough funds");
-        if(_reserve != aETHAddress) {
-            IERC20(_reserve).transfer(msg.sender, _amount);
+    function withdrawFunds(address reserve, uint256 amount) external onlyAgentOwner {
+        require(hasEnoughFunds(reserve, amount), "You don't have enough funds");
+        if(reserve != aETHAddress) {
+            IERC20(reserve).transfer(msg.sender, amount);
         } else {
-            msg.sender.transfer(_amount);
+            msg.sender.transfer(amount);
         }
     }
 
     /// @notice Deposit funds from your account to your UserProxy in Byzantic
-    function depositFunds(address _reserve, uint256 _amount) external payable onlyAgentOwner {
-        if(_reserve == aETHAddress) {
-            require(msg.value == _amount, "_amount does not match the sent ETH");
+    function depositFunds(address reserve, uint256 amount) external payable onlyAgentOwner {
+        if(reserve == aETHAddress) {
+            require(msg.value == amount, "_amount does not match the sent ETH");
         } else {
-            IERC20(_reserve).transferFrom(msg.sender, address(this), _amount);
+            IERC20(reserve).transferFrom(msg.sender, address(this), amount);
         }
     }
 

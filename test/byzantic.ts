@@ -670,7 +670,7 @@ contract("SimpleLending Protocol", accounts => {
             );
 
             // the userProxy of accs[0] should have sent the deposit to SimpleLending, because accs[1] 
-            // proved it was linked to accs[0]
+            // proved that it was linked to accs[0] using a zero-knowledge proof
             let totalDepositsAsETH = await simpleLending.getUserDepositToReserve(userProxy.address, ethAddress);
             assert(totalDepositsAsETH.toString() == web3.utils.toWei('1', 'ether').toString());
         });
